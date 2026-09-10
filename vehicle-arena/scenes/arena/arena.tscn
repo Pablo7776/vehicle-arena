@@ -4,6 +4,8 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n62jo"]
 
+[sub_resource type="Environment" id="Environment_f8ekr"]
+
 [node name="Arena" type="Node3D" unique_id=1386833253]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=731603457]
@@ -14,3 +16,9 @@ mesh = SubResource("BoxMesh_f8ekr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=608821982]
 shape = SubResource("BoxShape3D_n62jo")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1303397376]
+transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 0, 13.988404, 21.340214)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=316382671]
+environment = SubResource("Environment_f8ekr")
