@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dtfdnacujyrlc"]
+
+[ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
+[ext_resource type="PackedScene" uid="uid://3cip8s3b1fto" path="res://scenes/vehicle/vehicle.tscn" id="2_iuonh"]
+
+[node name="Main" type="Node3D" unique_id=1314549957]
+
+[node name="Arena" parent="." unique_id=1386833253 instance=ExtResource("1_hyk8p")]
+
+[node name="Vehicle" parent="." unique_id=1090642931 instance=ExtResource("2_iuonh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.860461, 0)
