@@ -1,6 +1,12 @@
 [gd_scene format=3 uid="uid://b6qocilsg135b"]
 
+[ext_resource type="Texture2D" uid="uid://dwxtaksuo5mvo" path="res://icon.svg" id="1_1qjuf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8trdl"]
+albedo_texture = ExtResource("1_1qjuf")
+
 [sub_resource type="BoxMesh" id="BoxMesh_f8ekr"]
+material = SubResource("StandardMaterial3D_8trdl")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n62jo"]
 
@@ -15,11 +21,14 @@ mesh = SubResource("BoxMesh_f8ekr")
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=1712842039]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=608821982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.71325684, 0)
 shape = SubResource("BoxShape3D_n62jo")
 debug_color = Color(0.1784229, 0.10895, 0.47736079, 0.41960785)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1303397376]
 transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 0, 13.988404, 21.340214)
+light_color = Color(0.91320074, 0.6635343, 0.42710492, 1)
+light_energy = 3.099
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=316382671]
 environment = SubResource("Environment_f8ekr")
