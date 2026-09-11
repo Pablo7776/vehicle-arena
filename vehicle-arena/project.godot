@@ -51,6 +51,7 @@ steer_right={
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=4
 global_illumination/voxel_gi/quality=1
 camera/depth_of_field/depth_of_field_bokeh_shape=2

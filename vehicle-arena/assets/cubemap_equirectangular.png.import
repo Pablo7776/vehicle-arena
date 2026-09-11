@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://caa5anyk0n8si"
 path.s3tc="res://.godot/imported/cubemap_equirectangular.png-188713d955a80a5e4914629361928009.s3tc.ctex"
+path.etc2="res://.godot/imported/cubemap_equirectangular.png-188713d955a80a5e4914629361928009.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/cubemap_equirectangular.png"
-dest_files=["res://.godot/imported/cubemap_equirectangular.png-188713d955a80a5e4914629361928009.s3tc.ctex"]
+dest_files=["res://.godot/imported/cubemap_equirectangular.png-188713d955a80a5e4914629361928009.s3tc.ctex", "res://.godot/imported/cubemap_equirectangular.png-188713d955a80a5e4914629361928009.etc2.ctex"]
 
 [params]
 

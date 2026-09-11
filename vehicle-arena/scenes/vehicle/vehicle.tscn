@@ -67,4 +67,4 @@ mesh = SubResource("CylinderMesh_f8ekr")
 surface_material_override/0 = SubResource("StandardMaterial3D_1v42w")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=4533717]
-transform = Transform3D(-0.9997304, -0.008775807, 0.021495221, 0, 0.9258138, 0.37798, -0.02321765, 0.3778781, -0.9255642, 0.5466265, 5.0225344, -7.520713)
+transform = Transform3D(-0.99999994, 2.686997e-08, -8.3191026e-08, 0, 0.9515944, 0.30735663, 8.742277e-08, 0.30735663, -0.9515944, 0, 2, -5)
