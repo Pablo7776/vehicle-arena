@@ -65,6 +65,3 @@ wheel_radius = 0.75
 transform = Transform3D(-6.556708e-08, -1.5, 0, 1.5, -6.556708e-08, 0, 0, 0, 1.5, 0, 0, 0)
 mesh = SubResource("CylinderMesh_f8ekr")
 surface_material_override/0 = SubResource("StandardMaterial3D_1v42w")
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=4533717]
-transform = Transform3D(-0.99999994, 2.686997e-08, -8.3191026e-08, 0, 0.9515944, 0.30735663, 8.742277e-08, 0.30735663, -0.9515944, 0, 2, -5)

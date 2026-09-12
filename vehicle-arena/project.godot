@@ -43,6 +43,13 @@ steer_right={
 ]
 }
 
+[input_devices]
+
+sensors/enable_accelerometer=true
+sensors/enable_gravity=true
+sensors/enable_gyroscope=true
+sensors/enable_magnetometer=true
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

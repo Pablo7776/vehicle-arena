@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://dtfdnacujyrlc"]
 
+[ext_resource type="PackedScene" uid="uid://cew2auxn0ee51" path="res://scenes/camera/camera_3d.tscn" id="1_6q06x"]
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
 [ext_resource type="PackedScene" uid="uid://3cip8s3b1fto" path="res://scenes/vehicle/vehicle.tscn" id="2_iuonh"]
 [ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_k2fmo"]
+[ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6q06x"]
 panorama = ExtResource("2_k2fmo")
@@ -21,6 +23,11 @@ sdfgi_probe_bias = 30.0
 
 [node name="Main" type="Node3D" unique_id=1314549957]
 
+[node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("1_6q06x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.6694756)
+vehiculo_path = NodePath("../Vehicle")
+offset = Vector3(0, 3.5, -5)
+
 [node name="Arena" parent="." unique_id=1386833253 instance=ExtResource("1_hyk8p")]
 
 [node name="WorldEnvironment" parent="Arena" index="2" unique_id=316382671]
@@ -29,9 +36,6 @@ camera_attributes = SubResource("CameraAttributesPractical_n62jo")
 
 [node name="Vehicle" parent="." unique_id=1090642931 instance=ExtResource("2_iuonh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.860461, 0)
-
-[node name="Camera3D" parent="Vehicle" index="6" unique_id=4533717]
-transform = Transform3D(-0.99999994, 4.640956e-08, -1.4368676e-07, 0, 0.9515944, 0.30735663, 1.5099579e-07, 0.30735663, -0.9515944, 0, 2, -5)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
 
@@ -66,6 +70,12 @@ offset_right = 330.0
 offset_bottom = 568.0
 text = "DER"
 
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=1297915195]
+offset_right = 299.0
+offset_bottom = 114.0
+theme_override_font_sizes/font_size = 23
+script = ExtResource("4_l3cfh")
+
 [connection signal="button_down" from="CanvasLayer/Button" to="Vehicle" method="_on_button_button_down"]
 [connection signal="button_up" from="CanvasLayer/Button" to="Vehicle" method="_on_button_button_up"]
 [connection signal="button_down" from="CanvasLayer/Button2" to="Vehicle" method="_on_button_2_button_down"]
@@ -76,4 +86,3 @@ text = "DER"
 [connection signal="button_up" from="CanvasLayer/Button4" to="Vehicle" method="_on_button_4_button_up"]
 
 [editable path="Arena"]
-[editable path="Vehicle"]
