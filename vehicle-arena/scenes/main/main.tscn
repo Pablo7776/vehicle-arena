@@ -26,7 +26,10 @@ sdfgi_probe_bias = 30.0
 [node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("1_6q06x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.6694756)
 vehiculo_path = NodePath("../Vehicle")
-offset = Vector3(0, 3.5, -5)
+offset = Vector3(0, 6.5, -17)
+sensibilidad = 8.0
+limite_pitch = 0.3
+recentrado = 2.5
 
 [node name="Arena" parent="." unique_id=1386833253 instance=ExtResource("1_hyk8p")]
 
