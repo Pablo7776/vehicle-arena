@@ -3,5 +3,7 @@
 [ext_resource type="Script" uid="uid://b3x4qyrwb6dbo" path="res://scenes/camera/camera_3d.gd" id="1_1aulh"]
 
 [node name="Camera3D" type="Camera3D" unique_id=1054761183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 script = ExtResource("1_1aulh")
 offset = Vector3(0, 7.5, -17)
+sensibilidad = 8.0

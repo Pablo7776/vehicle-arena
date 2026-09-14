@@ -24,9 +24,9 @@ sdfgi_probe_bias = 30.0
 [node name="Main" type="Node3D" unique_id=1314549957]
 
 [node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("1_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.6694756)
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 vehiculo_path = NodePath("../Vehicle")
-offset = Vector3(0, 6.5, -17)
+offset = Vector3(0, 6.5, -18)
 sensibilidad = 8.0
 limite_pitch = 0.3
 recentrado = 2.5
@@ -60,6 +60,7 @@ offset_bottom = 588.0
 text = "FFF"
 
 [node name="Button3" type="Button" parent="CanvasLayer" unique_id=100974611]
+visible = false
 offset_left = 49.0
 offset_top = 464.0
 offset_right = 165.0
@@ -67,6 +68,7 @@ offset_bottom = 569.0
 text = "IZ"
 
 [node name="Button4" type="Button" parent="CanvasLayer" unique_id=1412539236]
+visible = false
 offset_left = 221.0
 offset_top = 472.0
 offset_right = 330.0
