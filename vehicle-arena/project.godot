@@ -20,6 +20,16 @@ config/icon="res://icon.svg"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[file_customization]
+
+folder_colors={
+"res://assets/": "purple",
+"res://builds/": "red",
+"res://docs/": "green",
+"res://scenes/": "orange",
+"res://scripts/": "yellow"
+}
+
 [input]
 
 accelerate={
