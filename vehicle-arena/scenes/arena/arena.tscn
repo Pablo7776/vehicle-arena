@@ -6,6 +6,7 @@
 albedo_texture = ExtResource("1_1qjuf")
 
 [sub_resource type="BoxMesh" id="BoxMesh_f8ekr"]
+lightmap_size_hint = Vector2i(14, 21)
 material = SubResource("StandardMaterial3D_8trdl")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n62jo"]
@@ -21,6 +22,18 @@ mesh = SubResource("BoxMesh_f8ekr")
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=1712842039]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=608821982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.71325684, 0)
+shape = SubResource("BoxShape3D_n62jo")
+debug_color = Color(0.1784229, 0.10895, 0.47736079, 0.41960785)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=2137905020]
+transform = Transform3D(2000, 0, 0, 0, 1, 0, 0, 0, 2000, 0, -99, 0)
+gi_lightmap_texel_scale = 0.8578
+mesh = SubResource("BoxMesh_f8ekr")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D2" unique_id=1172287138]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/StaticBody3D" unique_id=1364158970]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.71325684, 0)
 shape = SubResource("BoxShape3D_n62jo")
 debug_color = Color(0.1784229, 0.10895, 0.47736079, 0.41960785)

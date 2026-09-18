@@ -41,3 +41,7 @@ func _on_button_4_button_down() -> void:
 
 func _on_button_4_button_up() -> void:
 	Input.action_release("steer_right")
+
+
+func _on_button_5_pressed() -> void:
+	Input.action_press("accelerate")

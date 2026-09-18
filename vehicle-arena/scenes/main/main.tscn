@@ -27,13 +27,12 @@ sdfgi_probe_bias = 30.0
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 vehiculo_path = NodePath("../Vehicle")
 offset = Vector3(0, 6.5, -18)
-sensibilidad = 8.0
 limite_pitch = 0.3
 recentrado = 2.5
 
 [node name="Arena" parent="." unique_id=1386833253 instance=ExtResource("1_hyk8p")]
 
-[node name="WorldEnvironment" parent="Arena" index="2" unique_id=316382671]
+[node name="WorldEnvironment" parent="Arena" index="3" unique_id=316382671]
 environment = SubResource("Environment_l3cfh")
 camera_attributes = SubResource("CameraAttributesPractical_n62jo")
 
@@ -43,14 +42,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.860461, 0)
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
 
 [node name="Button" type="Button" parent="CanvasLayer" unique_id=709181938]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
 anchors_preset = -1
 anchor_right = 0.035
 anchor_bottom = 0.048
-offset_left = 1001.0
-offset_top = 437.0
-offset_right = 1069.68
-offset_bottom = 459.896
-text = "AAA"
+offset_left = -50.0
+offset_top = -68.0
+offset_right = 1795.68
+offset_bottom = 814.896
 
 [node name="Button2" type="Button" parent="CanvasLayer" unique_id=701542423]
 offset_left = 1002.0
@@ -60,7 +60,6 @@ offset_bottom = 588.0
 text = "FFF"
 
 [node name="Button3" type="Button" parent="CanvasLayer" unique_id=100974611]
-visible = false
 offset_left = 49.0
 offset_top = 464.0
 offset_right = 165.0
@@ -68,7 +67,6 @@ offset_bottom = 569.0
 text = "IZ"
 
 [node name="Button4" type="Button" parent="CanvasLayer" unique_id=1412539236]
-visible = false
 offset_left = 221.0
 offset_top = 472.0
 offset_right = 330.0
@@ -76,8 +74,10 @@ offset_bottom = 568.0
 text = "DER"
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=1297915195]
-offset_right = 299.0
-offset_bottom = 114.0
+offset_left = -58.0
+offset_top = -38.0
+offset_right = 1190.0
+offset_bottom = 654.0
 theme_override_font_sizes/font_size = 23
 script = ExtResource("4_l3cfh")
 
