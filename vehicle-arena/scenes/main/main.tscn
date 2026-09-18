@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://dtfdnacujyrlc"]
 
-[ext_resource type="PackedScene" uid="uid://cew2auxn0ee51" path="res://scenes/camera/camera_3d.tscn" id="1_6q06x"]
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
-[ext_resource type="PackedScene" uid="uid://3cip8s3b1fto" path="res://scenes/vehicle/vehicle.tscn" id="2_iuonh"]
 [ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_k2fmo"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
+[ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="6_ow5a4"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6q06x"]
 panorama = ExtResource("2_k2fmo")
@@ -23,58 +22,16 @@ sdfgi_probe_bias = 30.0
 
 [node name="Main" type="Node3D" unique_id=1314549957]
 
-[node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("1_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
-vehiculo_path = NodePath("../Vehicle")
-offset = Vector3(0, 6.5, -18)
-limite_pitch = 0.3
-recentrado = 2.5
-
 [node name="Arena" parent="." unique_id=1386833253 instance=ExtResource("1_hyk8p")]
 
 [node name="WorldEnvironment" parent="Arena" index="3" unique_id=316382671]
 environment = SubResource("Environment_l3cfh")
 camera_attributes = SubResource("CameraAttributesPractical_n62jo")
 
-[node name="Vehicle" parent="." unique_id=1090642931 instance=ExtResource("2_iuonh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.860461, 0)
+[node name="Player" parent="." unique_id=861030176 instance=ExtResource("6_ow5a4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 27.270035, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
-
-[node name="Button" type="Button" parent="CanvasLayer" unique_id=709181938]
-modulate = Color(1, 1, 1, 0)
-self_modulate = Color(1, 1, 1, 0)
-anchors_preset = -1
-anchor_right = 0.035
-anchor_bottom = 0.048
-offset_left = -50.0
-offset_top = -68.0
-offset_right = 1795.68
-offset_bottom = 814.896
-
-[node name="Button2" type="Button" parent="CanvasLayer" unique_id=701542423]
-visible = false
-offset_left = 1002.0
-offset_top = 530.0
-offset_right = 1108.0
-offset_bottom = 588.0
-text = "FFF"
-
-[node name="Button3" type="Button" parent="CanvasLayer" unique_id=100974611]
-visible = false
-offset_left = 49.0
-offset_top = 464.0
-offset_right = 165.0
-offset_bottom = 569.0
-text = "IZ"
-
-[node name="Button4" type="Button" parent="CanvasLayer" unique_id=1412539236]
-visible = false
-offset_left = 221.0
-offset_top = 472.0
-offset_right = 330.0
-offset_bottom = 568.0
-text = "DER"
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=1297915195]
 offset_left = 48.0
@@ -84,14 +41,5 @@ offset_bottom = 166.0
 theme_override_font_sizes/font_size = 23
 text = "aaa"
 script = ExtResource("4_l3cfh")
-
-[connection signal="button_down" from="CanvasLayer/Button" to="Vehicle" method="_on_button_button_down"]
-[connection signal="button_up" from="CanvasLayer/Button" to="Vehicle" method="_on_button_button_up"]
-[connection signal="button_down" from="CanvasLayer/Button2" to="Vehicle" method="_on_button_2_button_down"]
-[connection signal="button_up" from="CanvasLayer/Button2" to="Vehicle" method="_on_button_2_button_up"]
-[connection signal="button_down" from="CanvasLayer/Button3" to="Vehicle" method="_on_button_3_button_down"]
-[connection signal="button_up" from="CanvasLayer/Button3" to="Vehicle" method="_on_button_3_button_up"]
-[connection signal="button_down" from="CanvasLayer/Button4" to="Vehicle" method="_on_button_4_button_down"]
-[connection signal="button_up" from="CanvasLayer/Button4" to="Vehicle" method="_on_button_4_button_up"]
 
 [editable path="Arena"]
