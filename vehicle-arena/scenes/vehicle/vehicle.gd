@@ -1,14 +1,20 @@
 extends VehicleBody3D
 
-@export var MAX_STEER = 0.9
-@export var ENGINE_POWER = 300
+@export var MAX_STEER := 0.9
+@export var ENGINE_POWER := 9000.0
+
+@onready var vehicle_input = $VehicleInput
+
 
 func _physics_process(delta: float) -> void:
-	var input = Input.get_axis("steer_right", "steer_left")
-	steering = move_toward(steering, input * MAX_STEER, delta * 10)
+	print("steering input: ", vehicle_input.steering)
+	steering = move_toward(
+		steering,
+		vehicle_input.steering * MAX_STEER,
+		delta * 10
+	)
 
-	var throttle = Input.get_axis("brake", "accelerate")
-	engine_force = throttle * ENGINE_POWER
+	engine_force = vehicle_input.throttle * ENGINE_POWER
 
 
 func _on_button_button_down() -> void:

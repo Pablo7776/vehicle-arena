@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://3cip8s3b1fto"]
 
 [ext_resource type="Script" uid="uid://bf0odfvfvn4lu" path="res://scenes/vehicle/vehicle.gd" id="1_1nnvc"]
+[ext_resource type="Script" uid="uid://dr8ivd8ffgqep" path="res://scenes/vehicle/vehicle_input.gd" id="2_udt0a"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_f8ekr"]
 size = Vector3(2.552681, 0.7423096, 5.031929)
@@ -15,9 +16,8 @@ height = 0.5
 albedo_color = Color(0.25565878, 0.25565878, 0.25565878, 1)
 
 [node name="Vehicle" type="VehicleBody3D" unique_id=1090642931]
-mass = 100.0
+mass = 1000.0
 script = ExtResource("1_1nnvc")
-ENGINE_POWER = 1000
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1003306190]
 mesh = SubResource("BoxMesh_f8ekr")
@@ -65,3 +65,6 @@ wheel_radius = 0.75
 transform = Transform3D(-6.556708e-08, -1.5, 0, 1.5, -6.556708e-08, 0, 0, 0, 1.5, 0, 0, 0)
 mesh = SubResource("CylinderMesh_f8ekr")
 surface_material_override/0 = SubResource("StandardMaterial3D_1v42w")
+
+[node name="VehicleInput" type="Node" parent="." unique_id=1733466363]
+script = ExtResource("2_udt0a")

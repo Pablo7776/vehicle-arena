@@ -44,16 +44,3 @@ func _process(delta):
 	global_rotation.y = yaw_base + offset_yaw
 	global_rotation.x = offset_pitch
 	global_rotation.z = 0.0
-
-	# -------------------------
-	# VOLANTE (inclinación sostenida del celular)
-	# -------------------------
-	var accel = Input.get_accelerometer()
-
-	# accel.x suele ser el eje que corresponde a "inclinar como un volante"
-	# (rotar el celular sobre su eje largo). Si tu juego usa el celu en horizontal
-	# en vez de vertical, probablemente necesites accel.z en su lugar.
-	var volante = -(accel.x / 9.8) * sensibilidad_volante
-	volante = clamp(volante, -limite_volante, limite_volante)
-
-	vehiculo.steering = volante
