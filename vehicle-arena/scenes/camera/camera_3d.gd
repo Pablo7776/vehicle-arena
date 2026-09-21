@@ -48,12 +48,12 @@ func _process(delta):
 	# -------------------------
 	# VOLANTE (inclinación sostenida del celular)
 	# -------------------------
-	var accel = Input.get_accelerometer()
+	#var accel = Input.get_accelerometer()
 
 	# accel.x suele ser el eje que corresponde a "inclinar como un volante"
 	# (rotar el celular sobre su eje largo). Si tu juego usa el celu en horizontal
 	# en vez de vertical, probablemente necesites accel.z en su lugar.
-	var volante = -(accel.x / 9.8) * sensibilidad_volante
-	volante = clamp(volante, -limite_volante, limite_volante)
+	#var volante = -(accel.x / 9.8) * sensibilidad_volante
+	#volante = clamp(volante, -limite_volante, limite_volante)
 
-	vehiculo.steering = volante
+#wdddddddw	vehiculo.steering = volante

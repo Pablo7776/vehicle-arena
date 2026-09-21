@@ -3,11 +3,13 @@
 [ext_resource type="PackedScene" uid="uid://cew2auxn0ee51" path="res://scenes/camera/camera_3d.tscn" id="1_6q06x"]
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
 [ext_resource type="PackedScene" uid="uid://3cip8s3b1fto" path="res://scenes/vehicle/vehicle.tscn" id="2_iuonh"]
-[ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_k2fmo"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hujxm"]
+load_path = "res://.godot/imported/cubemap_equirectangular.png-188713d955a80a5e4914629361928009.s3tc.ctex"
+
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6q06x"]
-panorama = ExtResource("2_k2fmo")
+panorama = SubResource("CompressedTexture2D_hujxm")
 
 [sub_resource type="Sky" id="Sky_1qjuf"]
 sky_material = SubResource("PanoramaSkyMaterial_6q06x")
@@ -24,21 +26,29 @@ sdfgi_probe_bias = 30.0
 [node name="Main" type="Node3D" unique_id=1314549957]
 
 [node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("1_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.2726393, 0)
 vehiculo_path = NodePath("../Vehicle")
 offset = Vector3(0, 6.5, -18)
-sensibilidad = 8.0
 limite_pitch = 0.3
 recentrado = 2.5
 
 [node name="Arena" parent="." unique_id=1386833253 instance=ExtResource("1_hyk8p")]
+
+[node name="MeshInstance3D" parent="Arena" index="0" unique_id=731603457]
+transform = Transform3D(500, 0, 0, 0, 1, 0, 0, 0, 500, 190.88745, 0, 0)
+
+[node name="CollisionShape3D" parent="Arena/MeshInstance3D/StaticBody3D" parent_id_path=PackedInt32Array(1386833253, 1712842039) index="0" unique_id=608821982]
+transform = Transform3D(1, 0, 0, 0, 39.985, 0, 0, 0, 1, 0, -16.973145, 0)
 
 [node name="WorldEnvironment" parent="Arena" index="2" unique_id=316382671]
 environment = SubResource("Environment_l3cfh")
 camera_attributes = SubResource("CameraAttributesPractical_n62jo")
 
 [node name="Vehicle" parent="." unique_id=1090642931 instance=ExtResource("2_iuonh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.860461, 0)
+transform = Transform3D(0.99963933, -0.007312299, 0.0258401, 0.005608533, 0.99784315, 0.06540348, -0.026262615, -0.06523496, 0.9975243, 0.0043563843, 9.234372, -0.074313164)
+mass = 212.064
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, -0.8, -1.19)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
 
