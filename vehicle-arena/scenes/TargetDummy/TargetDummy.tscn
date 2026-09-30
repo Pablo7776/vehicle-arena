@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://qummw1k2sbin"]
+
+[ext_resource type="Script" uid="uid://coo7inrb8ccco" path="res://scenes/components/health_component.gd" id="1_ajyew"]
+[ext_resource type="Script" uid="uid://bw5phwtitcf3u" path="res://scenes/TargetDummy/target_dummy.gd" id="1_eu4uf"]
+[ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurtbox/Hurtbox.tscn" id="2_lnq1v"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1v42w"]
+size = Vector3(10, 10, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1v42w"]
+
+[node name="TargetDummy" type="StaticBody3D" unique_id=327059932]
+script = ExtResource("1_eu4uf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1025635403]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+shape = SubResource("BoxShape3D_f8ekr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2002619696]
+mesh = SubResource("BoxMesh_1v42w")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=31194109]
+script = ExtResource("1_ajyew")
+metadata/_custom_type_script = "uid://coo7inrb8ccco"
+
+[node name="Hurtbox" parent="." unique_id=2134039607 node_paths=PackedStringArray("health") instance=ExtResource("2_lnq1v")]
+health = NodePath("../HealthComponent")
+
+[node name="CollisionShape3D" parent="Hurtbox" index="0" unique_id=1951837659]
+shape = SubResource("BoxShape3D_1v42w")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=165133716]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 21.473526, 0)
+pixel_size = 1.0
+billboard = 1
+text = "hola"
+font_size = 8
+
+[editable path="Hurtbox"]

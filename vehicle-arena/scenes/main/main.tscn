@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
 [ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_k2fmo"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
+[ext_resource type="PackedScene" uid="uid://qummw1k2sbin" path="res://scenes/TargetDummy/TargetDummy.tscn" id="5_6q06x"]
 [ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="6_ow5a4"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6q06x"]
@@ -41,5 +42,8 @@ offset_bottom = 166.0
 theme_override_font_sizes/font_size = 23
 text = "aaa"
 script = ExtResource("4_l3cfh")
+
+[node name="TargetDummy" parent="." unique_id=327059932 instance=ExtResource("5_6q06x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.76671, 5.773876, 0)
 
 [editable path="Arena"]
