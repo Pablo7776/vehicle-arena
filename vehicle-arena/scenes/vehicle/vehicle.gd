@@ -8,6 +8,9 @@ extends VehicleBody3D
 @onready var punto_disparo: Marker3D = $PuntoDisparo
 
 func _physics_process(delta: float) -> void:
+	if not GDSync.is_gdsync_owner(self):
+		return
+	
 	print("steering input: ", vehicle_input.steering)
 	steering = move_toward(
 		steering,

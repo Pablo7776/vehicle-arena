@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://wapqf55j64ve"]
+
+[ext_resource type="Script" uid="uid://b1xkc6lejaad" path="res://scenes/network/red.gd" id="1_3r28c"]
+
+[node name="Red" type="Node" unique_id=581295001]
+script = ExtResource("1_3r28c")

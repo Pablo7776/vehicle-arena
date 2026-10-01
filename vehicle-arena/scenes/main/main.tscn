@@ -2,9 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
 [ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_k2fmo"]
+[ext_resource type="PackedScene" uid="uid://bqspi2sep64v2" path="res://scenes/ui_red/menu_red.tscn" id="4_6q06x"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
-[ext_resource type="PackedScene" uid="uid://qummw1k2sbin" path="res://scenes/TargetDummy/TargetDummy.tscn" id="5_6q06x"]
-[ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="6_ow5a4"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6q06x"]
 panorama = ExtResource("2_k2fmo")
@@ -29,12 +28,10 @@ sdfgi_probe_bias = 30.0
 environment = SubResource("Environment_l3cfh")
 camera_attributes = SubResource("CameraAttributesPractical_n62jo")
 
-[node name="Player" parent="." unique_id=861030176 instance=ExtResource("6_ow5a4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 27.270035, 0)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=1297915195]
+visible = false
 offset_left = 48.0
 offset_top = 53.0
 offset_right = 276.0
@@ -43,7 +40,6 @@ theme_override_font_sizes/font_size = 23
 text = "aaa"
 script = ExtResource("4_l3cfh")
 
-[node name="TargetDummy" parent="." unique_id=327059932 instance=ExtResource("5_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.76671, 5.773876, 0)
+[node name="MenuRed" parent="CanvasLayer" unique_id=751831021 instance=ExtResource("4_6q06x")]
 
 [editable path="Arena"]
