@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://3cip8s3b1fto" path="res://scenes/vehicle/vehicle.tscn" id="1_dovo2"]
 [ext_resource type="PackedScene" uid="uid://cew2auxn0ee51" path="res://scenes/camera/camera_3d.tscn" id="2_gmlin"]
 [ext_resource type="Script" uid="uid://c2acvk05demxg" path="res://scenes/player/touch_gesture_controller.gd" id="3_gmlin"]
+[ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="4_lvxji"]
 
 [node name="Player" type="Node3D" unique_id=861030176]
 
@@ -13,3 +14,5 @@ vehiculo_path = NodePath("../Vehicle")
 
 [node name="TouchGestureController" type="Node" parent="." unique_id=1304990146]
 script = ExtResource("3_gmlin")
+
+[node name="hud" parent="." unique_id=389512278 instance=ExtResource("4_lvxji")]
