@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dwxtaksuo5mvo" path="res://icon.svg" id="1_1qjuf"]
 [ext_resource type="PackedScene" uid="uid://bpv2quijua7qy" path="res://scenes/item_life.tscn" id="2_8trdl"]
+[ext_resource type="Script" uid="uid://led084tcccak" path="res://scripts/GameManager.gd" id="3_5tue2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8trdl"]
 albedo_texture = ExtResource("1_1qjuf")
@@ -60,5 +61,29 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 51.58412)
 
 [node name="Punto2" type="Marker3D" parent="PuntosSpawnVida" unique_id=1792476611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -46.277893)
+
+[node name="game_manager" type="Node" parent="." unique_id=542191633 node_paths=PackedStringArray("label_resultado")]
+script = ExtResource("3_5tue2")
+label_resultado = NodePath("../CanvasLayer/Label")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2097004690]
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=372553812]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -306.5
+offset_top = -168.0
+offset_right = 306.5
+offset_bottom = 168.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 58
+text = "hola"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [editable path="Item_life"]

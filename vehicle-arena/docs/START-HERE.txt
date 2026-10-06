@@ -15,7 +15,7 @@ SEE IT RUNNING (about a minute)
 
 PUT IT IN YOUR OWN GAME (about two minutes)
   1) Copy the folder  addons/settings_menus  into your project's addons folder.
-     Make an addons folder first if you don't have one.
+	 Make an addons folder first if you don't have one.
   2) In Godot: Project -> Project Settings -> Plugins -> tick "Settings + Menus".
   That's it. Anything the pack needs running in the background switches
   itself on. You don't add autoloads by hand.

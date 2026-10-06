@@ -12,20 +12,43 @@ var municion_actual: int = 30
 @onready var health: HealthComponent = $HealthComponent
 @onready var label: Label3D = $Label3D
 
+var _muerto := false   # estado local de cada peer, se deduce de health.current (sincronizado)
 
-func _ready() -> void:	
+
+func _ready() -> void:
+	add_to_group("vehiculos")   # el GameManager cuenta los vivos con este grupo
+	GDSync.expose_func(spawn_bullet_remote)
+	health.health_changed.connect(_on_health_changed)
+	health.died.connect(_on_died)
+	_on_health_changed(health.current, health.max_health)
 	if hud:
 		hud.actualizar_municion(municion_actual, municion_maxima)
-		GDSync.expose_func(spawn_bullet_remote)
-		health.health_changed.connect(_on_health_changed)
-		_on_health_changed(health.current, health.max_health)
 
 func _on_health_changed(current: float, max_value: float) -> void:
 	label.text = "HP: %d / %d" % [current, max_value]
+	# current llega sincronizado, así que esto corre en TODOS los peers
+	if current <= 0.0 and not _muerto:
+		_morir()
+
+func _morir() -> void:
+	_muerto = true
+	engine_force = 0.0
+	steering = 0.0
+	brake = 10.0
+	# acá: explosión, humo, oscurecer el modelo, etc.
+
+# died se emite solo en el host: es el momento de revisar si terminó la partida
+func _on_died() -> void:
+	if GDSync.is_host():
+		get_tree().get_first_node_in_group("game_manager").revisar_ganador()
 
 
 func _physics_process(delta: float) -> void:
 	if not GDSync.is_gdsync_owner(self):
+		return
+	
+	# vehículo muerto: no maneja ni dispara
+	if _muerto:
 		return
 	
 	#print("steering input: ", vehicle_input.steering)
