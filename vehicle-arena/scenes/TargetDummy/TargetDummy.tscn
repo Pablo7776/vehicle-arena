@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://qummw1k2sbin"]
 
-[ext_resource type="Script" uid="uid://coo7inrb8ccco" path="res://scenes/components/health_component.gd" id="1_ajyew"]
 [ext_resource type="Script" uid="uid://bw5phwtitcf3u" path="res://scenes/TargetDummy/target_dummy.gd" id="1_eu4uf"]
 [ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurtbox/Hurtbox.tscn" id="2_lnq1v"]
+[ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/HealthComponent/HealthComponent.tscn" id="3_eu4uf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
 
@@ -21,10 +21,6 @@ shape = SubResource("BoxShape3D_f8ekr")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2002619696]
 mesh = SubResource("BoxMesh_1v42w")
 
-[node name="HealthComponent" type="Node" parent="." unique_id=31194109]
-script = ExtResource("1_ajyew")
-metadata/_custom_type_script = "uid://coo7inrb8ccco"
-
 [node name="Hurtbox" parent="." unique_id=2134039607 node_paths=PackedStringArray("health") instance=ExtResource("2_lnq1v")]
 health = NodePath("../HealthComponent")
 
@@ -37,5 +33,7 @@ pixel_size = 1.0
 billboard = 1
 text = "hola"
 font_size = 8
+
+[node name="HealthComponent" parent="." unique_id=1038012900 instance=ExtResource("3_eu4uf")]
 
 [editable path="Hurtbox"]

@@ -3,8 +3,9 @@
 [ext_resource type="Script" uid="uid://bf0odfvfvn4lu" path="res://scenes/vehicle/vehicle.gd" id="1_1nnvc"]
 [ext_resource type="PackedScene" uid="uid://1sus1pjrfkru" path="res://scenes/bullets/bullet1.tscn" id="2_2aj0h"]
 [ext_resource type="Script" uid="uid://dr8ivd8ffgqep" path="res://scenes/vehicle/vehicle_input.gd" id="2_udt0a"]
-[ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="3_015gl"]
 [ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="4_cs81w"]
+[ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/HealthComponent/HealthComponent.tscn" id="5_3wsv0"]
+[ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurtbox/Hurtbox.tscn" id="6_bswb0"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_f8ekr"]
 size = Vector3(2.552681, 0.7423096, 5.031929)
@@ -18,13 +19,13 @@ height = 0.5
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1v42w"]
 albedo_color = Color(0.25565878, 0.25565878, 0.25565878, 1)
 
-[node name="Vehicle" type="VehicleBody3D" unique_id=1090642931 node_paths=PackedStringArray("hud")]
+[sub_resource type="BoxShape3D" id="BoxShape3D_3wsv0"]
+size = Vector3(0.4362793, 0.65893555, 0.78015137)
+
+[node name="Vehicle" type="VehicleBody3D" unique_id=1090642931]
 mass = 1000.0
 script = ExtResource("1_1nnvc")
-hud = NodePath("hud/CanvasLayer")
 bullet_scene = ExtResource("2_2aj0h")
-
-[node name="hud" parent="." unique_id=389512278 instance=ExtResource("3_015gl")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1003306190]
 mesh = SubResource("BoxMesh_f8ekr")
@@ -77,6 +78,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1v42w")
 script = ExtResource("2_udt0a")
 
 [node name="PuntoDisparo" type="Marker3D" parent="." unique_id=1400064361]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.293638)
 
 [node name="PropertySynchronizer" type="Node" parent="." unique_id=2053773302]
 script = ExtResource("4_cs81w")
@@ -89,4 +91,20 @@ extrapolated = false
 max_extrapolation_time = 0.2
 metadata/_custom_type_script = "uid://fcoih1ax5dcs"
 
-[editable path="hud"]
+[node name="HealthComponent" parent="." unique_id=1038012900 instance=ExtResource("5_3wsv0")]
+
+[node name="Hurtbox" parent="." unique_id=2134039607 node_paths=PackedStringArray("health") instance=ExtResource("6_bswb0")]
+health = NodePath("../HealthComponent")
+
+[node name="CollisionShape3D" parent="Hurtbox" index="0" unique_id=1951837659]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.5163574, 1.7053223, -1.0992432)
+shape = SubResource("BoxShape3D_3wsv0")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=547134350]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.658436, 0)
+pixel_size = 0.2
+billboard = 1
+text = "hola"
+font_size = 9
+
+[editable path="Hurtbox"]

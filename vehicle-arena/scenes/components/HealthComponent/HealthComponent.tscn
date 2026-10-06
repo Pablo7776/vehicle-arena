@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://w42wq4wgwehc"]
+
+[ext_resource type="Script" uid="uid://coo7inrb8ccco" path="res://scenes/components/HealthComponent/health_component.gd" id="1_txckl"]
+[ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="2_hy0qq"]
+[ext_resource type="Script" uid="uid://dkeanc3bq6hok" path="res://scenes/components/DamageValidator/DamageValidator.gd" id="3_tvoea"]
+
+[node name="HealthComponent" type="Node" unique_id=1038012900]
+script = ExtResource("1_txckl")
+
+[node name="PropertySynchronizer" type="Node" parent="." unique_id=698122003]
+script = ExtResource("2_hy0qq")
+broadcast = 5
+node_path = NodePath("..")
+properties = PackedStringArray("current")
+interpolated = false
+interpolation_speed = 1.0
+extrapolation = null
+extrapolated = false
+max_extrapolation_time = 0.2
+metadata/_custom_type_script = "uid://fcoih1ax5dcs"
+
+[node name="Node" type="Node" parent="." unique_id=1593811512]
+script = ExtResource("3_tvoea")
