@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bf0odfvfvn4lu" path="res://scenes/vehicle/vehicle.gd" id="1_1nnvc"]
 [ext_resource type="PackedScene" uid="uid://1sus1pjrfkru" path="res://scenes/bullets/bullet1.tscn" id="2_2aj0h"]
 [ext_resource type="Script" uid="uid://dr8ivd8ffgqep" path="res://scenes/vehicle/vehicle_input.gd" id="2_udt0a"]
+[ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="3_015gl"]
 [ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="4_cs81w"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_f8ekr"]
@@ -17,10 +18,13 @@ height = 0.5
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1v42w"]
 albedo_color = Color(0.25565878, 0.25565878, 0.25565878, 1)
 
-[node name="Vehicle" type="VehicleBody3D" unique_id=1090642931]
+[node name="Vehicle" type="VehicleBody3D" unique_id=1090642931 node_paths=PackedStringArray("hud")]
 mass = 1000.0
 script = ExtResource("1_1nnvc")
+hud = NodePath("hud/CanvasLayer")
 bullet_scene = ExtResource("2_2aj0h")
+
+[node name="hud" parent="." unique_id=389512278 instance=ExtResource("3_015gl")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1003306190]
 mesh = SubResource("BoxMesh_f8ekr")
@@ -84,3 +88,5 @@ interpolation_speed = 30.0
 extrapolated = false
 max_extrapolation_time = 0.2
 metadata/_custom_type_script = "uid://fcoih1ax5dcs"
+
+[editable path="hud"]
