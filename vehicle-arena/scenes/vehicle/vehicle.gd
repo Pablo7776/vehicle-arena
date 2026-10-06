@@ -8,10 +8,11 @@ var municion_maxima: int = 30
 var municion_actual: int = 30
 @export var bullet_scene: PackedScene
 @onready var punto_disparo: Marker3D = $PuntoDisparo
-
+@export var ammo_hud: CanvasLayer
 @onready var health: HealthComponent = $HealthComponent
 @onready var label: Label3D = $Label3D
 
+signal municion_cambiada(actual, maxima)
 
 func _ready() -> void:	
 	if hud:
@@ -19,9 +20,12 @@ func _ready() -> void:
 		GDSync.expose_func(spawn_bullet_remote)
 		health.health_changed.connect(_on_health_changed)
 		_on_health_changed(health.current, health.max_health)
-
+	if ammo_hud != null:
+		municion_cambiada.connect(ammo_hud.actualizar_municion)
+		ammo_hud.actualizar_municion(municion_actual, municion_maxima)
 func _on_health_changed(current: float, max_value: float) -> void:
 	label.text = "HP: %d / %d" % [current, max_value]
+
 
 
 func _physics_process(delta: float) -> void:
@@ -41,11 +45,20 @@ func _physics_process(delta: float) -> void:
 		disparar()
 		
 func disparar() -> void:
-	var pos := punto_disparo.global_position
-	var dir := -global_transform.basis.z
-	spawn_bullet(pos, dir, true)                      # mi copia, hace daño
-	GDSync.call_func(spawn_bullet_remote, [pos, dir]) # copias de los demás, solo visuales
-
+	if municion_actual > 0:
+		municion_actual -= 1
+		
+		# Agregamos este print temporal para ver la consola
+		print("Pum! Balas restantes: ", municion_actual) 
+		
+		municion_cambiada.emit(municion_actual, municion_maxima)
+		
+		var pos := punto_disparo.global_position
+		var dir := -global_transform.basis.z
+		spawn_bullet(pos, dir, true)
+		GDSync.call_func(spawn_bullet_remote, [pos, dir])
+	else:
+		print("¡Sin munición! Bloqueando disparo.")
 
 # Receptor remoto: recibe UN solo argumento
 #func spawn_bullet_remote(a = null, b = null) -> void:

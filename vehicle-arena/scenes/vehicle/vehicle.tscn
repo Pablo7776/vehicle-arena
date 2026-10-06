@@ -23,11 +23,12 @@ albedo_color = Color(0.25565878, 0.25565878, 0.25565878, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_3wsv0"]
 size = Vector3(0.4362793, 0.65893555, 0.78015137)
 
-[node name="Vehicle" type="VehicleBody3D" unique_id=1090642931 node_paths=PackedStringArray("hud")]
+[node name="Vehicle" type="VehicleBody3D" unique_id=1090642931 node_paths=PackedStringArray("hud", "ammo_hud")]
 mass = 1000.0
 script = ExtResource("1_1nnvc")
 hud = NodePath("hud/CanvasLayer")
 bullet_scene = ExtResource("2_2aj0h")
+ammo_hud = NodePath("hud/CanvasLayer")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1003306190]
 mesh = SubResource("BoxMesh_f8ekr")
