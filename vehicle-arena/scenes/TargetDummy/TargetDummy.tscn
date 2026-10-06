@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://coo7inrb8ccco" path="res://scenes/components/health_component.gd" id="1_ajyew"]
 [ext_resource type="Script" uid="uid://bw5phwtitcf3u" path="res://scenes/TargetDummy/target_dummy.gd" id="1_eu4uf"]
 [ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurtbox/Hurtbox.tscn" id="2_lnq1v"]
+[ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="4_uaiwt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
 
@@ -37,5 +38,17 @@ pixel_size = 1.0
 billboard = 1
 text = "hola"
 font_size = 8
+
+[node name="PropertySynchronizer" type="Node" parent="." unique_id=837773793]
+script = ExtResource("4_uaiwt")
+broadcast = 5
+node_path = NodePath("../HealthComponent")
+properties = PackedStringArray("current")
+interpolated = false
+interpolation_speed = 1.0
+extrapolation = null
+extrapolated = false
+max_extrapolation_time = 0.2
+metadata/_custom_type_script = "uid://fcoih1ax5dcs"
 
 [editable path="Hurtbox"]

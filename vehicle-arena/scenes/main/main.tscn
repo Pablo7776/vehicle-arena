@@ -44,6 +44,6 @@ script = ExtResource("4_l3cfh")
 [node name="MenuRed" parent="CanvasLayer" unique_id=751831021 instance=ExtResource("4_6q06x")]
 
 [node name="TargetDummy" parent="." unique_id=327059932 instance=ExtResource("5_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4170437, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.87497, 5.4170437, 0)
 
 [editable path="Arena"]
