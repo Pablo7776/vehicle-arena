@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_k2fmo"]
 [ext_resource type="PackedScene" uid="uid://bqspi2sep64v2" path="res://scenes/ui_red/menu_red.tscn" id="4_6q06x"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
+[ext_resource type="PackedScene" uid="uid://qummw1k2sbin" path="res://scenes/TargetDummy/TargetDummy.tscn" id="5_6q06x"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6q06x"]
 panorama = ExtResource("2_k2fmo")
@@ -41,5 +42,8 @@ text = "aaa"
 script = ExtResource("4_l3cfh")
 
 [node name="MenuRed" parent="CanvasLayer" unique_id=751831021 instance=ExtResource("4_6q06x")]
+
+[node name="TargetDummy" parent="." unique_id=327059932 instance=ExtResource("5_6q06x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4170437, 0)
 
 [editable path="Arena"]
