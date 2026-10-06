@@ -69,3 +69,6 @@ func spawn_bullet(pos: Vector3, dir: Vector3, deals_damage: bool) -> void:
 	bala.deals_damage = deals_damage
 	get_tree().root.add_child(bala)
 	bala.global_position = pos
+	
+func curar(amount: float) -> void:
+	health.heal(amount)
