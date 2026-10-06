@@ -682,6 +682,7 @@ text = "Welcome to the GD-Sync configuration menu. Here you can find basic setti
 
 [node name="UpdatePanel" type="PanelContainer" parent="CenterContainer/UIAnchor/UI" unique_id=162433719]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_left = -450.0
 offset_top = -250.0

@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://bqspi2sep64v2"]
+
+[ext_resource type="Script" uid="uid://dhek8bvwsdjno" path="res://scenes/ui_red/menu_red.gd" id="1_j58ay"]
+[ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="2_p885p"]
+
+[node name="MenuRed" type="PanelContainer" unique_id=751831021 node_paths=PackedStringArray("boton_host", "boton_cliente", "campo_sala", "label_log")]
+script = ExtResource("1_j58ay")
+boton_host = NodePath("VBoxContainer/BotonHost")
+boton_cliente = NodePath("VBoxContainer/BotonCliente")
+campo_sala = NodePath("VBoxContainer/CampoSala")
+label_log = NodePath("VBoxContainer/LabelLogs")
+escena_jugador = ExtResource("2_p885p")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=319614076]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=468050218]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "juego"
+
+[node name="CampoSala" type="LineEdit" parent="VBoxContainer" unique_id=1184622398]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+
+[node name="BotonHost" type="Button" parent="VBoxContainer" unique_id=1143610925]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "BotonHost"
+
+[node name="BotonCliente" type="Button" parent="VBoxContainer" unique_id=2073841745]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "BotonCliente"
+
+[node name="LabelLogs" type="Label" parent="VBoxContainer" unique_id=1863819333]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
