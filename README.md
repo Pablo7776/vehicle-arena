@@ -1,84 +1,48 @@
-# Vehicle Arena
+Vehicle Arena
 
-Multiplayer 3D — Deathmatch vehicular. 2 a 4 jugadores online compiten en una arena cerrada para conseguir la mayor cantidad de eliminaciones antes de que termine el tiempo de partida.
+Juego multijugador de combate de vehículos hecho con Godot 4.7. Los jugadores manejan vehículos en una arena, se disparan entre sí y gana el último que queda con vida.
 
-## Ficha técnica
+Tecnologías y créditos
+Godot Engine 4.7.2
+GD-Sync: plugin que se usa para todo el multijugador (lobbies, sincronización de propiedades y llamadas remotas).
+Godot Settings and Menu System de selodev: plugin que se usa para los menús y la configuración del juego.
 
-- **Género:** Multiplayer 3D — Deathmatch vehicular
-- **Jugadores:** 2–4 online
-- **Plataforma:** PC (posible adaptación futura a Android)
-- **Motor:** Godot 4.7.2
+Cómo jugar
+Un jugador crea la sala y los demás se unen.
+Cada jugador maneja su vehículo y dispara a los demás.
+Si la vida llega a 0, el vehículo queda fuera de combate.
+Gana el último vehículo que quede vivo. Al terminar, cada jugador ve ¡VICTORIA! o DERROTA.
+Hay ítems de curación que reaparecen en puntos al azar de la arena.
 
-## Requisitos
+Cómo ejecutarlo
+Instalá Godot 4.7.2.
+Abrí el proyecto desde el administrador de proyectos de Godot.
+Verificá que los plugins estén activados en Proyecto → Configuración del proyecto → Plugins.
+Ejecutá el juego. Para probar el multijugador, abrí dos instancias (Depurar → Ejecutar múltiples instancias) o exportá una build.
+Cómo funciona la red
 
-- [Godot Engine 4.7.2](https://godotengine.org/download) (versión estándar, sin .NET salvo que se decida usar C#)
-- Git
+El host tiene la autoridad sobre la vida y sobre quién gana. El dueño (owner) de cada vehículo controla su movimiento y sus disparos.
 
-## Cómo levantar el proyecto
+Qué	Quién decide	Cómo se comunica
+Vida (current)	El host	PropertySynchronizer
+Daño recibido	El cliente avisa, el host lo valida y lo aplica	call_func_on al host + DamageValidator
+Movimiento y disparo	El owner del vehículo	Solo él ejecuta la lógica
+Balas	Cada peer crea su copia	call_func (solo viaja posición y dirección del disparo)
+Recoger un ítem	Quien lo recoge	call_func (evento)
+Ganador	El host	call_func a todos
 
-1. Cloná el repositorio:
-   ```bash
-   git clone https://github.com/<usuario>/<repo>.git
-   cd vehicle-arena
-   ```
-2. Abrí Godot 4.7.2 y usá **Import**, seleccionando el archivo `project.godot` en la raíz del proyecto.
-3. Esperá a que el editor importe los assets (se genera la carpeta local `.godot/`, no versionada).
-4. Corré el proyecto con F5. La escena principal se configura en Project Settings → Application → Run.
+Regla para recordar
+Un valor que cambia y todos deben tener igual → PropertySynchronizer.
+Algo que pasa una sola vez (un disparo, recoger un ítem) → call_func.
+Detalle importante de GD-Sync en este proyecto
 
-## Estructura de carpetas
+Con la versión usada, los parámetros de call_func / call_func_on llegan empaquetados en un solo Array al receptor. Por eso las funciones remotas reciben data y lo desarman (data[0], data[1]...).
 
-```
-vehicle-arena/
-├── addons/              # Plugins de terceros
-├── assets/              # Modelos, texturas, materiales, audio, fuentes
-├── scenes/              # Escenas (.tscn) organizadas por área
-│   ├── main/            # Escena principal / gestor de cambio de escenas
-│   ├── menu/             # Menú y lobby (crear/unirse a partida)
-│   ├── arena/            # Arena de juego
-│   ├── vehicle/           # Vehículo del jugador
-│   ├── weapons/           # Arma y proyectiles
-│   ├── ui/                # HUD, scoreboard, pantalla de resultados
-│   └── effects/           # Partículas, explosiones, etc.
-├── scripts/              # Scripts sin escena asociada
-│   ├── autoload/          # Singletons (NetworkManager, GameManager, etc.)
-│   ├── vehicle/
-│   ├── weapons/
-│   ├── networking/         # RPCs y helpers de sincronización
-│   └── ui/
-├── resources/             # Recursos .tres (stats de vehículos, configs)
-├── docs/                  # One-page, GDD y notas de diseño
-└── builds/                # Exportaciones del juego (NO se versiona)
-```
 
-> Nota: cada escena vive junto a su script correspondiente dentro de `scenes/`. La carpeta `scripts/` se usa solo para autoloads (singletons) y utilidades sin escena propia.
 
-## Flujo de juego
-
-```
-Menú → Crear/Unirse a partida → Arena → Combate → Fin de partida → Resultados
-```
-
-## Arquitectura de red
-
-- API de multiplayer de alto nivel de Godot (`MultiplayerAPI`, `MultiplayerSynchronizer`, `MultiplayerSpawner`).
-- Transporte: `ENetMultiplayerPeer`.
-- Modelo host-peer: un jugador actúa como host/servidor con autoridad sobre daño, eliminaciones, puntuación y estado de partida.
-- Los clientes envían input/acciones y reciben el estado sincronizado.
-
-## Roadmap de implementación
-
-1. Lobby básico + conexión de 2 jugadores (sin gameplay)
-2. Movimiento del vehículo sincronizado (sin combate)
-3. Disparo y daño con autoridad del servidor
-4. Vida, destrucción y respawn
-5. Puntuación, timer y pantalla de fin de partida
-6. Arena final con obstáculos y pulido
-
-## Documentación
-
-El one-page de diseño y otras notas están en [`docs/`](./docs).
-
-## Equipo
-
-- Desarrollador 1 — Gameplay local (movimiento, cámara, disparo, arena, UI)
-- Desarrollador 2 — Networking (sincronización, RPCs, lobby, estado de partida)
+Componentes reutilizables
+HealthComponent: vida del objeto. Incluye su propio PropertySynchronizer y un DamageValidator opcional. Se puede usar en vehículos, en el TargetDummy o en cualquier objeto.
+Hurtbox: zona que recibe golpes y los reenvía al HealthComponent. Tiene un multiplicador de daño configurable.
+Hitbox: base de las balas. Detecta el Hurtbox y le envía el golpe.
+DamageValidator: el host limita el daño máximo y la cadencia de golpes.
+GameManager: vive en la arena. El host revisa cuántos vehículos quedan vivos y avisa el resultado a todos.
