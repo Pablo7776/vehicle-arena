@@ -263,17 +263,21 @@ func _cliente_entro(client_id: int) -> void:
 		# Generamos la Arena 3D si asignaste una y si no existe ya
 		if escena_arena and arena_instanciada == null:
 			arena_instanciada = escena_arena.instantiate()
-			get_tree().current_scene.call_deferred("add_child", arena_instanciada)
+			# Cambiado a add_child directo para evitar problemas de sincronía
+			get_tree().current_scene.add_child(arena_instanciada)
 			
 	# 2. Generamos el vehículo
 	if escena_jugador:
 		var jugador = escena_jugador.instantiate()
 		jugador.name = str(client_id)
 		
-		# Asignamos posición y lo añadimos a la escena actual
+		# Asignamos posición y lo añadimos a la escena actual de inmediato
 		jugador.position = Vector3((client_id % 5) * 4.0, 2.0, 0.0) 
-		get_tree().current_scene.call_deferred("add_child", jugador)
 		
+		# SOLUCIÓN: Agregarlo directamente al árbol de la escena
+		get_tree().current_scene.add_child(jugador)
+		
+		# GD-Sync ya no dará error porque el nodo ya es hijo de current_scene
 		GDSync.set_gdsync_owner(jugador, client_id)
 
 		# Buscamos y activamos la cámara si es nuestro vehículo
@@ -281,8 +285,7 @@ func _cliente_entro(client_id: int) -> void:
 		if cam:
 			cam.current = es_mio
 		else:
-				print("ERROR: Falta asignar 'Escena Jugador' en el Inspector.")
-
+			print("ERROR: No se encontró 'Camera3D' en el vehículo instanciado.")
 func _cliente_salio(client_id: int) -> void:
 	_actualizar_log("JUGADOR SALIO: " + str(client_id))
 	var nodo = get_tree().current_scene.get_node_or_null(str(client_id))

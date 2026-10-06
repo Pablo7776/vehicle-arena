@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b6qocilsg135b"]
 
 [ext_resource type="Texture2D" uid="uid://dwxtaksuo5mvo" path="res://icon.svg" id="1_1qjuf"]
+[ext_resource type="PackedScene" uid="uid://bpv2quijua7qy" path="res://scenes/item_life.tscn" id="2_8trdl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8trdl"]
 albedo_texture = ExtResource("1_1qjuf")
@@ -45,3 +46,6 @@ light_energy = 3.099
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=316382671]
 environment = SubResource("Environment_f8ekr")
+
+[node name="Item_life" parent="." unique_id=1159983786 instance=ExtResource("2_8trdl")]
+transform = Transform3D(11.175, 0, 0, 0, 11.175, 0, 0, 0, 11.175, -12.23645, 8.071102, -39.77954)

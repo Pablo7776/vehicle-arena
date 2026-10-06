@@ -6,20 +6,19 @@ extends VehicleBody3D
 @onready var vehicle_input = $VehicleInput
 var municion_maxima: int = 30
 var municion_actual: int = 30
-
-func _ready():
-	if hud:
-		hud.actualizar_municion(municion_actual, municion_maxima)
 @export var bullet_scene: PackedScene
 @onready var punto_disparo: Marker3D = $PuntoDisparo
 
 @onready var health: HealthComponent = $HealthComponent
 @onready var label: Label3D = $Label3D
 
-func _ready() -> void:
-	GDSync.expose_func(spawn_bullet_remote)
-	health.health_changed.connect(_on_health_changed)
-	_on_health_changed(health.current, health.max_health)
+
+func _ready() -> void:	
+	if hud:
+		hud.actualizar_municion(municion_actual, municion_maxima)
+		GDSync.expose_func(spawn_bullet_remote)
+		health.health_changed.connect(_on_health_changed)
+		_on_health_changed(health.current, health.max_health)
 
 func _on_health_changed(current: float, max_value: float) -> void:
 	label.text = "HP: %d / %d" % [current, max_value]
