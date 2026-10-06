@@ -58,7 +58,7 @@ func spawn_bullet_remote(data) -> void:
 	spawn_bullet(data[0], data[1], false)
 
 func spawn_bullet(pos: Vector3, dir: Vector3, deals_damage: bool) -> void:
-	print("[BALA] spawn | deals_damage: ", deals_damage, " | nodo: ", get_path())
+	#print("[BALA] spawn | deals_damage: ", deals_damage, " | nodo: ", get_path())
 	var bala = bullet_scene.instantiate()
 	bala.direction = dir
 	bala.deals_damage = deals_damage

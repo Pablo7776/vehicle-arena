@@ -7,7 +7,7 @@ var direction: Vector3
 var deals_damage: bool = true
 
 func _ready() -> void:
-	print("[BULLET] pos: ", global_position, " | visible: ", visible, " | deals_damage: ", deals_damage)
+	#print("[BULLET] pos: ", global_position, " | visible: ", visible, " | deals_damage: ", deals_damage)
 	super._ready()
 	if deals_damage:
 		hit_landed.connect(func(_h): queue_free())
