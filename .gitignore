@@ -28,3 +28,16 @@ Thumbs.db
 # IDE / Editor
 .idea/
 .vscode/
+
+
+# Godot 4 - Archivos generados
+**/.godot/
+
+# Exportaciones del juego
+**/builds/
+
+# Claves privadas de GD-Sync
+**/addons/GD-Sync/keys.cfg
+
+# Archivos temporales de Godot
+**/*.tmp
