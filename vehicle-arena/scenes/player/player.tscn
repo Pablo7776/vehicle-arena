@@ -16,3 +16,7 @@ vehiculo_path = NodePath("../Vehicle")
 script = ExtResource("3_gmlin")
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("4_lvxji")]
+anchors_preset = 15
+offset_left = -2.0
+offset_top = -5.0
+size_flags_horizontal = 8

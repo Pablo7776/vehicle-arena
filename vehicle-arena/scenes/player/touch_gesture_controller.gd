@@ -10,6 +10,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed:
 			_active_touches[event.index] = true
 			Input.action_press(accelerate_action)
+
 		else:
 			_active_touches.erase(event.index)
 			if _active_touches.is_empty():
