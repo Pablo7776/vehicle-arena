@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://bpd17vpmo2oi3"]
 
 [ext_resource type="PackedScene" uid="uid://b7r1rj2p4t62d" path="res://assets/vehiculo/Kart/Bumper_Front/Bumper_Front1.fbx" id="1_kvtuq"]
+[ext_resource type="Script" uid="uid://bf0odfvfvn4lu" path="res://scenes/vehicle/vehicle.gd" id="1_spjhc"]
 [ext_resource type="PackedScene" uid="uid://lqq3u0bjwo" path="res://assets/vehiculo/Kart/Bumper_Rear/Bumper_Rear1.fbx" id="2_l2rym"]
+[ext_resource type="PackedScene" uid="uid://1sus1pjrfkru" path="res://scenes/bullets/bullet1.tscn" id="2_y0wgl"]
 [ext_resource type="PackedScene" uid="uid://022b5i8mp3kn" path="res://assets/vehiculo/Kart/Bumper_Side/Bumper_Side1.fbx" id="3_spjhc"]
 [ext_resource type="PackedScene" uid="uid://dopb2ad2j4rkb" path="res://assets/vehiculo/Kart/Chasis/Chasis1.fbx" id="4_wkh08"]
 [ext_resource type="PackedScene" uid="uid://riksskckx27e" path="res://assets/vehiculo/Kart/Engine/Engine1.fbx" id="5_lbt0e"]
@@ -12,31 +14,18 @@
 [ext_resource type="PackedScene" uid="uid://cduqrcuiwdvgq" path="res://assets/vehiculo/Kart/Transmission_Belt/Transmission_Belt1.fbx" id="10_70yas"]
 [ext_resource type="PackedScene" uid="uid://di685x5xs4wax" path="res://assets/vehiculo/Kart/Wheels/Wheel1.fbx" id="11_nnuiq"]
 [ext_resource type="PackedScene" uid="uid://b36xq546uuyf6" path="res://assets/vehiculo/Kart/Wheels/Wheel2.fbx" id="12_kie2a"]
+[ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/HealthComponent/HealthComponent.tscn" id="14_lbt0e"]
+[ext_resource type="Script" uid="uid://dr8ivd8ffgqep" path="res://scenes/vehicle/vehicle_input.gd" id="14_wkh08"]
+[ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="16_lbt0e"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
 size = Vector3(1.8258057, 0.75439453, 3.5321045)
 
-[node name="Kart1" type="VehicleBody3D" unique_id=1947343312]
-
-[node name="Bumper_Front1" parent="." unique_id=519692762 instance=ExtResource("1_kvtuq")]
-
-[node name="Bumper_Rear1" parent="." unique_id=1070820912 instance=ExtResource("2_l2rym")]
-
-[node name="Bumper_Side1" parent="." unique_id=583655172 instance=ExtResource("3_spjhc")]
-
-[node name="Chasis1" parent="." unique_id=282028956 instance=ExtResource("4_wkh08")]
-
-[node name="Engine1" parent="." unique_id=2106294599 instance=ExtResource("5_lbt0e")]
-
-[node name="Exhaust1" parent="." unique_id=1628244364 instance=ExtResource("6_y0wgl")]
-
-[node name="Pedal" parent="." unique_id=1498872654 instance=ExtResource("7_7ucfe")]
-
-[node name="Spoiler1" parent="." unique_id=678031945 instance=ExtResource("8_erc3b")]
-
-[node name="Steering_Wheel1" parent="." unique_id=878465984 instance=ExtResource("9_che54")]
-
-[node name="Transmission_Belt1" parent="." unique_id=1802074545 instance=ExtResource("10_70yas")]
+[node name="Kart1" type="VehicleBody3D" unique_id=1947343312 node_paths=PackedStringArray("hud", "ammo_hud")]
+script = ExtResource("1_spjhc")
+hud = NodePath("hud/CanvasLayer")
+bullet_scene = ExtResource("2_y0wgl")
+ammo_hud = NodePath("hud/CanvasLayer")
 
 [node name="VehicleWheel3D" type="VehicleWheel3D" parent="." unique_id=769143159]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95562816, 0, 0.7971802)
@@ -73,3 +62,40 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1974556, -0.17168829, 1.32
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=498462511]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.027526855, 0.122802734, -0.116760254)
 shape = SubResource("BoxShape3D_f8ekr")
+
+[node name="carroceria" type="Node3D" parent="." unique_id=585597280]
+
+[node name="Bumper_Front1" parent="carroceria" unique_id=519692762 instance=ExtResource("1_kvtuq")]
+
+[node name="Bumper_Rear1" parent="carroceria" unique_id=1070820912 instance=ExtResource("2_l2rym")]
+
+[node name="Bumper_Side1" parent="carroceria" unique_id=583655172 instance=ExtResource("3_spjhc")]
+
+[node name="Chasis1" parent="carroceria" unique_id=282028956 instance=ExtResource("4_wkh08")]
+
+[node name="Engine1" parent="carroceria" unique_id=2106294599 instance=ExtResource("5_lbt0e")]
+
+[node name="Exhaust1" parent="carroceria" unique_id=1628244364 instance=ExtResource("6_y0wgl")]
+
+[node name="Pedal" parent="carroceria" unique_id=1498872654 instance=ExtResource("7_7ucfe")]
+
+[node name="Spoiler1" parent="carroceria" unique_id=678031945 instance=ExtResource("8_erc3b")]
+
+[node name="Steering_Wheel1" parent="carroceria" unique_id=878465984 instance=ExtResource("9_che54")]
+
+[node name="Transmission_Belt1" parent="carroceria" unique_id=1802074545 instance=ExtResource("10_70yas")]
+
+[node name="HealthComponent" parent="." unique_id=1038012900 instance=ExtResource("14_lbt0e")]
+
+[node name="VehicleInput" type="Node" parent="." unique_id=1963909258]
+script = ExtResource("14_wkh08")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=1654681688]
+
+[node name="hud" parent="." unique_id=389512278 instance=ExtResource("16_lbt0e")]
+anchors_preset = 15
+
+[node name="PuntoDisparo" type="Marker3D" parent="." unique_id=1292163591]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.293638)
+
+[editable path="hud"]
