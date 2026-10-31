@@ -2,10 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://dwxtaksuo5mvo" path="res://icon.svg" id="1_1qjuf"]
 [ext_resource type="PackedScene" uid="uid://bpv2quijua7qy" path="res://scenes/item_life.tscn" id="2_8trdl"]
-[ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_asdgj"]
 [ext_resource type="Script" uid="uid://led084tcccak" path="res://scripts/GameManager.gd" id="3_5tue2"]
 [ext_resource type="PackedScene" uid="uid://lo2hver3y1u2" path="res://assets/terreno1/Sin_nombre.glb" id="4_aj7ud"]
 [ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="6_jx0ua"]
+[ext_resource type="PackedScene" uid="uid://bpd17vpmo2oi3" path="res://scenes/vehicle/kart/kart1.tscn" id="6_u52cf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8trdl"]
 albedo_texture = ExtResource("1_1qjuf")
@@ -16,12 +16,7 @@ material = SubResource("StandardMaterial3D_8trdl")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n62jo"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_asdgj"]
-panorama = ExtResource("2_asdgj")
-energy_multiplier = 3.28
-
 [sub_resource type="Sky" id="Sky_aj7ud"]
-sky_material = SubResource("PanoramaSkyMaterial_asdgj")
 
 [sub_resource type="Environment" id="Environment_f8ekr"]
 background_mode = 2
@@ -106,11 +101,17 @@ vertical_alignment = 1
 transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, -6.403824, -55.668106, -6.240097)
 
 [node name="Player" parent="." unique_id=861030176 instance=ExtResource("6_jx0ua")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12.898292, 18.173615)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1746464, -11.185621, 18.173615)
+
+[node name="Vehicle" parent="Player" index="0" unique_id=1090642931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.77401733, 0)
 
 [node name="hud" parent="Player" index="3" unique_id=389512278]
 offset_right = 0.0
 offset_bottom = 0.0
+
+[node name="Kart1" parent="." unique_id=1947343312 instance=ExtResource("6_u52cf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.883319, -14.860863, -28.507944)
 
 [editable path="Item_life"]
 [editable path="Player"]

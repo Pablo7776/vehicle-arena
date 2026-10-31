@@ -58,10 +58,10 @@ const PauseMenuUIScript := preload("res://addons/settings_menus/ui/pause_menu_ui
 const MenuThemeScript := preload("res://addons/settings_menus/resources/menu_theme.gd")
 
 func _ready() -> void:
-    var pause: PauseMenuUI = PauseMenuUIScript.new()
-    pause.theme_data = MenuThemeScript.new()
-    pause.main_menu_scene_path = "res://scenes/main_menu.tscn"
-    add_child(pause)
+	var pause: PauseMenuUI = PauseMenuUIScript.new()
+	pause.theme_data = MenuThemeScript.new()
+	pause.main_menu_scene_path = "res://scenes/main_menu.tscn"
+	add_child(pause)
 ```
 
 The pause overlay listens for the `pause` input action (Esc by default) and toggles the tree's `paused` state. If you want a different key, change the `pause_action` export on the `PauseMenuUI`.

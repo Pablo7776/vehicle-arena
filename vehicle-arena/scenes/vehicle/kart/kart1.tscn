@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://bpd17vpmo2oi3"]
+
+[ext_resource type="PackedScene" uid="uid://b7r1rj2p4t62d" path="res://assets/vehiculo/Kart/Bumper_Front/Bumper_Front1.fbx" id="1_kvtuq"]
+[ext_resource type="PackedScene" uid="uid://lqq3u0bjwo" path="res://assets/vehiculo/Kart/Bumper_Rear/Bumper_Rear1.fbx" id="2_l2rym"]
+[ext_resource type="PackedScene" uid="uid://022b5i8mp3kn" path="res://assets/vehiculo/Kart/Bumper_Side/Bumper_Side1.fbx" id="3_spjhc"]
+[ext_resource type="PackedScene" uid="uid://dopb2ad2j4rkb" path="res://assets/vehiculo/Kart/Chasis/Chasis1.fbx" id="4_wkh08"]
+[ext_resource type="PackedScene" uid="uid://riksskckx27e" path="res://assets/vehiculo/Kart/Engine/Engine1.fbx" id="5_lbt0e"]
+[ext_resource type="PackedScene" uid="uid://cxrwd68gmxrww" path="res://assets/vehiculo/Kart/Exhaust/Exhaust1.fbx" id="6_y0wgl"]
+[ext_resource type="PackedScene" uid="uid://dxnv35hnrcs3c" path="res://assets/vehiculo/Kart/Pedal/Pedal.fbx" id="7_7ucfe"]
+[ext_resource type="PackedScene" uid="uid://stpgoc1e5j8e" path="res://assets/vehiculo/Kart/Spoiler/Spoiler1.fbx" id="8_erc3b"]
+[ext_resource type="PackedScene" uid="uid://bpw8cbuuxi88c" path="res://assets/vehiculo/Kart/Steering_Wheel/Steering_Wheel1.fbx" id="9_che54"]
+[ext_resource type="PackedScene" uid="uid://cduqrcuiwdvgq" path="res://assets/vehiculo/Kart/Transmission_Belt/Transmission_Belt1.fbx" id="10_70yas"]
+[ext_resource type="PackedScene" uid="uid://di685x5xs4wax" path="res://assets/vehiculo/Kart/Wheels/Wheel1.fbx" id="11_nnuiq"]
+[ext_resource type="PackedScene" uid="uid://b36xq546uuyf6" path="res://assets/vehiculo/Kart/Wheels/Wheel2.fbx" id="12_kie2a"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
+size = Vector3(1.8258057, 0.75439453, 3.5321045)
+
+[node name="Kart1" type="VehicleBody3D" unique_id=1947343312]
+
+[node name="Bumper_Front1" parent="." unique_id=519692762 instance=ExtResource("1_kvtuq")]
+
+[node name="Bumper_Rear1" parent="." unique_id=1070820912 instance=ExtResource("2_l2rym")]
+
+[node name="Bumper_Side1" parent="." unique_id=583655172 instance=ExtResource("3_spjhc")]
+
+[node name="Chasis1" parent="." unique_id=282028956 instance=ExtResource("4_wkh08")]
+
+[node name="Engine1" parent="." unique_id=2106294599 instance=ExtResource("5_lbt0e")]
+
+[node name="Exhaust1" parent="." unique_id=1628244364 instance=ExtResource("6_y0wgl")]
+
+[node name="Pedal" parent="." unique_id=1498872654 instance=ExtResource("7_7ucfe")]
+
+[node name="Spoiler1" parent="." unique_id=678031945 instance=ExtResource("8_erc3b")]
+
+[node name="Steering_Wheel1" parent="." unique_id=878465984 instance=ExtResource("9_che54")]
+
+[node name="Transmission_Belt1" parent="." unique_id=1802074545 instance=ExtResource("10_70yas")]
+
+[node name="VehicleWheel3D" type="VehicleWheel3D" parent="." unique_id=769143159]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95562816, 0, 0.7971802)
+use_as_steering = true
+wheel_radius = 0.38
+
+[node name="Wheel1" parent="VehicleWheel3D" unique_id=100420894 instance=ExtResource("11_nnuiq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95562816, 0, -0.7971802)
+
+[node name="VehicleWheel3D2" type="VehicleWheel3D" parent="." unique_id=1239924615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95958626, 0, 0.7971802)
+use_as_steering = true
+wheel_radius = 0.38
+
+[node name="Wheel3" parent="VehicleWheel3D2" unique_id=1591833917 instance=ExtResource("11_nnuiq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9217881, 0, -0.7971802)
+
+[node name="VehicleWheel3D3" type="VehicleWheel3D" parent="." unique_id=1646114634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17168829, -1.3294967)
+use_as_traction = true
+wheel_radius = 0.55
+
+[node name="Wheel2" parent="VehicleWheel3D3" unique_id=1424180744 instance=ExtResource("12_kie2a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.17168829, 1.3294967)
+
+[node name="VehicleWheel3D4" type="VehicleWheel3D" parent="." unique_id=1749915467]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17168829, -1.3294967)
+use_as_traction = true
+wheel_radius = 0.55
+
+[node name="Wheel4" parent="VehicleWheel3D4" unique_id=1231933576 instance=ExtResource("12_kie2a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1974556, -0.17168829, 1.3294967)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=498462511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.027526855, 0.122802734, -0.116760254)
+shape = SubResource("BoxShape3D_f8ekr")

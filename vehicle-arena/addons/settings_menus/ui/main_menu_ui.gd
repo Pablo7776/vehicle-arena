@@ -17,6 +17,7 @@ var _options_layer: CanvasLayer
 var _credits_layer: CanvasLayer
 var _options_ui: OptionsMenuUI
 var _credits_ui: CreditsUI
+var _test_button: Button
 var _first_button: Button
 var _btn_join: Button
 var _focus_return: Control
@@ -113,6 +114,7 @@ func _build() -> void:
 	col.add_child(_spacer(8))
 	
 	# Botones principales GDSync
+	_test_button = _add_button(col, "Test", _on_test)
 	_first_button = _add_button(col, "Crear Sala (Host)", _on_host)
 	_btn_join = _add_button(col, "Unirse a Partida", _on_join)
 	
@@ -225,6 +227,14 @@ func _bloquear_menu(bloqueado: bool) -> void:
 	if _first_button: _first_button.disabled = bloqueado
 	if _btn_join: _btn_join.disabled = bloqueado
 	if _sala_input: _sala_input.editable = not bloqueado
+
+func _on_test() -> void:
+	self.hide() # Ocultamos el menú
+	# Generamos la Arena 3D si asignaste una y si no existe ya
+	if escena_arena and arena_instanciada == null:
+		arena_instanciada = escena_arena.instantiate()
+		# Cambiado a add_child directo para evitar problemas de sincronía
+		get_tree().current_scene.add_child(arena_instanciada)
 
 func _on_host() -> void:
 	_leer_nombre_sala()
