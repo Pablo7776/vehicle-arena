@@ -22,6 +22,7 @@
 size = Vector3(1.8258057, 0.75439453, 3.5321045)
 
 [node name="Kart1" type="VehicleBody3D" unique_id=1947343312 node_paths=PackedStringArray("hud", "ammo_hud")]
+mass = 1000.0
 script = ExtResource("1_spjhc")
 hud = NodePath("hud/CanvasLayer")
 bullet_scene = ExtResource("2_y0wgl")
@@ -94,6 +95,10 @@ script = ExtResource("14_wkh08")
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("16_lbt0e")]
 anchors_preset = 15
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 
 [node name="PuntoDisparo" type="Marker3D" parent="." unique_id=1292163591]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.293638)
