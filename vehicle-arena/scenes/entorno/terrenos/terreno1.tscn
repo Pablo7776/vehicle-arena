@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://jvaucdggoeyr"]
+
+[ext_resource type="PackedScene" uid="uid://lo2hver3y1u2" path="res://assets/terreno1/Sin_nombre.glb" id="1_enc3v"]
+
+[node name="Sin_nombre" unique_id=302576289 instance=ExtResource("1_enc3v")]
