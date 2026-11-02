@@ -28,6 +28,8 @@ size = Vector3(0.4362793, 0.65893555, 0.78015137)
 
 [node name="Kart1" type="VehicleBody3D" unique_id=1947343312 node_paths=PackedStringArray("hud", "ammo_hud")]
 mass = 1000.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, -0.3, 0)
 script = ExtResource("1_spjhc")
 hud = NodePath("hud/CanvasLayer")
 bullet_scene = ExtResource("2_y0wgl")
