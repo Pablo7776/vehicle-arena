@@ -66,7 +66,7 @@ func _build() -> void:
 		bg_tex.texture = theme_data.background_texture
 		bg_tex.anchor_right = 1
 		bg_tex.anchor_bottom = 1
-		bg_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		bg_tex.stretch_mode = TextureRect.STRETCH_SCALE
 		bg_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		bg_tex.modulate = Color(1, 1, 1, 0.6)
 		add_child(bg_tex)

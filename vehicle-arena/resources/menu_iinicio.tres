@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MenuTheme" format=3 uid="uid://cqhflpcw8o5h3"]
+
+[ext_resource type="Script" uid="uid://ca5xkoaeirno6" path="res://addons/settings_menus/resources/menu_theme.gd" id="1_sc1jm"]
+
+[resource]
+script = ExtResource("1_sc1jm")
+title_font_size = 18
+heading_font_size = 11
+body_font_size = 6
+button_font_size = 9
+panel_corner_radius = 3
+panel_padding = 8
+menu_max_width = 240
+game_subtitle = "Polished settings + menus, free."
+metadata/_custom_type_script = "uid://ca5xkoaeirno6"

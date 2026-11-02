@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dnan2sb4ap5sy"]
 
 [ext_resource type="Script" uid="uid://c4s7rghnfw4lm" path="res://addons/settings_menus/ui/main_menu_ui.gd" id="1_oo0fn"]
-[ext_resource type="Resource" uid="uid://da5mg5mti62c1" path="res://addons/settings_menus/resources/default_menu_theme.tres" id="2_5ysmq"]
+[ext_resource type="Resource" uid="uid://cqhflpcw8o5h3" path="res://resources/menu_iinicio.tres" id="2_o0tnf"]
 [ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="3_11y2r"]
 [ext_resource type="PackedScene" uid="uid://dtfdnacujyrlc" path="res://scenes/main/main.tscn" id="4_o0tnf"]
 
@@ -24,7 +24,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_oo0fn")
-theme_data = ExtResource("2_5ysmq")
+theme_data = ExtResource("2_o0tnf")
 play_scene_path = "uid://dtfdnacujyrlc"
+show_options = false
+show_credits = false
 escena_jugador = ExtResource("3_11y2r")
 escena_arena = ExtResource("4_o0tnf")
