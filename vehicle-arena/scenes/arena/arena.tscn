@@ -93,8 +93,10 @@ transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 102.86211, -20.890755, -60
 transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 4.4387436, -25.51095, -109.73297)
 
 [node name="Label" type="Label" parent="." unique_id=1561493362]
-offset_right = 387.0
-offset_bottom = 202.0
+offset_left = 3.0
+offset_top = 222.0
+offset_right = 172.0
+offset_bottom = 322.0
 script = ExtResource("7_u52cf")
 
 [editable path="Item_life"]

@@ -97,11 +97,16 @@ shape = SubResource("BoxShape3D_f8ekr")
 script = ExtResource("14_wkh08")
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("16_lbt0e")]
-anchors_preset = 15
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
+
+[node name="LabelAmmo" parent="hud/CanvasLayer" parent_id_path=PackedInt32Array(389512278, 780447160) index="0" unique_id=549345612]
+offset_left = 453.0
+offset_top = 270.0
+offset_right = 641.0
+offset_bottom = 372.0
 
 [node name="PuntoDisparo" type="Marker3D" parent="." unique_id=1292163591]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.293638)
@@ -125,11 +130,11 @@ transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.5163574, 1.7053223, -1.
 shape = SubResource("BoxShape3D_70yas")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=1815795333]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0478806, 2.1720467, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9819074, 1.2134285, 0)
 pixel_size = 0.001
 billboard = 1
 text = "hola"
-font_size = 500
+font_size = 700
 outline_size = 2
 
 [editable path="hud"]
