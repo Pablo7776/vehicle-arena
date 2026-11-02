@@ -11,14 +11,14 @@
 background_mode = 2
 sky = SubResource("Sky_aj7ud")
 ambient_light_source = 2
-ambient_light_color = Color(0.11527895, 1.296, 0.20465082, 1)
+ambient_light_color = Color(1.256622, 0.11786261, 1.2958895, 1)
 ambient_light_energy = 0.09
 reflected_light_source = 2
 tonemap_mode = 2
 tonemap_exposure = 0.2
 ssr_enabled = true
 fog_enabled = true
-fog_light_color = Color(0.202652, 0.3041384, 0.18628913, 1)
+fog_light_color = Color(0.27420822, 0.43551105, 0.285627, 1)
 adjustment_enabled = true
 adjustment_brightness = 1.71
 adjustment_contrast = 1.155
