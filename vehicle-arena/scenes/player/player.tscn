@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://c2acvk05demxg" path="res://scenes/player/touch_gesture_controller.gd" id="3_gmlin"]
 [ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="4_lvxji"]
 [ext_resource type="PackedScene" uid="uid://bpd17vpmo2oi3" path="res://scenes/vehicle/kart/kart1.tscn" id="4_p47bc"]
+[ext_resource type="Texture2D" uid="uid://dwxtaksuo5mvo" path="res://icon.svg" id="5_p47bc"]
 
 [node name="Player" type="Node3D" unique_id=861030176]
 
@@ -22,3 +23,9 @@ offset_bottom = 0.0
 size_flags_horizontal = 8
 
 [node name="Kart1" parent="." unique_id=1947343312 instance=ExtResource("4_p47bc")]
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="." unique_id=1463729580]
+position = Vector2(35, 29)
+scale = Vector2(0.9375, 0.90625)
+texture_normal = ExtResource("5_p47bc")
+action = "disparar"

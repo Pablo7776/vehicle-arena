@@ -71,6 +71,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("disparar"):
 		disparar()
 		
+		
 func disparar() -> void:
 	if municion_actual > 0:
 		municion_actual -= 1
