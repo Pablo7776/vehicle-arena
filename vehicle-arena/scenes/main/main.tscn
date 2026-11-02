@@ -1,32 +1,34 @@
 [gd_scene format=3 uid="uid://dtfdnacujyrlc"]
 
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
-[ext_resource type="Texture2D" uid="uid://caa5anyk0n8si" path="res://assets/cubemap_equirectangular.png" id="2_k2fmo"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
 [ext_resource type="PackedScene" uid="uid://qummw1k2sbin" path="res://scenes/TargetDummy/TargetDummy.tscn" id="5_6q06x"]
+[ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="5_ow5a4"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_6q06x"]
-panorama = ExtResource("2_k2fmo")
-
-[sub_resource type="Sky" id="Sky_1qjuf"]
-sky_material = SubResource("PanoramaSkyMaterial_6q06x")
+[sub_resource type="Sky" id="Sky_aj7ud"]
 
 [sub_resource type="Environment" id="Environment_l3cfh"]
 background_mode = 2
-sky = SubResource("Sky_1qjuf")
-sdfgi_enabled = true
-sdfgi_energy = 0.45
-sdfgi_probe_bias = 30.0
+sky = SubResource("Sky_aj7ud")
+ambient_light_source = 2
+ambient_light_color = Color(0.11527895, 1.296, 0.20465082, 1)
+ambient_light_energy = 0.09
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_exposure = 0.2
+ssr_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.202652, 0.3041384, 0.18628913, 1)
+adjustment_enabled = true
+adjustment_brightness = 1.71
+adjustment_contrast = 1.155
+adjustment_saturation = 1.28
 
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_n62jo"]
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_6q06x"]
 
 [node name="Main" type="Node3D" unique_id=1314549957]
 
 [node name="Arena" parent="." unique_id=1386833253 instance=ExtResource("1_hyk8p")]
-
-[node name="WorldEnvironment" parent="Arena" index="3" unique_id=316382671]
-environment = SubResource("Environment_l3cfh")
-camera_attributes = SubResource("CameraAttributesPractical_n62jo")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
 
@@ -43,5 +45,19 @@ script = ExtResource("4_l3cfh")
 [node name="TargetDummy" parent="." unique_id=327059932 instance=ExtResource("5_6q06x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.87497, 5.4170437, 0)
 
+[node name="Player" parent="." unique_id=861030176 instance=ExtResource("5_ow5a4")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1116587904]
+transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 221.46631, 1259.4043, 334.04175)
+light_color = Color(1.1037436, 0.7150186, 0.43300235, 1)
+shadow_enabled = true
+shadow_blur = 3.686
+directional_shadow_mode = 0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=507325657]
+environment = SubResource("Environment_l3cfh")
+camera_attributes = SubResource("CameraAttributesPractical_6q06x")
+
 [editable path="Arena"]
 [editable path="Arena/Item_life"]
+[editable path="Player"]

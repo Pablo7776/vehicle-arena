@@ -16,26 +16,6 @@ material = SubResource("StandardMaterial3D_8trdl")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n62jo"]
 
-[sub_resource type="Sky" id="Sky_aj7ud"]
-
-[sub_resource type="Environment" id="Environment_f8ekr"]
-background_mode = 2
-sky = SubResource("Sky_aj7ud")
-ambient_light_source = 2
-ambient_light_color = Color(0.24185894, 1.2955862, 0.2794444, 1)
-ambient_light_sky_contribution = 0.84
-ambient_light_energy = 0.09
-reflected_light_source = 2
-tonemap_mode = 3
-tonemap_exposure = 0.2
-ssr_enabled = true
-adjustment_enabled = true
-adjustment_brightness = 1.71
-adjustment_contrast = 1.155
-adjustment_saturation = 1.28
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_aj7ud"]
-
 [node name="Arena" type="Node3D" unique_id=1386833253]
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=2137905020]
@@ -49,15 +29,6 @@ mesh = SubResource("BoxMesh_f8ekr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.71325684, 0)
 shape = SubResource("BoxShape3D_n62jo")
 debug_color = Color(0.1784229, 0.10895, 0.47736079, 0.41960785)
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1303397376]
-transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 221.46631, 1259.4043, 334.04175)
-light_color = Color(1, 0.7990707, 0.9899295, 1)
-directional_shadow_mode = 0
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=316382671]
-environment = SubResource("Environment_f8ekr")
-camera_attributes = SubResource("CameraAttributesPractical_aj7ud")
 
 [node name="Item_life" parent="." unique_id=1159983786 instance=ExtResource("2_8trdl")]
 transform = Transform3D(11.175, 0, 0, 0, 11.175, 0, 0, 0, 11.175, -12.23645, 8.071102, -39.77954)
