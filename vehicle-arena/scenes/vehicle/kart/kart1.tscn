@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="16_lbt0e"]
 [ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="18_erc3b"]
 [ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurtbox/Hurtbox.tscn" id="19_che54"]
+[ext_resource type="FontFile" uid="uid://cjbskfb6pfq6n" path="res://assets/fonts/badaboom/BADABB__.TTF" id="20_che54"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
 size = Vector3(1.8258057, 0.75439453, 3.5321045)
@@ -132,11 +133,13 @@ transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.5163574, 1.7053223, -1.
 shape = SubResource("BoxShape3D_70yas")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=1815795333]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9819074, 1.2134285, 0)
+transform = Transform3D(-0.4287752, -0.08355219, 0.89953923, 0.41249713, 0.86775255, 0.277221, -0.8037398, 0.48992288, -0.3376057, -2.9819074, 1.2134285, 2.0183024)
 pixel_size = 0.001
-billboard = 1
+shaded = true
+modulate = Color(6.470068, 0, 0, 1)
 text = "hola"
-font_size = 700
+font = ExtResource("20_che54")
+font_size = 1400
 outline_size = 2
 
 [editable path="hud"]
