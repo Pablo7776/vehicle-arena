@@ -1,7 +1,8 @@
 extends Camera3D
 
 @export var vehiculo_path: NodePath
-@export var offset := Vector3(0, 2.5, 5)
+@export var offset := Vector3(0, 12.5, -4.0)
+@export_range(-90, 90) var inclinacion_grados := -45.0   # negativo = mira hacia abajo
 @export var sensibilidad := 1.0
 @export var limite_yaw := 1.0
 @export var limite_pitch := 0.5
@@ -15,7 +16,7 @@ extends Camera3D
 var vehiculo: Node3D
 var offset_yaw := 0.0
 var offset_pitch := 0.0
-var volante := 0.0   # ángulo del "volante" (lo podés leer desde el vehículo)
+var volante := 0.0
 
 func _ready():
 	current = true
@@ -41,15 +42,12 @@ func _process(delta):
 	volante = lerp(volante, 0.0, recentrado_volante * delta)
 	volante = clamp(volante, -limite_volante, limite_volante)
 
-	# Volante v2 (ángulo absoluto con gravedad)  <-- acá va lo nuevo
-	#var g = Input.get_gravity()
-	#var angulo = atan2(g.y, g.x)
-	#volante = lerp(volante, clamp(angulo * sensibilidad_volante, -limite_volante, limite_volante), 10.0 * delta)
-	
+	# Posición: sigue al vehículo con suavizado
 	var pos_objetivo = vehiculo.global_transform.origin + vehiculo.global_transform.basis * offset
 	global_position = lerp(global_position, pos_objetivo, suavizado_pos * delta)
 
+	# Rotación
 	var yaw_base = vehiculo.global_rotation.y + PI
 	global_rotation.y = yaw_base + offset_yaw
-	global_rotation.x = offset_pitch
-	global_rotation.z = volante   # <- rotación en Z (roll)
+	global_rotation.x = offset_pitch + deg_to_rad(inclinacion_grados)
+	global_rotation.z = volante

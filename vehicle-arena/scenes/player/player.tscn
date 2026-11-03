@@ -8,14 +8,10 @@
 
 [node name="Player" type="Node3D" unique_id=861030176]
 
-[node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("2_gmlin")]
-vehiculo_path = NodePath("../Kart1")
-
 [node name="TouchGestureController" type="Node" parent="." unique_id=1304990146]
 script = ExtResource("3_gmlin")
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("4_lvxji")]
-anchors_preset = 15
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
@@ -23,6 +19,10 @@ offset_bottom = 0.0
 size_flags_horizontal = 8
 
 [node name="Kart1" parent="." unique_id=1947343312 instance=ExtResource("4_p47bc")]
+
+[node name="Camera3D" parent="Kart1" unique_id=1054761183 instance=ExtResource("2_gmlin")]
+transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 0, -2)
+vehiculo_path = NodePath("..")
 
 [node name="TouchScreenButton" type="TouchScreenButton" parent="." unique_id=1463729580]
 position = Vector2(26, 16.000004)

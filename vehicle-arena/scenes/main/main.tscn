@@ -47,9 +47,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.87497, 5.4170437, 0)
 
 [node name="Player" parent="." unique_id=861030176 instance=ExtResource("5_ow5a4")]
 
-[node name="Camera3D" parent="Player" index="0" unique_id=1054761183]
-offset = Vector3(0, 2, -4)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1116587904]
 transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 221.46631, 1259.4043, 334.04175)
 light_color = Color(1.1037436, 0.7150186, 0.43300235, 1)
