@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
 [ext_resource type="PackedScene" uid="uid://qummw1k2sbin" path="res://scenes/TargetDummy/TargetDummy.tscn" id="5_6q06x"]
-[ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="5_ow5a4"]
 
 [sub_resource type="Sky" id="Sky_aj7ud"]
 
@@ -45,13 +44,6 @@ script = ExtResource("4_l3cfh")
 [node name="TargetDummy" parent="." unique_id=327059932 instance=ExtResource("5_6q06x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.87497, 5.4170437, 0)
 
-[node name="Player" parent="." unique_id=861030176 instance=ExtResource("5_ow5a4")]
-
-[node name="Camera3D" parent="Player/Kart1" parent_id_path=PackedInt32Array(861030176, 1947343312) index="13" unique_id=1054761183]
-offset = Vector3(0, 7, -5)
-inclinacion_grados = -30.0
-limite_pitch = 0.1
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1116587904]
 transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 221.46631, 1259.4043, 334.04175)
 light_color = Color(1.1037436, 0.7150186, 0.43300235, 1)
@@ -65,7 +57,3 @@ camera_attributes = SubResource("CameraAttributesPractical_6q06x")
 
 [editable path="Arena"]
 [editable path="Arena/Item_life"]
-[editable path="Player"]
-[editable path="Player/hud"]
-[editable path="Player/Kart1"]
-[editable path="Player/Kart1/Hurtbox"]
