@@ -16,25 +16,26 @@
 [ext_resource type="PackedScene" uid="uid://b36xq546uuyf6" path="res://assets/vehiculo/Kart/Wheels/Wheel2.fbx" id="12_kie2a"]
 [ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/HealthComponent/HealthComponent.tscn" id="14_lbt0e"]
 [ext_resource type="Script" uid="uid://dr8ivd8ffgqep" path="res://scenes/vehicle/vehicle_input.gd" id="14_wkh08"]
-[ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="16_lbt0e"]
 [ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="18_erc3b"]
 [ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurtbox/Hurtbox.tscn" id="19_che54"]
 [ext_resource type="FontFile" uid="uid://cjbskfb6pfq6n" path="res://assets/fonts/badaboom/BADABB__.TTF" id="20_che54"]
+[ext_resource type="PackedScene" uid="uid://bcegsbm8mdsu0" path="res://scenes/components/weapon/weapon.tscn" id="21_nnuiq"]
+[ext_resource type="Script" uid="uid://brmgjxstvpws8" path="res://scenes/components/weapon/weapon.gd" id="22_kie2a"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
 size = Vector3(1.8258057, 0.75439453, 3.5321045)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_70yas"]
-size = Vector3(0.4362793, 0.65893555, 0.78015137)
+size = Vector3(0.436, 0.659, 0.5)
 
 [node name="Kart1" type="VehicleBody3D" unique_id=1947343312 node_paths=PackedStringArray("hud", "ammo_hud")]
 mass = 1000.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.3, 0)
 script = ExtResource("1_spjhc")
-hud = NodePath("hud/CanvasLayer")
+hud = NodePath("")
 bullet_scene = ExtResource("2_y0wgl")
-ammo_hud = NodePath("hud/CanvasLayer")
+ammo_hud = NodePath("")
 
 [node name="VehicleWheel3D" type="VehicleWheel3D" parent="." unique_id=769143159]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95562816, 0, 0.7971802)
@@ -99,20 +100,8 @@ shape = SubResource("BoxShape3D_f8ekr")
 [node name="VehicleInput" type="Node" parent="." unique_id=1963909258]
 script = ExtResource("14_wkh08")
 
-[node name="hud" parent="." unique_id=389512278 instance=ExtResource("16_lbt0e")]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-
-[node name="LabelAmmo" parent="hud/CanvasLayer" parent_id_path=PackedInt32Array(389512278, 780447160) index="0" unique_id=549345612]
-offset_left = 453.0
-offset_top = 270.0
-offset_right = 641.0
-offset_bottom = 372.0
-
 [node name="PuntoDisparo" type="Marker3D" parent="." unique_id=1292163591]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.293638)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.4423718)
 
 [node name="PropertySynchronizer" type="Node" parent="." unique_id=1157587121]
 script = ExtResource("18_erc3b")
@@ -142,5 +131,9 @@ font = ExtResource("20_che54")
 font_size = 1400
 outline_size = 2
 
-[editable path="hud"]
+[node name="weapon" parent="." unique_id=681733314 node_paths=PackedStringArray("muzzle") instance=ExtResource("21_nnuiq")]
+script = ExtResource("22_kie2a")
+muzzle = NodePath("../PuntoDisparo")
+bullet_scene = ExtResource("2_y0wgl")
+
 [editable path="Hurtbox"]

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud.tscn" id="4_lvxji"]
 [ext_resource type="PackedScene" uid="uid://bpd17vpmo2oi3" path="res://scenes/vehicle/kart/kart1.tscn" id="4_p47bc"]
 [ext_resource type="Texture2D" uid="uid://dwxtaksuo5mvo" path="res://icon.svg" id="5_p47bc"]
+[ext_resource type="Script" uid="uid://brk5novpo1vjl" path="res://scripts/aim_controller.gd" id="6_75vfm"]
 
 [node name="Player" type="Node3D" unique_id=861030176]
 
@@ -25,7 +26,18 @@ transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50
 vehiculo_path = NodePath("..")
 
 [node name="TouchScreenButton" type="TouchScreenButton" parent="." unique_id=1463729580]
+visible = false
 position = Vector2(26, 16.000004)
 scale = Vector2(0.5859375, 0.59374994)
 texture_normal = ExtResource("5_p47bc")
 action = "disparar"
+
+[node name="AimController" type="Node" parent="." unique_id=792537202 node_paths=PackedStringArray("joystick", "weapon", "camera")]
+script = ExtResource("6_75vfm")
+joystick = NodePath("../hud/VirtualJoystick")
+weapon = NodePath("../Kart1/weapon")
+camera = NodePath("../Kart1/Camera3D")
+
+[editable path="hud"]
+[editable path="Kart1"]
+[editable path="Kart1/Hurtbox"]
