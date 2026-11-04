@@ -16,6 +16,8 @@ emission_on_uv2 = true
 
 [node name="Bullet1" type="Area3D" unique_id=1086934140]
 script = ExtResource("1_a8evu")
+speed = 1500.0
+life_time = 40.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=942617021]
 shape = SubResource("SphereShape3D_f8ekr")

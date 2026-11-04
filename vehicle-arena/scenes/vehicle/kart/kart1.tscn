@@ -28,14 +28,12 @@ size = Vector3(1.8258057, 0.75439453, 3.5321045)
 [sub_resource type="BoxShape3D" id="BoxShape3D_70yas"]
 size = Vector3(0.436, 0.659, 0.5)
 
-[node name="Kart1" type="VehicleBody3D" unique_id=1947343312 node_paths=PackedStringArray("hud", "ammo_hud")]
+[node name="Kart1" type="VehicleBody3D" unique_id=1947343312]
 mass = 1000.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.3, 0)
 script = ExtResource("1_spjhc")
-hud = NodePath("")
 bullet_scene = ExtResource("2_y0wgl")
-ammo_hud = NodePath("")
 
 [node name="VehicleWheel3D" type="VehicleWheel3D" parent="." unique_id=769143159]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95562816, 0, 0.7971802)
@@ -135,5 +133,7 @@ outline_size = 2
 script = ExtResource("22_kie2a")
 muzzle = NodePath("../PuntoDisparo")
 bullet_scene = ExtResource("2_y0wgl")
+max_range = 80.0
+bullet_speed = 80.0
 
 [editable path="Hurtbox"]

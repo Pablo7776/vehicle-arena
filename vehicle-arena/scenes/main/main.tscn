@@ -61,3 +61,6 @@ camera_attributes = SubResource("CameraAttributesPractical_6q06x")
 [editable path="Arena"]
 [editable path="Arena/Item_life"]
 [editable path="Player"]
+[editable path="Player/hud"]
+[editable path="Player/Kart1"]
+[editable path="Player/Kart1/Hurtbox"]
