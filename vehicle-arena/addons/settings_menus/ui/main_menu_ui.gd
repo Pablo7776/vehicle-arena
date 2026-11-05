@@ -22,6 +22,7 @@ var _first_button: Button
 var _btn_join: Button
 var _focus_return: Control
 var arena_instanciada: Node = null
+var player_instanciado: Node = null
 # --- Variables de Red ---
 var nombre_sala := "MiSala"
 var soy_host := false
@@ -235,7 +236,9 @@ func _on_test() -> void:
 		arena_instanciada = escena_arena.instantiate()
 		# Cambiado a add_child directo para evitar problemas de sincronía
 		get_tree().current_scene.add_child(arena_instanciada)
-
+		player_instanciado = escena_jugador.instantiate()
+		get_tree().current_scene.add_child(player_instanciado)
+		
 func _on_host() -> void:
 	_leer_nombre_sala()
 	soy_host = true
