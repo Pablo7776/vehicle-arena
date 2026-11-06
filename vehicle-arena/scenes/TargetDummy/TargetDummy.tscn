@@ -5,48 +5,60 @@
 [ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/HealthComponent/HealthComponent.tscn" id="3_eu4uf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_eu4uf"]
-height = 12.104065
+radius = 5.0
+height = 15.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eu4uf"]
-albedo_color = Color(2.695322e-06, 0.5798912, 0.72416824, 1)
+albedo_color = Color(1, 0.11372549, 1, 1)
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_eu4uf"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_uaiwt"]
 material = SubResource("StandardMaterial3D_eu4uf")
-height = 3.3007813
+radius = 5.0
+height = 15.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_15q4e"]
 albedo_color = Color(7.02709e-06, 0.69613826, 0.82464963, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_1v42w"]
-size = Vector3(1.3877563, 1.0751953, 1.324707)
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_uaiwt"]
+radius = 5.0
+height = 15.0
 
 [node name="TargetDummy" type="CharacterBody3D" unique_id=201704722]
 script = ExtResource("1_eu4uf")
-move_speed = 30.0
+move_speed = 20.0
+wander_range = 100.0
+idle_time_min = 0.1
+idle_time_max = 0.4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1025635403]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0736475, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
 shape = SubResource("CapsuleShape3D_eu4uf")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2002619696]
-transform = Transform3D(12.677355, 0, 0, 0, 3.6968274, 0, 0, 0, 14.963356, 0, -1.9073486e-06, 0)
-mesh = SubResource("CapsuleMesh_eu4uf")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
+mesh = SubResource("CapsuleMesh_uaiwt")
 surface_material_override/0 = SubResource("StandardMaterial3D_15q4e")
 
 [node name="Hurtbox" parent="." unique_id=2134039607 node_paths=PackedStringArray("health") instance=ExtResource("2_lnq1v")]
 health = NodePath("../HealthComponent")
 
 [node name="CollisionShape3D" parent="Hurtbox" index="0" unique_id=1951837659]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.082092285, -0.37597656, -1.6235352)
-shape = SubResource("BoxShape3D_1v42w")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
+shape = SubResource("CapsuleShape3D_uaiwt")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=165133716]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.045425, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.9057503, 0)
 pixel_size = 1.0
 billboard = 1
 text = "hola"
 font_size = 8
 
 [node name="HealthComponent" parent="." unique_id=1038012900 instance=ExtResource("3_eu4uf")]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=2087680247]
+path_desired_distance = 2.0
+target_desired_distance = 3.0
+debug_enabled = true
+debug_path_custom_color = Color(1, 1, 0.011764706, 1)
 
 [editable path="Hurtbox"]
