@@ -14,8 +14,8 @@
 [node name="Camera3D" parent="Kart1" unique_id=1054761183 instance=ExtResource("2_gmlin")]
 transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 0, -2)
 vehiculo_path = NodePath("..")
-offset = Vector3(0, 6, -5)
-inclinacion_grados = -25.0
+offset = Vector3(0, 4, -4)
+inclinacion_grados = -15.0
 limite_pitch = 0.1
 sensibilidad_volante = 4.0
 

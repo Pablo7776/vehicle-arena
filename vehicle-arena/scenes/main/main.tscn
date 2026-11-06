@@ -41,9 +41,6 @@ theme_override_font_sizes/font_size = 23
 text = "aaa"
 script = ExtResource("4_l3cfh")
 
-[node name="TargetDummy" parent="." unique_id=327059932 instance=ExtResource("5_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.87497, 5.4170437, 0)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1116587904]
 transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 221.46631, 1259.4043, 334.04175)
 light_color = Color(1.1037436, 0.7150186, 0.43300235, 1)
@@ -54,6 +51,8 @@ directional_shadow_mode = 0
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=507325657]
 environment = SubResource("Environment_l3cfh")
 camera_attributes = SubResource("CameraAttributesPractical_6q06x")
+
+[node name="TargetDummy" parent="." unique_id=201704722 instance=ExtResource("5_6q06x")]
 
 [editable path="Arena"]
 [editable path="Arena/Item_life"]
