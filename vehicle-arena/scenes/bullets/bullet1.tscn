@@ -15,6 +15,7 @@ emission_energy_multiplier = 13.0
 emission_on_uv2 = true
 
 [node name="Bullet1" type="Area3D" unique_id=1086934140]
+collision_mask = 11
 script = ExtResource("1_a8evu")
 speed = 1500.0
 life_time = 40.0

@@ -50,4 +50,4 @@ func _process(delta):
 	var yaw_base = vehiculo.global_rotation.y + PI
 	global_rotation.y = yaw_base + offset_yaw
 	global_rotation.x = offset_pitch + deg_to_rad(inclinacion_grados)
-	global_rotation.z = volante
+	global_rotation.z = volante * 0.3

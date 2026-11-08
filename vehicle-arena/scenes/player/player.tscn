@@ -11,13 +11,16 @@
 
 [node name="Kart1" parent="." unique_id=1947343312 instance=ExtResource("4_p47bc")]
 
+[node name="Hurtbox" parent="Kart1" index="10" unique_id=2134039607]
+collision_layer = 4
+
 [node name="Camera3D" parent="Kart1" unique_id=1054761183 instance=ExtResource("2_gmlin")]
 transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 0, -2)
 vehiculo_path = NodePath("..")
 offset = Vector3(0, 4, -4)
-inclinacion_grados = -15.0
+inclinacion_grados = -10.0
 limite_pitch = 0.1
-sensibilidad_volante = 4.0
+sensibilidad_volante = -8.0
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("4_lvxji")]
 offset_left = 0.0
@@ -25,6 +28,9 @@ offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
 size_flags_horizontal = 8
+
+[node name="VirtualJoystick" parent="hud" index="1" unique_id=1041655175]
+action_up = &""
 
 [node name="TouchGestureController" type="Node" parent="." unique_id=1304990146]
 script = ExtResource("3_gmlin")
