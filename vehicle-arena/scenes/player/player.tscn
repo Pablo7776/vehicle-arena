@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://bpd17vpmo2oi3" path="res://scenes/vehicle/kart/kart1.tscn" id="4_p47bc"]
 [ext_resource type="Texture2D" uid="uid://dwxtaksuo5mvo" path="res://icon.svg" id="5_p47bc"]
 [ext_resource type="Script" uid="uid://brk5novpo1vjl" path="res://scripts/aim_controller.gd" id="6_75vfm"]
+[ext_resource type="AudioStream" uid="uid://b44yjrc7rd1kf" path="res://assets/audio/Loop1.mp3" id="7_0owmy"]
+[ext_resource type="Script" uid="uid://d2v6tj80f0vmy" path="res://scripts/audio_stream_player.gd" id="8_qek5x"]
 
 [node name="Player" type="Node3D" unique_id=861030176]
 
@@ -49,6 +51,13 @@ inclinacion_grados = -10.0
 sensibilidad_horizonte = -1.0
 intensidad_horizonte = 0.8
 velocidad_horizonte = 300.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=769034137 node_paths=PackedStringArray("vehiculo")]
+stream = ExtResource("7_0owmy")
+autoplay = true
+bus = &"musica"
+script = ExtResource("8_qek5x")
+vehiculo = NodePath("../Kart1")
 
 [editable path="Kart1"]
 [editable path="Kart1/Hurtbox"]

@@ -64,7 +64,7 @@ environment = SubResource("Environment_l3cfh")
 camera_attributes = SubResource("CameraAttributesPractical_6q06x")
 
 [node name="TargetDummy" parent="." unique_id=201704722 instance=ExtResource("5_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.649788, 0.7447958, 31.268734)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.07799, 0.7447958, 218.94496)
 
 [editable path="NavigationRegion3D/Arena"]
 [editable path="NavigationRegion3D/Arena/Item_life"]
