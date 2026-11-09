@@ -25,7 +25,7 @@ height = 15.0
 
 [node name="TargetDummy" type="CharacterBody3D" unique_id=201704722]
 script = ExtResource("1_eu4uf")
-move_speed = 20.0
+move_speed = 40.0
 wander_range = 100.0
 idle_time_min = 0.1
 idle_time_max = 0.4
