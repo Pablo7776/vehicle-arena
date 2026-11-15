@@ -46,8 +46,7 @@ folder_colors={
 "res://builds/": "red",
 "res://docs/": "green",
 "res://scenes/": "orange",
-"res://scenes/player/": "blue",
-"res://scripts/": "yellow"
+"res://scenes/player/": "blue"
 }
 
 [global_group]

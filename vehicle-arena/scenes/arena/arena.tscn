@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b6qocilsg135b"]
 
 [ext_resource type="PackedScene" uid="uid://bpv2quijua7qy" path="res://scenes/items/life_item/item_life.tscn" id="2_8trdl"]
-[ext_resource type="Script" uid="uid://led084tcccak" path="res://scripts/game_manager.gd" id="3_5tue2"]
+[ext_resource type="Script" uid="uid://led084tcccak" path="res://scenes/game/game_manager.gd" id="3_5tue2"]
 [ext_resource type="PackedScene" uid="uid://lo2hver3y1u2" path="res://assets/terreno1/Sin_nombre.glb" id="4_aj7ud"]
 [ext_resource type="PackedScene" uid="uid://ddncj6y5nxn1y" path="res://assets/Hypno's Fantsy Village Pack/tree1.fbx" id="6_u52cf"]
 [ext_resource type="Script" uid="uid://bjkkkwg1l78x3" path="res://scenes/debug/fps_label.gd" id="7_u52cf"]

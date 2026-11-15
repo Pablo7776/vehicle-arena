@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://bpv2quijua7qy"]
 
-[ext_resource type="Script" uid="uid://66ryfr505gjx" path="res://scenes/items/life_item/life_item.gd" id="1_jifmn"]
+[ext_resource type="Script" uid="uid://66ryfr505gjx" path="res://scenes/items/life_item/item_life.gd" id="1_jifmn"]
 [ext_resource type="Texture2D" uid="uid://cebdsj7uccxla" path="res://assets/llave/adjustable_wrench_0.png" id="2_jifmn"]
 [ext_resource type="Texture2D" uid="uid://bhwsodxd0a23r" path="res://assets/llave/adjustable_wrench_1.png" id="3_epmmw"]
 [ext_resource type="Texture2D" uid="uid://c62v0nnme4ynr" path="res://assets/llave/adjustable_wrench_2.png" id="4_mjuti"]
