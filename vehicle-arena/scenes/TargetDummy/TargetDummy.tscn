@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bw5phwtitcf3u" path="res://scenes/TargetDummy/target_dummy.gd" id="1_eu4uf"]
 [ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurtbox/Hurtbox.tscn" id="2_lnq1v"]
 [ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/HealthComponent/HealthComponent.tscn" id="3_eu4uf"]
+[ext_resource type="BehaviorTree" uid="uid://t7eks88stlix" path="res://ai/trees/jabali.tres" id="4_uaiwt"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_eu4uf"]
 radius = 5.0
@@ -23,12 +24,13 @@ albedo_color = Color(7.02709e-06, 0.69613826, 0.82464963, 1)
 radius = 5.0
 height = 15.0
 
-[node name="TargetDummy" type="CharacterBody3D" unique_id=201704722]
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_eu4uf"]
+
+[sub_resource type="GDScript" id="GDScript_uaiwt"]
+
+[node name="TargetDummy" type="CharacterBody3D" unique_id=201704722 groups=["jabali"]]
 script = ExtResource("1_eu4uf")
 move_speed = 40.0
-wander_range = 100.0
-idle_time_min = 0.1
-idle_time_max = 0.4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1025635403]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
@@ -46,7 +48,7 @@ health = NodePath("../HealthComponent")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
 shape = SubResource("CapsuleShape3D_uaiwt")
 
-[node name="Label3D" type="Label3D" parent="." unique_id=165133716 groups=["jabali"]]
+[node name="Label3D" type="Label3D" parent="." unique_id=165133716]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.782986, 0)
 pixel_size = 1.0
 billboard = 1
@@ -59,5 +61,16 @@ font_size = 8
 path_desired_distance = 2.0
 target_desired_distance = 3.0
 debug_path_custom_color = Color(1, 1, 0.011764706, 1)
+
+[node name="BTPlayer" type="BTPlayer" parent="." unique_id=492356388]
+behavior_tree = ExtResource("4_uaiwt")
+blackboard_plan = SubResource("BlackboardPlan_eu4uf")
+
+[node name="Label3D2" type="Label3D" parent="." unique_id=445489010]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.409847, 9.622119, 0)
+pixel_size = 0.2
+billboard = 1
+text = "aaaa"
+script = SubResource("GDScript_uaiwt")
 
 [editable path="Hurtbox"]

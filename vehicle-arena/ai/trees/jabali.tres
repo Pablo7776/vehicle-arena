@@ -1,0 +1,80 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://t7eks88stlix"]
+
+[ext_resource type="Script" uid="uid://dr7ict1r8nqjv" path="res://ai/tasks/hambre_mayor_a.gd" id="1_655y1"]
+[ext_resource type="Script" uid="uid://df8hxdf8i5re4" path="res://ai/tasks/elegir_pos_aleatoria.gd" id="1_beukn"]
+[ext_resource type="Script" uid="uid://cuossuofk7lki" path="res://ai/tasks/vehiculo_cerca.gd" id="1_stdl7"]
+[ext_resource type="Script" uid="uid://yc75tkbou8u0" path="res://ai/tasks/elegir_punto_huida.gd" id="2_jav6q"]
+[ext_resource type="Script" uid="uid://dc4c2nephk232" path="res://ai/tasks/embestir.gd" id="2_p8jgx"]
+[ext_resource type="Script" uid="uid://v68r68s601b6" path="res://ai/tasks/elegir_del_grupo.gd" id="2_ph50v"]
+[ext_resource type="Script" uid="uid://1t4saqhxc6j0" path="res://ai/tasks/ir_a_pos.gd" id="2_ssq0g"]
+[ext_resource type="Script" uid="uid://b6tgg2nkwf682" path="res://ai/tasks/pastar.gd" id="4_ph50v"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_e8i8n"]
+
+[sub_resource type="BTCondition" id="BTCondition_22sde"]
+script = ExtResource("1_stdl7")
+radio = 50.0
+
+[sub_resource type="BTAction" id="BTAction_s7dbb"]
+script = ExtResource("2_p8jgx")
+vel_carga = 40.0
+duracion_carga = 3.0
+
+[sub_resource type="BTCooldown" id="BTCooldown_qy01l"]
+duration = 3.0
+children = [SubResource("BTAction_s7dbb")]
+
+[sub_resource type="BTSequence" id="BTSequence_jf346"]
+custom_name = "Embestir"
+children = [SubResource("BTCondition_22sde"), SubResource("BTCooldown_qy01l")]
+
+[sub_resource type="BTCondition" id="BTCondition_p8jgx"]
+script = ExtResource("1_stdl7")
+radio = 100.0
+memoria = 5.0
+
+[sub_resource type="BTAction" id="BTAction_22sde"]
+script = ExtResource("2_jav6q")
+
+[sub_resource type="BTAction" id="BTAction_tacu7"]
+script = ExtResource("2_ssq0g")
+
+[sub_resource type="BTSequence" id="BTSequence_s7dbb"]
+custom_name = "Huir"
+children = [SubResource("BTCondition_p8jgx"), SubResource("BTAction_22sde"), SubResource("BTAction_tacu7")]
+
+[sub_resource type="BTCondition" id="BTCondition_lipte"]
+script = ExtResource("1_655y1")
+
+[sub_resource type="BTAction" id="BTAction_stdl7"]
+script = ExtResource("2_ph50v")
+
+[sub_resource type="BTAction" id="BTAction_jav6q"]
+script = ExtResource("2_ssq0g")
+
+[sub_resource type="BTAction" id="BTAction_lipte"]
+script = ExtResource("4_ph50v")
+
+[sub_resource type="BTSequence" id="BTSequence_p8jgx"]
+custom_name = "Pastar"
+children = [SubResource("BTCondition_lipte"), SubResource("BTAction_stdl7"), SubResource("BTAction_jav6q"), SubResource("BTAction_lipte")]
+
+[sub_resource type="BTAction" id="BTAction_beukn"]
+script = ExtResource("1_beukn")
+
+[sub_resource type="BTAction" id="BTAction_mrkx4"]
+script = ExtResource("2_ssq0g")
+
+[sub_resource type="BTWait" id="BTWait_ssq0g"]
+duration = 5.0
+
+[sub_resource type="BTSequence" id="BTSequence_beukn"]
+custom_name = "Deambular"
+children = [SubResource("BTAction_beukn"), SubResource("BTAction_mrkx4"), SubResource("BTWait_ssq0g")]
+
+[sub_resource type="BTDynamicSelector" id="BTDynamicSelector_stdl7"]
+children = [SubResource("BTSequence_jf346"), SubResource("BTSequence_s7dbb"), SubResource("BTSequence_p8jgx"), SubResource("BTSequence_beukn")]
+
+[resource]
+blackboard_plan = SubResource("BlackboardPlan_e8i8n")
+root_task = SubResource("BTDynamicSelector_stdl7")

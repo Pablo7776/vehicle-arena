@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dtfdnacujyrlc"]
 
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
+[ext_resource type="PackedScene" uid="uid://bh0qcaq7j0fkm" path="res://scenes/pasto/pasto.tscn" id="4_6q06x"]
 [ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scripts/label.gd" id="4_l3cfh"]
 [ext_resource type="PackedScene" uid="uid://qummw1k2sbin" path="res://scenes/TargetDummy/TargetDummy.tscn" id="5_6q06x"]
 
@@ -64,7 +65,10 @@ environment = SubResource("Environment_l3cfh")
 camera_attributes = SubResource("CameraAttributesPractical_6q06x")
 
 [node name="TargetDummy" parent="." unique_id=201704722 instance=ExtResource("5_6q06x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.07799, 0.7447958, 218.94496)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 139.02179, 0.7447958, -71.6031)
+
+[node name="Pasto" parent="." unique_id=605286845 instance=ExtResource("4_6q06x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.314194, -12.925612, 0)
 
 [editable path="NavigationRegion3D/Arena"]
 [editable path="NavigationRegion3D/Arena/Item_life"]

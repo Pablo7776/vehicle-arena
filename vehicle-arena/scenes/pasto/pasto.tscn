@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bh0qcaq7j0fkm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1v42w"]
+albedo_color = Color(6.160736e-06, 0.6216084, 7.70092e-07, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_f8ekr"]
+material = SubResource("StandardMaterial3D_1v42w")
+radius = 5.0
+height = 10.0
+
+[node name="Pasto" type="Node3D" unique_id=605286845 groups=["pasto"]]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=922252223]
+mesh = SubResource("SphereMesh_f8ekr")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=1934383426]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.626324, 0)
+pixel_size = 0.5
+billboard = 1
+text = "pasto"

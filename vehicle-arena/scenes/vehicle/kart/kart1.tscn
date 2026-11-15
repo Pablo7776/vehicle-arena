@@ -28,7 +28,7 @@ size = Vector3(1.8258057, 0.75439453, 3.5321045)
 [sub_resource type="BoxShape3D" id="BoxShape3D_70yas"]
 size = Vector3(0.436, 0.659, 0.5)
 
-[node name="Kart1" type="VehicleBody3D" unique_id=1947343312]
+[node name="Kart1" type="VehicleBody3D" unique_id=1947343312 groups=["vehiculos"]]
 mass = 1000.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.3, 0)
