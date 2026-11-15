@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud/hud.tscn" id="3_015gl"]
 [ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="4_cs81w"]
 [ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/health_component/health_component.tscn" id="5_3wsv0"]
-[ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurt_box/hurtbox.tscn" id="6_bswb0"]
+[ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurt_box/hurt_box.tscn" id="6_bswb0"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_f8ekr"]
 size = Vector3(2.552681, 0.7423096, 5.031929)

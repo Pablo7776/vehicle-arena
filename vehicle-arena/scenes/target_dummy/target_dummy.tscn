@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://qummw1k2sbin"]
 
 [ext_resource type="Script" uid="uid://bw5phwtitcf3u" path="res://scenes/target_dummy/target_dummy.gd" id="1_eu4uf"]
-[ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurt_box/hurtbox.tscn" id="2_lnq1v"]
+[ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurt_box/hurt_box.tscn" id="2_lnq1v"]
 [ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/health_component/health_component.tscn" id="3_eu4uf"]
 [ext_resource type="BehaviorTree" uid="uid://t7eks88stlix" path="res://ai/trees/jabali.tres" id="4_uaiwt"]
 
