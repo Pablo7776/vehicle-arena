@@ -5,6 +5,10 @@ extends BTAction
 
 func _tick(_delta: float) -> Status:
 	var map: RID = agent.get_world_3d().navigation_map
+	# En los primeros frames el mapa de navegación todavía no está listo:
+	# esperamos en vez de consultarlo (si no, Godot tira un error).
+	if NavigationServer3D.map_get_iteration_id(map) == 0:
+		return RUNNING
 	agent.set_estado("Deambulando")
 	for i in 10:
 		var p: Vector3 = agent.global_position + Vector3(

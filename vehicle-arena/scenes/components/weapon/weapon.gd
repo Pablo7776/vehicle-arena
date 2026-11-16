@@ -10,10 +10,10 @@ signal municion_cambiada(actual: int, maxima: int)
 @export var muzzle: Node3D          # PuntoDisparo de ESTE vehículo
 @export var bullet_scene: PackedScene
 @export var damage: float = 10.0
-@export var max_range: float = 25.0
-@export var bullet_speed: float = 40.0
+@export var max_range: float = 100.0
+@export var bullet_speed: float = 80.0
 @export var fire_rate: float = 0.25   # segundos mínimos entre disparos
-@export var municion_maxima: int = 30
+@export var municion_maxima: int = 100
 
 var municion_actual: int
 var _last_shot_time: float = -1000.0

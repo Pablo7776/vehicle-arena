@@ -1,7 +1,7 @@
 extends VehicleBody3D
 
 @export var MAX_STEER := 0.9
-@export var ENGINE_POWER := 9000.0
+@export var ENGINE_POWER := 12000.0
 ## Freno: con masa 1000, entre 25 y 30 es un frenado fuerte.
 @export var FUERZA_FRENO := 30.0
 ## Potencia de la marcha atrás, como fracción de ENGINE_POWER (0.5 = la mitad).

@@ -37,10 +37,14 @@ func _actualizar() -> void:
 func _nombre_del_dueno() -> String:
 	var dueno := GDSync.get_gdsync_owner(self)
 	if dueno < 0:
-		return ""
+		return "Jugador"
 	# El nombre lo va a poner cada jugador en el lobby (player_set_username).
-	# Mientras no tenga uno, mostramos "Jugador" + las últimas cifras de su ID.
-	return GDSync.player_get_username(dueno, "Jugador %d" % (dueno % 1000))
+	# GD-Sync puede devolver un nombre VACÍO ("") si el jugador todavía no eligió
+	# uno: en ese caso mostramos "Jugador" + las últimas cifras de su ID.
+	var nombre := str(GDSync.player_get_username(dueno, "")).strip_edges()
+	if nombre.is_empty():
+		nombre = "Jugador %d" % (dueno % 1000)
+	return nombre
 
 
 func _al_cambiar_datos_jugador(client_id: int, clave: String, _valor) -> void:
