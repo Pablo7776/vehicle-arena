@@ -16,6 +16,12 @@ const ESCENA_JUGADOR: PackedScene = preload("uid://bswy0tnc4txqv")   # scenes/pl
 const ESCENA_ARENA: PackedScene = preload("uid://dtfdnacujyrlc")     # scenes/main/main.tscn
 
 const MAX_JUGADORES := 4
+## Nombre del nodo de la arena que agrupa los Marker3D de aparición de jugadores
+const NODO_PUNTOS_SPAWN := "PuntosSpawnJugadores"
+## Si la arena no tiene puntos de aparición, se usa este lugar
+const SPAWN_POR_DEFECTO := Vector3(0.0, 2.0, 0.0)
+## Dónde espera el kart de otro jugador hasta que llega su posición sincronizada
+const POSICION_ESPERA_REMOTO := Vector3(0.0, -200.0, 0.0)
 
 var nombre_sala := "MiSala"
 var soy_host := false
@@ -54,7 +60,9 @@ func probar_offline() -> void:
 	if _arena != null:
 		return
 	_crear_arena()
-	get_tree().current_scene.add_child(ESCENA_JUGADOR.instantiate())
+	var jugador: Node3D = ESCENA_JUGADOR.instantiate()
+	jugador.transform = _transform_de_spawn(0)
+	get_tree().current_scene.add_child(jugador)
 
 
 # ---- Conexión y salas -------------------------------------------------------
@@ -96,7 +104,17 @@ func _al_entrar_cliente(client_id: int) -> void:
 	# Crear el vehículo de ese jugador (el mío o el de otro)
 	var jugador: Node3D = ESCENA_JUGADOR.instantiate()
 	jugador.name = str(client_id)
-	jugador.position = Vector3((client_id % 5) * 4.0, 2.0, 0.0)
+	# Punto de aparición. Solo importa el que calcula el DUEÑO: su PropertySynchronizer
+	# manda la posición real y pisa la que pongamos acá (como en la clase 10:
+	# la posición la escribe el dueño).
+	if es_mio:
+		# Índice = orden de llegada: el primero en la sala va al punto 0, el segundo
+		# al 1... (como el índice rotativo del spawner de la clase 10)
+		jugador.transform = _transform_de_spawn(GDSync.lobby_get_player_count() - 1)
+	else:
+		# Un kart ajeno: lo dejamos lejos hasta que llegue su posición real,
+		# así no choca con nadie en el punto de aparición mientras tanto.
+		jugador.position = POSICION_ESPERA_REMOTO
 	# Primero agregarlo al árbol, después asignar el dueño (si no, GD-Sync da error)
 	get_tree().current_scene.add_child(jugador)
 	GDSync.set_gdsync_owner(jugador, client_id)
@@ -133,6 +151,30 @@ func _al_salir_cliente(client_id: int) -> void:
 	var nodo = get_tree().current_scene.get_node_or_null(str(client_id))
 	if nodo:
 		nodo.queue_free()
+
+
+## Posición y rotación del punto de aparición número `indice`.
+## Si hay más jugadores que puntos, rota: el quinto vuelve al primero.
+func _transform_de_spawn(indice: int) -> Transform3D:
+	var puntos := _puntos_de_spawn()
+	if puntos.is_empty():
+		push_warning("La arena no tiene '%s': uso el spawn por defecto." % NODO_PUNTOS_SPAWN)
+		return Transform3D(Basis.IDENTITY, SPAWN_POR_DEFECTO)
+	return puntos[indice % puntos.size()].global_transform
+
+
+func _puntos_de_spawn() -> Array[Marker3D]:
+	var resultado: Array[Marker3D] = []
+	if _arena == null:
+		return resultado
+	# owned = false: los nodos de una escena instanciada no son "propios" de la raíz
+	var contenedor := _arena.find_child(NODO_PUNTOS_SPAWN, true, false)
+	if contenedor == null:
+		return resultado
+	for hijo in contenedor.get_children():
+		if hijo is Marker3D:
+			resultado.append(hijo)
+	return resultado
 
 
 func _crear_arena() -> void:
