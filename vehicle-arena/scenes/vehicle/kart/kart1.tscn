@@ -132,5 +132,8 @@ outline_size = 2
 script = ExtResource("22_kie2a")
 muzzle = NodePath("../PuntoDisparo")
 bullet_scene = ExtResource("2_y0wgl")
+max_range = 100.0
+bullet_speed = 80.0
+municion_maxima = 100
 
 [editable path="Hurtbox"]

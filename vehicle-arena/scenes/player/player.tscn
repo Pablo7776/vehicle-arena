@@ -23,6 +23,7 @@ collision_layer = 4
 [node name="weapon" parent="Kart1" index="12" unique_id=681733314]
 max_range = 100.0
 bullet_speed = 80.0
+municion_maxima = 100
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("4_lvxji")]
 offset_left = 0.0
