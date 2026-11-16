@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bswy0tnc4txqv"]
 
+[ext_resource type="Script" uid="uid://fmksxd37e641" path="res://scenes/player/cartel_jugador.gd" id="2_5gtgg"]
 [ext_resource type="PackedScene" uid="uid://cew2auxn0ee51" path="res://scenes/camera/camera_3d.tscn" id="2_gmlin"]
 [ext_resource type="Script" uid="uid://c2acvk05demxg" path="res://scenes/player/touch_gesture_controller.gd" id="3_gmlin"]
 [ext_resource type="PackedScene" uid="uid://64vcvd4e1wte" path="res://scenes/hud/hud.tscn" id="4_lvxji"]
@@ -20,10 +21,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.6353226)
 [node name="Hurtbox" parent="Kart1" index="10" unique_id=2134039607]
 collision_layer = 4
 
-[node name="weapon" parent="Kart1" index="12" unique_id=681733314]
-max_range = 100.0
-bullet_speed = 80.0
-municion_maxima = 100
+[node name="Label3D" parent="Kart1" index="11" unique_id=1815795333]
+script = ExtResource("2_5gtgg")
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("4_lvxji")]
 offset_left = 0.0

@@ -1,4 +1,3 @@
-
 extends VehicleBody3D
 
 @export var MAX_STEER := 0.9
@@ -15,7 +14,6 @@ extends VehicleBody3D
 @onready var vehicle_input = $VehicleInput
 @onready var weapon: Weapon = $weapon
 @onready var health: HealthComponent = $HealthComponent
-@onready var label: Label3D = $Label3D
 
 var _en_reversa := false
 var _muerto := false   # estado local de cada peer, se deduce de health.current (sincronizado)
@@ -25,14 +23,13 @@ func _ready() -> void:
 	add_to_group("vehiculos")   # el GameManager cuenta los vivos con este grupo
 	health.health_changed.connect(_on_health_changed)
 	health.died.connect(_on_died)
-	_on_health_changed(health.current, health.max_health)
 	if ammo_hud != null:
 		weapon.municion_cambiada.connect(ammo_hud.actualizar_municion)
 		ammo_hud.actualizar_municion(weapon.municion_actual, weapon.municion_maxima)
 
 
-func _on_health_changed(current: float, max_value: float) -> void:
-	label.text = "HP: %d / %d" % [current, max_value]
+# El cartel con nombre y vida lo maneja cartel_jugador.gd (escena del jugador)
+func _on_health_changed(current: float, _max_value: float) -> void:
 	# current llega sincronizado, así que esto corre en TODOS los peers
 	if current <= 0.0 and not _muerto:
 		_morir()
