@@ -110,4 +110,6 @@ camera/depth_of_field/depth_of_field_bokeh_shape=2
 camera/depth_of_field/depth_of_field_bokeh_quality=2
 anti_aliasing/quality/msaa_3d=2
 scaling_3d/mode=5
-scaling_3d/scale=0.30000000000000004
+scaling_3d/scale.mobile=0.3
+scaling_3d/scale.web=0.3
+anti_aliasing/quality/msaa_3d.web=0
