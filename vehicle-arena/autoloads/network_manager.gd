@@ -101,12 +101,31 @@ func _al_entrar_cliente(client_id: int) -> void:
 	get_tree().current_scene.add_child(jugador)
 	GDSync.set_gdsync_owner(jugador, client_id)
 
+	# Los jugadores de otros no muestran su HUD ni leen los toques de esta pantalla
+	if not es_mio:
+		_desactivar_controles_locales(jugador)
+
 	# Solo la cámara de MI vehículo queda activa
 	var cam = jugador.find_child("Camera3D", true, false)
 	if cam:
 		cam.current = es_mio
 	else:
 		push_error("No se encontró 'Camera3D' en el vehículo instanciado.")
+
+
+## Cada jugador es un player.tscn completo, con HUD y controles táctiles.
+## En la pantalla de cada uno, solo el propio debe verse y responder.
+func _desactivar_controles_locales(jugador: Node) -> void:
+	var hud = jugador.get_node_or_null("hud")
+	if hud:
+		hud.hide()
+		# Un CanvasLayer no se oculta cuando se oculta su padre: hay que ocultarlo aparte
+		var capa = hud.get_node_or_null("CanvasLayer")
+		if capa:
+			capa.hide()
+	var touch = jugador.get_node_or_null("TouchGestureController")
+	if touch:
+		touch.process_mode = Node.PROCESS_MODE_DISABLED
 
 
 func _al_salir_cliente(client_id: int) -> void:
