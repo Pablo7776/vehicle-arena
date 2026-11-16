@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://d1ul50kvw4uva"]
+
+[ext_resource type="Script" uid="uid://b5tqyjfdp47m0" path="res://scenes/sala_espera/sala_espera.gd" id="1_sala"]
+
+[node name="SalaEspera" type="Control" unique_id=1203494127]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -3.0517578e-05
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sala")
+
+[node name="Fondo" type="ColorRect" parent="." unique_id=1031680244]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.09, 0.12, 0.95)
+
+[node name="Margen" type="MarginContainer" parent="." unique_id=753225177]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="Columnas" type="HBoxContainer" parent="Margen" unique_id=1958554788]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Izquierda" type="VBoxContainer" parent="Margen/Columnas" unique_id=116136694]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Titulo" type="Label" parent="Margen/Columnas/Izquierda" unique_id=1316387784]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Sala: "
+
+[node name="EtiquetaNombre" type="Label" parent="Margen/Columnas/Izquierda" unique_id=182311410]
+layout_mode = 2
+text = "Tu nombre:"
+
+[node name="FilaNombre" type="HBoxContainer" parent="Margen/Columnas/Izquierda" unique_id=764495110]
+layout_mode = 2
+
+[node name="NombreInput" type="LineEdit" parent="Margen/Columnas/Izquierda/FilaNombre" unique_id=1720364540]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 16
+
+[node name="BotonNombre" type="Button" parent="Margen/Columnas/Izquierda/FilaNombre" unique_id=1543379404]
+unique_name_in_owner = true
+layout_mode = 2
+text = "OK"
+
+[node name="Espacio" type="Control" parent="Margen/Columnas/Izquierda" unique_id=1255449972]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Estado" type="Label" parent="Margen/Columnas/Izquierda" unique_id=1676260692]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="BotonEmpezar" type="Button" parent="Margen/Columnas/Izquierda" unique_id=255802513]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Empezar (prueba)"
+
+[node name="BotonSalir" type="Button" parent="Margen/Columnas/Izquierda" unique_id=1611210862]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Salir de la sala"
+
+[node name="Derecha" type="VBoxContainer" parent="Margen/Columnas" unique_id=2089329154]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="EtiquetaJugadores" type="Label" parent="Margen/Columnas/Derecha" unique_id=1395989157]
+layout_mode = 2
+text = "Jugadores"
+
+[node name="ListaJugadores" type="ItemList" parent="Margen/Columnas/Derecha" unique_id=620452061]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0

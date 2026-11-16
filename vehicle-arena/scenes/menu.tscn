@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dnan2sb4ap5sy"]
 
 [ext_resource type="Script" uid="uid://c4s7rghnfw4lm" path="res://addons/settings_menus/ui/main_menu_ui.gd" id="1_mhnvy"]
-[ext_resource type="Resource" uid="uid://cqhflpcw8o5h3" path="res://resources/menu_inicio.tres" id="2_mhnvy"]
+[ext_resource type="PackedScene" uid="uid://d1ul50kvw4uva" path="res://scenes/sala_espera/sala_espera.tscn" id="2_vjb58"]
 
 [node name="Menu" type="Control" unique_id=1310546058]
 layout_mode = 3
@@ -22,7 +22,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mhnvy")
-theme_data = ExtResource("2_mhnvy")
-play_scene_path = "uid://dtfdnacujyrlc"
-show_options = false
-show_credits = false
+
+[node name="SalaEspera" parent="." unique_id=1203494127 instance=ExtResource("2_vjb58")]
+layout_mode = 1

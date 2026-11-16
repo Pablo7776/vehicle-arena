@@ -29,7 +29,9 @@ func _ready() -> void:
 
 	# La red la maneja el autoload NetworkManager; el menú solo muestra lo que pasa
 	NetworkManager.estado_cambiado.connect(_actualizar_log)
-	NetworkManager.partida_iniciada.connect(hide)
+	NetworkManager.entraste_a_sala.connect(hide)        # pasa a verse la sala de espera
+	NetworkManager.partida_iniciada.connect(hide)       # (botón Test)
+	NetworkManager.saliste_de_sala.connect(_al_volver_al_menu)
 	NetworkManager.conexion_fallida.connect(_bloquear_menu.bind(false))
 
 func _notification(what: int) -> void:
@@ -221,6 +223,10 @@ func _on_host() -> void:
 func _on_join() -> void:
 	_bloquear_menu(true)
 	NetworkManager.unirse_a_sala(_sala_input.text)
+
+func _al_volver_al_menu() -> void:
+	show()
+	_bloquear_menu(false)
 
 func _actualizar_log(texto: String) -> void:
 	if _status_label:

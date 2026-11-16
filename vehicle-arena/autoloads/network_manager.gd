@@ -1,14 +1,20 @@
 extends Node
 
 ## Toda la lógica de red del juego (GD-Sync) vive acá.
-## El menú (o el lobby, más adelante) solo llama a:
-##   NetworkManager.crear_sala(nombre)
-##   NetworkManager.unirse_a_sala(nombre)
+## El menú y la sala de espera solo llaman a estas funciones:
+##   NetworkManager.crear_sala(nombre) / unirse_a_sala(nombre)
+##   NetworkManager.cambiar_nombre(nombre)
+##   NetworkManager.empezar_partida()      (solo el host)
+##   NetworkManager.salir_de_sala()
 ##   NetworkManager.probar_offline()
-## y escucha estas señales para actualizar la pantalla:
+## y escuchan estas señales para actualizar la pantalla
+## (como los eventos de LobbyConnection en la clase 9):
 
 signal estado_cambiado(texto: String)   # mensajes para mostrar al jugador
-signal partida_iniciada                  # entraste a la partida: ocultar el menú
+signal entraste_a_sala                   # estás en la sala de espera: ocultar el menú
+signal sala_actualizada                  # alguien entró, salió o cambió su nombre
+signal saliste_de_sala                   # volviste al menú
+signal partida_iniciada                  # arrancó la partida: ocultar menú y sala
 signal conexion_fallida                  # algo salió mal: desbloquear el menú
 
 # Se cargan por UID, así no se rompen si movés o renombrás los archivos.
@@ -20,12 +26,11 @@ const MAX_JUGADORES := 4
 const NODO_PUNTOS_SPAWN := "PuntosSpawnJugadores"
 ## Si la arena no tiene puntos de aparición, se usa este lugar
 const SPAWN_POR_DEFECTO := Vector3(0.0, 2.0, 0.0)
-## Dónde espera el kart de otro jugador hasta que llega su posición sincronizada
-const POSICION_ESPERA_REMOTO := Vector3(0.0, -200.0, 0.0)
 
 var nombre_sala := "MiSala"
 var soy_host := false
 var _arena: Node = null
+var _partida_en_curso := false
 
 
 func _ready() -> void:
@@ -41,6 +46,9 @@ func _conectar_senales() -> void:
 	GDSync.lobby_join_failed.connect(_al_fallar_unirse)
 	GDSync.client_joined.connect(_al_entrar_cliente)
 	GDSync.client_left.connect(_al_salir_cliente)
+	GDSync.player_data_changed.connect(_al_cambiar_datos_jugador)
+	GDSync.host_changed.connect(func(_es_host, _nuevo_host): sala_actualizada.emit())
+	GDSync.expose_func(_iniciar_partida_remoto)
 	_estado("SISTEMA DE RED LISTO")
 
 
@@ -65,6 +73,48 @@ func probar_offline() -> void:
 	get_tree().current_scene.add_child(jugador)
 
 
+# ---- Lo que llama la sala de espera -----------------------------------------
+
+## IDs de los jugadores de la sala, SIEMPRE en el mismo orden en todas las máquinas
+## (ordenados de menor a mayor). Ese orden decide el punto de aparición de cada uno.
+func jugadores_en_sala() -> Array:
+	var ids: Array = GDSync.lobby_get_all_clients()
+	ids.sort()
+	return ids
+
+
+## El nombre que eligió el jugador, o "Jugador ###" si todavía no eligió uno.
+func nombre_de(client_id: int) -> String:
+	var nombre := str(GDSync.player_get_username(client_id, "")).strip_edges()
+	if nombre.is_empty():
+		nombre = "Jugador %d" % (client_id % 1000)
+	return nombre
+
+
+func cambiar_nombre(nombre: String) -> void:
+	nombre = nombre.strip_edges()
+	if nombre.is_empty():
+		return
+	# Se guarda como dato del jugador y les llega a todos (señal player_data_changed),
+	# igual que el dato "IsReady" de la clase 9.
+	GDSync.player_set_username(nombre)
+
+
+## SOLO el host. Cierra la sala y arranca la partida en todas las máquinas.
+func empezar_partida() -> void:
+	if not GDSync.is_host() or _partida_en_curso:
+		return
+	GDSync.lobby_close()   # = IsLocked de la clase 9: nadie más entra con la partida empezada
+	GDSync.call_func(_iniciar_partida_remoto)   # los demás
+	_iniciar_partida()                           # yo
+
+
+func salir_de_sala() -> void:
+	GDSync.lobby_leave()
+	_estado("Saliste de la sala")
+	saliste_de_sala.emit()
+
+
 # ---- Conexión y salas -------------------------------------------------------
 
 func _iniciar(nombre: String, como_host: bool) -> void:
@@ -72,6 +122,10 @@ func _iniciar(nombre: String, como_host: bool) -> void:
 	if not nombre.is_empty():
 		nombre_sala = nombre
 	soy_host = como_host
+	if GDSync.is_active():
+		# Ya estamos conectados (por ejemplo, volviste de otra sala): directo a la sala
+		_al_conectar()
+		return
 	_estado("CONECTANDO (host)..." if como_host else "CONECTANDO (cliente)...")
 	GDSync.start_multiplayer()
 
@@ -89,32 +143,54 @@ func _al_crear_sala(lobby_name: String) -> void:
 	GDSync.lobby_join(lobby_name, "")
 
 
-# ---- Jugadores ----------------------------------------------------------------
+# ---- Sala de espera -----------------------------------------------------------
 
 func _al_entrar_cliente(client_id: int) -> void:
-	_estado("JUGADOR ENTRO: " + str(client_id))
+	_estado("JUGADOR ENTRO: " + nombre_de(client_id))
+	if client_id == GDSync.get_client_id():
+		entraste_a_sala.emit()
+	sala_actualizada.emit()
+
+
+func _al_salir_cliente(client_id: int) -> void:
+	_estado("JUGADOR SALIO: " + nombre_de(client_id))
+	# Si ya estábamos jugando, sacamos su kart
+	var nodo = get_tree().current_scene.get_node_or_null(str(client_id))
+	if nodo:
+		nodo.queue_free()
+	sala_actualizada.emit()
+
+
+func _al_cambiar_datos_jugador(_client_id: int, _clave: String, _valor) -> void:
+	sala_actualizada.emit()
+
+
+# ---- Partida ------------------------------------------------------------------
+
+# Los parámetros de call_func pueden llegar empaquetados: no los usamos
+func _iniciar_partida_remoto(_data = null) -> void:
+	_iniciar_partida()
+
+
+## Corre en TODAS las máquinas a la vez. Cada una crea la arena y los karts de todos,
+## en el mismo orden, así que todas coinciden en el punto de aparición de cada jugador.
+func _iniciar_partida() -> void:
+	if _partida_en_curso:
+		return
+	_partida_en_curso = true
+	partida_iniciada.emit()
+	if _arena == null:
+		_crear_arena()
+	var ids := jugadores_en_sala()
+	for i in ids.size():
+		_crear_jugador(ids[i], i)
+
+
+func _crear_jugador(client_id: int, indice_spawn: int) -> void:
 	var es_mio := client_id == GDSync.get_client_id()
-
-	# Si el que entró soy yo: arranca la partida en mi pantalla
-	if es_mio:
-		partida_iniciada.emit()
-		if _arena == null:
-			_crear_arena()
-
-	# Crear el vehículo de ese jugador (el mío o el de otro)
 	var jugador: Node3D = ESCENA_JUGADOR.instantiate()
 	jugador.name = str(client_id)
-	# Punto de aparición. Solo importa el que calcula el DUEÑO: su PropertySynchronizer
-	# manda la posición real y pisa la que pongamos acá (como en la clase 10:
-	# la posición la escribe el dueño).
-	if es_mio:
-		# Índice = orden de llegada: el primero en la sala va al punto 0, el segundo
-		# al 1... (como el índice rotativo del spawner de la clase 10)
-		jugador.transform = _transform_de_spawn(GDSync.lobby_get_player_count() - 1)
-	else:
-		# Un kart ajeno: lo dejamos lejos hasta que llegue su posición real,
-		# así no choca con nadie en el punto de aparición mientras tanto.
-		jugador.position = POSICION_ESPERA_REMOTO
+	jugador.transform = _transform_de_spawn(indice_spawn)
 	# Primero agregarlo al árbol, después asignar el dueño (si no, GD-Sync da error)
 	get_tree().current_scene.add_child(jugador)
 	GDSync.set_gdsync_owner(jugador, client_id)
@@ -146,13 +222,6 @@ func _desactivar_controles_locales(jugador: Node) -> void:
 		touch.process_mode = Node.PROCESS_MODE_DISABLED
 
 
-func _al_salir_cliente(client_id: int) -> void:
-	_estado("JUGADOR SALIO: " + str(client_id))
-	var nodo = get_tree().current_scene.get_node_or_null(str(client_id))
-	if nodo:
-		nodo.queue_free()
-
-
 ## Posición y rotación del punto de aparición número `indice`.
 ## Si hay más jugadores que puntos, rota: el quinto vuelve al primero.
 func _transform_de_spawn(indice: int) -> Transform3D:
@@ -160,7 +229,11 @@ func _transform_de_spawn(indice: int) -> Transform3D:
 	if puntos.is_empty():
 		push_warning("La arena no tiene '%s': uso el spawn por defecto." % NODO_PUNTOS_SPAWN)
 		return Transform3D(Basis.IDENTITY, SPAWN_POR_DEFECTO)
-	return puntos[indice % puntos.size()].global_transform
+	var t := puntos[indice % puntos.size()].global_transform
+	# Solo la POSICIÓN y el giro horizontal del marcador: si tiene escala o
+	# inclinación, no se la pasamos al kart (rompería la física y la cámara).
+	var giro_y := t.basis.orthonormalized().get_euler().y
+	return Transform3D(Basis(Vector3.UP, giro_y), t.origin)
 
 
 func _puntos_de_spawn() -> Array[Marker3D]:
