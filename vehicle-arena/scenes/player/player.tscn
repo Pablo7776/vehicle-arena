@@ -11,13 +11,18 @@
 
 [node name="Player" type="Node3D" unique_id=861030176]
 
-[node name="Kart1" parent="." unique_id=1947343312 instance=ExtResource("4_p47bc")]
+[node name="Kart1" parent="." unique_id=1947343312 node_paths=PackedStringArray("ammo_hud") instance=ExtResource("4_p47bc")]
+ammo_hud = NodePath("../hud/CanvasLayer")
 
 [node name="PuntoDisparo" parent="Kart1" index="8" unique_id=1292163591]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.6353226)
 
 [node name="Hurtbox" parent="Kart1" index="10" unique_id=2134039607]
 collision_layer = 4
+
+[node name="weapon" parent="Kart1" index="12" unique_id=681733314]
+max_range = 100.0
+bullet_speed = 80.0
 
 [node name="hud" parent="." unique_id=389512278 instance=ExtResource("4_lvxji")]
 offset_left = 0.0
