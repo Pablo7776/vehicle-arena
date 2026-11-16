@@ -9,8 +9,6 @@ signal quit_pressed
 @export var show_options: bool = true
 @export var show_credits: bool = true
 @export var show_quit: bool = true
-@export var escena_jugador: PackedScene
-@export var escena_arena: PackedScene
 var _sala_input: LineEdit
 var _status_label: Label
 var _options_layer: CanvasLayer
@@ -21,11 +19,6 @@ var _test_button: Button
 var _first_button: Button
 var _btn_join: Button
 var _focus_return: Control
-var arena_instanciada: Node = null
-var player_instanciado: Node = null
-# --- Variables de Red ---
-var nombre_sala := "MiSala"
-var soy_host := false
 
 func _ready() -> void:
 	if theme_data == null:
@@ -34,15 +27,10 @@ func _ready() -> void:
 	_apply_font_scale()
 	focus_default()
 
-	# Conectar señales de GDSync
-	GDSync.connected.connect(_al_conectar)
-	GDSync.connection_failed.connect(_conexion_fallida)
-	GDSync.lobby_created.connect(_sala_creada)
-	GDSync.lobby_creation_failed.connect(_sala_fallo)
-	GDSync.lobby_join_failed.connect(_union_fallo)
-	GDSync.client_joined.connect(_cliente_entro)
-
-	_actualizar_log("SISTEMA DE RED LISTO")
+	# La red la maneja el autoload NetworkManager; el menú solo muestra lo que pasa
+	NetworkManager.estado_cambiado.connect(_actualizar_log)
+	NetworkManager.partida_iniciada.connect(hide)
+	NetworkManager.conexion_fallida.connect(_bloquear_menu.bind(false))
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED and _first_button != null and is_visible_in_tree():
@@ -216,13 +204,7 @@ func _restore_focus() -> void:
 		_first_button.grab_focus()
 	_focus_return = null
 
-# ---- Lógica de Red (GD-Sync) ------------------------------------------------
-
-func _leer_nombre_sala() -> void:
-	if _sala_input:
-		var texto := _sala_input.text.strip_edges()
-		if not texto.is_empty():
-			nombre_sala = texto
+# ---- Red: todo lo hace NetworkManager ----------------------------------------
 
 func _bloquear_menu(bloqueado: bool) -> void:
 	if _first_button: _first_button.disabled = bloqueado
@@ -230,94 +212,16 @@ func _bloquear_menu(bloqueado: bool) -> void:
 	if _sala_input: _sala_input.editable = not bloqueado
 
 func _on_test() -> void:
-	self.hide() # Ocultamos el menú
-	# Generamos la Arena 3D si asignaste una y si no existe ya
-	if escena_arena and arena_instanciada == null:
-		arena_instanciada = escena_arena.instantiate()
-		# Cambiado a add_child directo para evitar problemas de sincronía
-		get_tree().current_scene.add_child(arena_instanciada)
-		player_instanciado = escena_jugador.instantiate()
-		get_tree().current_scene.add_child(player_instanciado)
-		
+	NetworkManager.probar_offline()
+
 func _on_host() -> void:
-	_leer_nombre_sala()
-	soy_host = true
 	_bloquear_menu(true)
-	_actualizar_log("CONECTANDO (host)...")
-	GDSync.start_multiplayer()
+	NetworkManager.crear_sala(_sala_input.text)
 
 func _on_join() -> void:
-	_leer_nombre_sala()
-	soy_host = false
 	_bloquear_menu(true)
-	_actualizar_log("CONECTANDO (cliente)...")
-	GDSync.start_multiplayer()
-
-func _al_conectar() -> void:
-	_actualizar_log("CONECTADO. Sala: " + nombre_sala)
-	if soy_host:
-		GDSync.lobby_create(nombre_sala, "", true, 4)
-	else:
-		GDSync.lobby_join(nombre_sala, "")
-
-func _sala_creada(lobby_name: String) -> void:
-	_actualizar_log("SALA CREADA: " + lobby_name)
-	GDSync.lobby_join(lobby_name, "")
-
-func _cliente_entro(client_id: int) -> void:
-	_actualizar_log("JUGADOR ENTRO: " + str(client_id))
-	
-	var es_mio := client_id == GDSync.get_client_id()
-	
-	# 1. Si el que acaba de entrar soy yo mismo:
-	if es_mio:
-		self.hide() # Ocultamos el menú
-		
-		# Generamos la Arena 3D si asignaste una y si no existe ya
-		if escena_arena and arena_instanciada == null:
-			arena_instanciada = escena_arena.instantiate()
-			# Cambiado a add_child directo para evitar problemas de sincronía
-			get_tree().current_scene.add_child(arena_instanciada)
-			
-	# 2. Generamos el vehículo
-	if escena_jugador:
-		var jugador = escena_jugador.instantiate()
-		jugador.name = str(client_id)
-		
-		# Asignamos posición y lo añadimos a la escena actual de inmediato
-		jugador.position = Vector3((client_id % 5) * 4.0, 2.0, 0.0) 
-		
-		# SOLUCIÓN: Agregarlo directamente al árbol de la escena
-		get_tree().current_scene.add_child(jugador)
-		
-		# GD-Sync ya no dará error porque el nodo ya es hijo de current_scene
-		GDSync.set_gdsync_owner(jugador, client_id)
-
-		# Buscamos y activamos la cámara si es nuestro vehículo
-		var cam = jugador.find_child("Camera3D", true, false)
-		if cam:
-			cam.current = es_mio
-		else:
-			print("ERROR: No se encontró 'Camera3D' en el vehículo instanciado.")
-func _cliente_salio(client_id: int) -> void:
-	_actualizar_log("JUGADOR SALIO: " + str(client_id))
-	var nodo = get_tree().current_scene.get_node_or_null(str(client_id))
-	if nodo:
-		nodo.queue_free()
-			
-func _conexion_fallida(error: int) -> void:
-	_actualizar_log("FALLO LA CONEXIÓN: " + str(error))
-	_bloquear_menu(false)
-
-func _sala_fallo(_lobby_name: String, error: int) -> void:
-	_actualizar_log("NO SE PUDO CREAR LA SALA: " + str(error))
-	_bloquear_menu(false)
-
-func _union_fallo(_lobby_name: String, error: int) -> void:
-	_actualizar_log("NO SE PUDO ENTRAR A LA SALA: " + str(error))
-	_bloquear_menu(false)
+	NetworkManager.unirse_a_sala(_sala_input.text)
 
 func _actualizar_log(texto: String) -> void:
-	print(texto)
 	if _status_label:
 		_status_label.text = texto

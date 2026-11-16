@@ -21,8 +21,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-NetworkManager="*uid://p8ju4wuts377"
 GDSync="*uid://cgo4kiocg4a4a"
+NetworkManager="*uid://p8ju4wuts377"
 Settings="*uid://br3e768wqf8sw"
 
 [display]

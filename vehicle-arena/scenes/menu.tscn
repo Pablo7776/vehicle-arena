@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" uid="uid://c4s7rghnfw4lm" path="res://addons/settings_menus/ui/main_menu_ui.gd" id="1_mhnvy"]
 [ext_resource type="Resource" uid="uid://cqhflpcw8o5h3" path="res://resources/menu_inicio.tres" id="2_mhnvy"]
-[ext_resource type="PackedScene" uid="uid://bswy0tnc4txqv" path="res://scenes/player/player.tscn" id="3_g3eks"]
-[ext_resource type="PackedScene" uid="uid://dtfdnacujyrlc" path="res://scenes/main/main.tscn" id="4_v86rl"]
 
 [node name="Menu" type="Control" unique_id=1310546058]
 layout_mode = 3
@@ -28,5 +26,3 @@ theme_data = ExtResource("2_mhnvy")
 play_scene_path = "uid://dtfdnacujyrlc"
 show_options = false
 show_credits = false
-escena_jugador = ExtResource("3_g3eks")
-escena_arena = ExtResource("4_v86rl")
