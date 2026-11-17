@@ -14,6 +14,7 @@ extends Control
 @onready var boton_nombre: Button = %BotonNombre
 @onready var lista: ItemList = %ListaJugadores
 @onready var estado: Label = %Estado
+@onready var boton_listo: Button = %BotonListo
 @onready var boton_empezar: Button = %BotonEmpezar
 @onready var boton_salir: Button = %BotonSalir
 
@@ -27,6 +28,7 @@ func _ready() -> void:
 
 	boton_nombre.pressed.connect(_cambiar_nombre)
 	nombre_input.text_submitted.connect(func(_texto): _cambiar_nombre())
+	boton_listo.pressed.connect(_alternar_listo)
 	boton_empezar.pressed.connect(NetworkManager.empezar_partida)
 	boton_salir.pressed.connect(NetworkManager.salir_de_sala)
 
@@ -38,13 +40,18 @@ func _al_entrar() -> void:
 	_refrescar()
 
 
+func _alternar_listo() -> void:
+	var yo_listo: bool = NetworkManager.esta_listo(GDSync.get_client_id())
+	NetworkManager.marcar_listo(not yo_listo)
+
+
 func _cambiar_nombre() -> void:
 	NetworkManager.cambiar_nombre(nombre_input.text)
 	nombre_input.release_focus()
 
 
 ## Redibuja todo con el estado actual de la sala. Se llama cada vez que
-## alguien entra, sale o cambia su nombre.
+## alguien entra, sale, cambia su nombre o marca "Listo".
 func _refrescar() -> void:
 	if not visible:
 		return
@@ -52,21 +59,34 @@ func _refrescar() -> void:
 
 	var mi_id := GDSync.get_client_id()
 	var host_id := GDSync.get_host()
-	var ids : Array = NetworkManager.jugadores_en_sala()
+	var ids: Array = NetworkManager.jugadores_en_sala()
 
 	lista.clear()
 	for id in ids:
-		var texto : String = NetworkManager.nombre_de(id)
+		var listo: bool = NetworkManager.esta_listo(id)
+		var texto: String = ("✓  " if listo else "—  ") + NetworkManager.nombre_de(id)
 		if id == host_id:
 			texto += "  ★ host"
 		if id == mi_id:
 			texto += "  (vos)"
 		lista.add_item(texto)
 
-	# Solo el host puede empezar
+	# Mi botón de listo
+	var yo_listo: bool = NetworkManager.esta_listo(mi_id)
+	boton_listo.text = "Listo ✓" if yo_listo else "Marcar listo"
+
+	# Solo el host ve "Empezar", y solo se habilita con todos listos
 	var soy_host := GDSync.is_host()
+	var se_puede: bool = NetworkManager.se_puede_empezar()
 	boton_empezar.visible = soy_host
-	if soy_host:
-		estado.text = "%d jugador(es). Empezá cuando estén todos." % ids.size()
+	boton_empezar.disabled = not se_puede
+
+	var faltan: int = NetworkManager.cuantos_faltan_listos()
+	if ids.size() < NetworkManager.MIN_JUGADORES:
+		estado.text = "Esperando jugadores (mínimo %d)..." % NetworkManager.MIN_JUGADORES
+	elif faltan > 0:
+		estado.text = "Falta que %d jugador(es) marquen listo" % faltan
+	elif soy_host:
+		estado.text = "¡Todos listos! Podés empezar."
 	else:
-		estado.text = "%d jugador(es). Esperando al host..." % ids.size()
+		estado.text = "¡Todos listos! Esperando al host..."

@@ -4,7 +4,8 @@ extends Node
 ## El menú y la sala de espera solo llaman a estas funciones:
 ##   NetworkManager.crear_sala(nombre) / unirse_a_sala(nombre)
 ##   NetworkManager.cambiar_nombre(nombre)
-##   NetworkManager.empezar_partida()      (solo el host)
+##   NetworkManager.marcar_listo(true / false)
+##   NetworkManager.empezar_partida()      (solo el host, con todos listos)
 ##   NetworkManager.salir_de_sala()
 ##   NetworkManager.probar_offline()
 ## y escuchan estas señales para actualizar la pantalla
@@ -22,6 +23,10 @@ const ESCENA_JUGADOR: PackedScene = preload("uid://bswy0tnc4txqv")   # scenes/pl
 const ESCENA_ARENA: PackedScene = preload("uid://dtfdnacujyrlc")     # scenes/main/main.tscn
 
 const MAX_JUGADORES := 4
+## Mínimo de jugadores para empezar (gana el último vivo: con 1 solo nunca termina)
+const MIN_JUGADORES := 2
+## Dato de cada jugador que dice si marcó "Listo" (como "IsReady" en la clase 9)
+const CLAVE_LISTO := "listo"
 ## Nombre del nodo de la arena que agrupa los Marker3D de aparición de jugadores
 const NODO_PUNTOS_SPAWN := "PuntosSpawnJugadores"
 ## Si la arena no tiene puntos de aparición, se usa este lugar
@@ -100,9 +105,38 @@ func cambiar_nombre(nombre: String) -> void:
 	GDSync.player_set_username(nombre)
 
 
+## Marca o desmarca "Listo". Es un dato del jugador: les llega a todos solo
+## (señal player_data_changed), igual que "IsReady" con UpdatePlayerAsync en la clase 9.
+func marcar_listo(listo: bool) -> void:
+	GDSync.player_set_data(CLAVE_LISTO, listo)
+
+
+func esta_listo(client_id: int) -> bool:
+	return bool(GDSync.player_get_data(client_id, CLAVE_LISTO, false))
+
+
+## Cuántos jugadores de la sala todavía no marcaron "Listo"
+func cuantos_faltan_listos() -> int:
+	var faltan := 0
+	for id in jugadores_en_sala():
+		if not esta_listo(id):
+			faltan += 1
+	return faltan
+
+
+## Se puede empezar si hay suficientes jugadores y TODOS marcaron "Listo"
+## (TodosListos() de la clase 9)
+func se_puede_empezar() -> bool:
+	return jugadores_en_sala().size() >= MIN_JUGADORES and cuantos_faltan_listos() == 0
+
+
 ## SOLO el host. Cierra la sala y arranca la partida en todas las máquinas.
 func empezar_partida() -> void:
 	if not GDSync.is_host() or _partida_en_curso:
+		return
+	# El host vuelve a validar: aunque el botón esté deshabilitado, no le creemos a la UI
+	if not se_puede_empezar():
+		_estado("Todavía no están todos listos")
 		return
 	GDSync.lobby_close()   # = IsLocked de la clase 9: nadie más entra con la partida empezada
 	GDSync.call_func(_iniciar_partida_remoto)   # los demás
@@ -148,6 +182,7 @@ func _al_crear_sala(lobby_name: String) -> void:
 func _al_entrar_cliente(client_id: int) -> void:
 	_estado("JUGADOR ENTRO: " + nombre_de(client_id))
 	if client_id == GDSync.get_client_id():
+		marcar_listo(false)   # al entrar a una sala, siempre arrancás "no listo"
 		entraste_a_sala.emit()
 	sala_actualizada.emit()
 

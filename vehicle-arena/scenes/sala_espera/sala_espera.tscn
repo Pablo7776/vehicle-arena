@@ -75,10 +75,15 @@ unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 
+[node name="BotonListo" type="Button" parent="Margen/Columnas/Izquierda"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Marcar listo"
+
 [node name="BotonEmpezar" type="Button" parent="Margen/Columnas/Izquierda" unique_id=255802513]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Empezar (prueba)"
+text = "Empezar"
 
 [node name="BotonSalir" type="Button" parent="Margen/Columnas/Izquierda" unique_id=1611210862]
 unique_name_in_owner = true
