@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://b6qocilsg135b" path="res://scenes/arena/arena.tscn" id="1_hyk8p"]
 [ext_resource type="PackedScene" uid="uid://bh0qcaq7j0fkm" path="res://scenes/pasto/pasto.tscn" id="4_6q06x"]
-[ext_resource type="Script" uid="uid://24imyfedo7fj" path="res://scenes/debug/gyro_label.gd" id="4_l3cfh"]
 [ext_resource type="PackedScene" uid="uid://qummw1k2sbin" path="res://scenes/target_dummy/target_dummy.tscn" id="5_6q06x"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_k2fmo"]
@@ -40,18 +39,6 @@ adjustment_saturation = 1.28
 navigation_mesh = SubResource("NavigationMesh_k2fmo")
 
 [node name="Arena" parent="NavigationRegion3D" unique_id=1386833253 instance=ExtResource("1_hyk8p")]
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
-
-[node name="Label" type="Label" parent="CanvasLayer" unique_id=1297915195]
-visible = false
-offset_left = 48.0
-offset_top = 53.0
-offset_right = 276.0
-offset_bottom = 166.0
-theme_override_font_sizes/font_size = 23
-text = "aaa"
-script = ExtResource("4_l3cfh")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1116587904]
 transform = Transform3D(1, 0, 0, 0, 0.87347776, 0.48686406, 0, -0.48686406, 0.87347776, 221.46631, 1259.4043, 334.04175)

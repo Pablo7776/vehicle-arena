@@ -17,6 +17,7 @@ size_flags_horizontal = 6
 mouse_filter = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=780447160]
+visible = false
 script = ExtResource("1_48c2t")
 
 [node name="LabelAmmo" type="Label" parent="CanvasLayer" unique_id=549345612]
