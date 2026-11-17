@@ -36,7 +36,7 @@ var _jabali: Node = null
 
 func _ready() -> void:
 	add_to_group("game_manager")
-	GDSync.expose_func(_mostrar_resultado)
+	GDSync.expose_func(_mostrar_resultado, ENUMS.EXPOSE_PERMISSION.HOST)   # solo el host anuncia el resultado
 	if label_resultado:
 		label_resultado.hide()
 	if label_tiempo == null:

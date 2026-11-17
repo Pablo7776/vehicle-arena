@@ -26,7 +26,7 @@ var _indice_actual := -1
 
 
 func _ready() -> void:
-	GDSync.expose_func(_recoger_remoto)   # requerido para que otros peers puedan llamarla
+	GDSync.expose_func(_recoger_remoto, ENUMS.EXPOSE_PERMISSION.HOST)   # solo el host decide quién lo agarró
 
 
 func _on_body_entered(body: Node3D) -> void:

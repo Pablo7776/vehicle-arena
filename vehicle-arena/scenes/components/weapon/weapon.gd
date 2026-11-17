@@ -21,7 +21,7 @@ var _last_shot_time: float = -1000.0
 
 func _ready() -> void:
 	municion_actual = municion_maxima
-	GDSync.expose_func(spawn_bullet_remote)
+	GDSync.expose_func(spawn_bullet_remote)   # cualquiera dispara: es solo la copia visual
 
 
 ## Dispara hacia `direction` (en el mundo). Devuelve true si salió una bala.

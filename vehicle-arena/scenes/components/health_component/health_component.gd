@@ -21,8 +21,8 @@ var ultimo_atacante: int = -1
 
 func _ready() -> void:
 	current = max_health
-	GDSync.expose_func(_host_apply_damage)
-	GDSync.expose_func(_host_heal)
+	GDSync.expose_func(_host_apply_damage)   # cualquiera avisa un golpe; el host lo valida
+	GDSync.expose_func(_host_heal, ENUMS.EXPOSE_PERMISSION.HOST)      # curar lo decide el host (ítem)
 
 # Lo llama el Hurtbox en el peer donde se detectó el golpe.
 # atacante = ID del jugador que disparó (-1 si no se sabe).

@@ -21,7 +21,7 @@ var _muerto := false   # true = no maneja ni dispara (sin vida, o la partida ter
 
 func _ready() -> void:
 	add_to_group("vehiculos")   # el game_manager los detiene a todos al terminar la partida
-	GDSync.expose_func(_empujon_remoto)
+	GDSync.expose_func(_empujon_remoto, ENUMS.EXPOSE_PERMISSION.HOST)   # el empujón lo ordena el jabalí, que corre en el host
 	health.health_changed.connect(_on_health_changed)
 	if ammo_hud != null:
 		weapon.municion_cambiada.connect(ammo_hud.actualizar_municion)

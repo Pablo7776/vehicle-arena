@@ -55,8 +55,8 @@ func _conectar_senales() -> void:
 	GDSync.client_left.connect(_al_salir_cliente)
 	GDSync.player_data_changed.connect(_al_cambiar_datos_jugador)
 	GDSync.host_changed.connect(func(_es_host, _nuevo_host): sala_actualizada.emit())
-	GDSync.expose_func(_iniciar_partida_remoto)
-	GDSync.expose_func(_volver_a_sala_remoto)
+	GDSync.expose_func(_iniciar_partida_remoto, ENUMS.EXPOSE_PERMISSION.HOST)   # solo el host empieza
+	GDSync.expose_func(_volver_a_sala_remoto, ENUMS.EXPOSE_PERMISSION.HOST)     # solo el host vuelve a la sala
 	_estado("SISTEMA DE RED LISTO")
 
 
