@@ -9,7 +9,6 @@ script = ExtResource("1_txckl")
 
 [node name="PropertySynchronizer" type="Node" parent="." unique_id=698122003]
 script = ExtResource("2_hy0qq")
-broadcast = 5
 node_path = NodePath("..")
 properties = PackedStringArray("current")
 interpolated = false
