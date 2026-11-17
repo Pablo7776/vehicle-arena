@@ -74,11 +74,13 @@ billboard = 1
 text = "aaaa"
 script = SubResource("GDScript_uaiwt")
 
-[node name="PropertySynchronizer" type="Node" parent="."]
+[node name="PropertySynchronizer" type="Node" parent="." unique_id=1105970277]
 script = ExtResource("5_sync")
 node_path = NodePath("..")
 properties = PackedStringArray("global_position", "global_rotation", "estado")
 interpolated = true
 interpolation_speed = 30.0
+extrapolated = false
+max_extrapolation_time = 0.2
 
 [editable path="Hurtbox"]

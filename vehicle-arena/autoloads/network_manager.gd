@@ -6,6 +6,7 @@ extends Node
 ##   NetworkManager.cambiar_nombre(nombre)
 ##   NetworkManager.marcar_listo(true / false)
 ##   NetworkManager.empezar_partida()      (solo el host, con todos listos)
+##   NetworkManager.volver_a_sala()        (solo el host, al terminar la partida)
 ##   NetworkManager.salir_de_sala()
 ##   NetworkManager.probar_offline()
 ## y escuchan estas señales para actualizar la pantalla
@@ -36,6 +37,7 @@ var nombre_sala := "MiSala"
 var soy_host := false
 var _arena: Node = null
 var _partida_en_curso := false
+var _jugadores_creados: Array[Node] = []
 
 
 func _ready() -> void:
@@ -54,6 +56,7 @@ func _conectar_senales() -> void:
 	GDSync.player_data_changed.connect(_al_cambiar_datos_jugador)
 	GDSync.host_changed.connect(func(_es_host, _nuevo_host): sala_actualizada.emit())
 	GDSync.expose_func(_iniciar_partida_remoto)
+	GDSync.expose_func(_volver_a_sala_remoto)
 	_estado("SISTEMA DE RED LISTO")
 
 
@@ -143,6 +146,16 @@ func empezar_partida() -> void:
 	_iniciar_partida()                           # yo
 
 
+## SOLO el host, cuando terminó la partida. Vuelven todos a la sala de espera
+## para jugar otra ronda con la misma gente.
+func volver_a_sala() -> void:
+	if not GDSync.is_host() or not _partida_en_curso:
+		return
+	GDSync.lobby_open()   # entre rondas puede entrar gente nueva
+	GDSync.call_func(_volver_a_sala_remoto)   # los demás
+	_volver_a_sala()                           # yo
+
+
 func salir_de_sala() -> void:
 	GDSync.lobby_leave()
 	_estado("Saliste de la sala")
@@ -221,6 +234,30 @@ func _iniciar_partida() -> void:
 		_crear_jugador(ids[i], i)
 
 
+func _volver_a_sala_remoto(_data = null) -> void:
+	_volver_a_sala()
+
+
+## Corre en TODAS las máquinas: borra la partida y muestra de nuevo la sala.
+func _volver_a_sala() -> void:
+	if not _partida_en_curso:
+		return
+	_partida_en_curso = false
+	# Borrar la arena (con el jabalí y el game_manager) y los karts
+	if _arena:
+		_arena.queue_free()
+		_arena = null
+	for jugador in _jugadores_creados:
+		if is_instance_valid(jugador):
+			jugador.queue_free()
+	_jugadores_creados.clear()
+	# Todos vuelven a "no listo": hay que confirmar de nuevo para la próxima ronda
+	marcar_listo(false)
+	_estado("Volviste a la sala")
+	entraste_a_sala.emit()
+	sala_actualizada.emit()
+
+
 func _crear_jugador(client_id: int, indice_spawn: int) -> void:
 	var es_mio := client_id == GDSync.get_client_id()
 	var jugador: Node3D = ESCENA_JUGADOR.instantiate()
@@ -229,6 +266,7 @@ func _crear_jugador(client_id: int, indice_spawn: int) -> void:
 	# Primero agregarlo al árbol, después asignar el dueño (si no, GD-Sync da error)
 	get_tree().current_scene.add_child(jugador)
 	GDSync.set_gdsync_owner(jugador, client_id)
+	_jugadores_creados.append(jugador)
 
 	# Los jugadores de otros no muestran su HUD ni leen los toques de esta pantalla
 	if not es_mio:

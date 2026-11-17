@@ -25,6 +25,9 @@ signal partida_terminada(cazador: int)
 ## Opcional: un Label para la cuenta regresiva. Si no asignás ninguno,
 ## se crea uno arriba al centro, en la misma capa que el resultado.
 @export var label_tiempo: Label
+## Opcional: el botón "Volver a la sala". Si no asignás ninguno, se crea uno
+## debajo del resultado.
+@export var boton_volver: Button
 
 var _terminada := false
 var _tiempo_restante := DURACION
@@ -38,6 +41,12 @@ func _ready() -> void:
 		label_resultado.hide()
 	if label_tiempo == null:
 		label_tiempo = _crear_label_tiempo()
+	if boton_volver == null:
+		boton_volver = _crear_boton_volver()
+	boton_volver.hide()
+	boton_volver.pressed.connect(NetworkManager.volver_a_sala)
+	# Si el host se va en la pantalla final, el nuevo host pasa a tener el botón
+	GDSync.host_changed.connect(func(_es_host, _nuevo_host): _actualizar_boton_volver())
 
 	# El jabalí está en la misma partida (main.tscn). died solo se emite en el host.
 	_jabali = get_tree().get_first_node_in_group("jabali")
@@ -102,7 +111,19 @@ func _mostrar_resultado(data = null) -> void:
 		else:
 			label_resultado.text = "¡%s cazó al jabalí!" % NetworkManager.nombre_de(cazador)
 
+	# Solo el host puede volver a la sala (así vuelven todos juntos)
+	boton_volver.show()
+	_actualizar_boton_volver()
+
 	partida_terminada.emit(cazador)
+
+
+func _actualizar_boton_volver() -> void:
+	if boton_volver == null:
+		return
+	var soy_host: bool = GDSync.is_host()
+	boton_volver.disabled = not soy_host
+	boton_volver.text = "Volver a la sala" if soy_host else "Esperando al host..."
 
 
 func _mostrar_tiempo() -> void:
@@ -127,3 +148,16 @@ func _crear_label_tiempo() -> Label:
 	var padre: Node = label_resultado.get_parent() if label_resultado else self
 	padre.add_child.call_deferred(label)
 	return label
+
+
+func _crear_boton_volver() -> Button:
+	var boton := Button.new()
+	boton.name = "BotonVolver"
+	boton.add_theme_font_size_override("font_size", 22)
+	boton.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	boton.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	boton.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	boton.offset_bottom = -24
+	var padre: Node = label_resultado.get_parent() if label_resultado else self
+	padre.add_child.call_deferred(boton)
+	return boton
