@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c6fgfdg2qhi6t" path="res://scenes/components/hurt_box/hurt_box.tscn" id="2_lnq1v"]
 [ext_resource type="PackedScene" uid="uid://w42wq4wgwehc" path="res://scenes/components/health_component/health_component.tscn" id="3_eu4uf"]
 [ext_resource type="BehaviorTree" uid="uid://t7eks88stlix" path="res://ai/trees/jabali.tres" id="4_uaiwt"]
+[ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="5_sync"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_eu4uf"]
 radius = 5.0
@@ -72,5 +73,12 @@ pixel_size = 0.2
 billboard = 1
 text = "aaaa"
 script = SubResource("GDScript_uaiwt")
+
+[node name="PropertySynchronizer" type="Node" parent="."]
+script = ExtResource("5_sync")
+node_path = NodePath("..")
+properties = PackedStringArray("global_position", "global_rotation", "estado")
+interpolated = true
+interpolation_speed = 30.0
 
 [editable path="Hurtbox"]

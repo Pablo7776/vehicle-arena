@@ -21,6 +21,7 @@ var _muerto := false   # estado local de cada peer, se deduce de health.current 
 
 func _ready() -> void:
 	add_to_group("vehiculos")   # el GameManager cuenta los vivos con este grupo
+	GDSync.expose_func(_empujon_remoto)
 	health.health_changed.connect(_on_health_changed)
 	health.died.connect(_on_died)
 	if ammo_hud != null:
@@ -88,6 +89,23 @@ func _aplicar_motor_y_freno() -> void:
 		_en_reversa = false
 		brake = 0.0
 		engine_force = vehicle_input.throttle * ENGINE_POWER
+
+
+## Lo llama el jabalí (que corre en el host) cuando embiste a este kart.
+## La posición del kart la manda su DUEÑO: si el host lo empujara en su copia,
+## el dueño lo pisaría en el frame siguiente. Por eso el empujón se le pide
+## al dueño (clase 10: "el servidor decide, el dueño ejecuta").
+func recibir_empujon(impulso: Vector3) -> void:
+	if GDSync.is_gdsync_owner(self):
+		apply_central_impulse(impulso)
+	else:
+		GDSync.call_func_on(GDSync.get_gdsync_owner(self), _empujon_remoto, [impulso])
+
+
+# Corre en la máquina del dueño. Los parámetros llegan empaquetados en un Array.
+func _empujon_remoto(data) -> void:
+	var impulso: Vector3 = data[0] if data is Array else data
+	apply_central_impulse(impulso)
 
 
 func curar(amount: float) -> void:

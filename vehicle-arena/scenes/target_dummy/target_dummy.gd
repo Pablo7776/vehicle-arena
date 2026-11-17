@@ -9,6 +9,11 @@ extends CharacterBody3D
 @onready var label: Label3D = $Label3D
 @onready var estado_label: Label3D = $Label3D2  # un segundo Label3D, ponelo más arriba
 @onready var nav: NavigationAgent3D = $NavigationAgent3D
+@onready var bt_player: BTPlayer = $BTPlayer
+
+## RED (clase 10, "enemigos controlados por IA"):
+## la IA corre SOLO en el host. Los demás reciben su posición, giro y estado
+## por el PropertySynchronizer (When Host) y la vida por el de HealthComponent.
 
 
 
@@ -26,6 +31,19 @@ var _dash_t := 0.0
 func _ready() -> void:
 	health.health_changed.connect(_on_health_changed)
 	_on_health_changed(health.current, health.max_health)
+	_actualizar_autoridad()
+	# Si el host se va, GD-Sync elige otro: el nuevo host toma el control de la IA
+	GDSync.host_changed.connect(func(_es_host, _nuevo_host): _actualizar_autoridad())
+
+
+## Prende la IA solo en el host. En los demás, el jabalí es una "copia" que se
+## mueve con lo que manda el host.
+func _actualizar_autoridad() -> void:
+	var soy_host: bool = GDSync.is_host()
+	bt_player.active = soy_host
+	if not soy_host:
+		_moving = false
+		_dash_t = 0.0
 
 func go_to(pos: Vector3) -> void:
 	nav.target_position = pos
@@ -49,6 +67,9 @@ func dash(dir: Vector3, speed: float, duration: float) -> void:
 	_dash_t = duration
 
 func _physics_process(delta: float) -> void:
+	# Solo el host simula al jabalí; en los demás su posición llega por red
+	if not GDSync.is_host():
+		return
 	hambre = minf(hambre + delta * 2.0, 100.0)
 	velocity.y = 0.0 if is_on_floor() else velocity.y - gravity * delta
 

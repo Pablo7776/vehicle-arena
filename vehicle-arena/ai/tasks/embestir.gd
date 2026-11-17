@@ -50,7 +50,11 @@ func _tick(delta: float) -> Status:
 	return RUNNING
 
 func _empujar(obj: Node3D) -> void:
-	if obj is RigidBody3D:
+	if obj.has_method("recibir_empujon"):
+		# Un kart: su posición la manda su DUEÑO, así que el empujón lo tiene que
+		# aplicar él (clase 10: "el servidor decide, el dueño ejecuta")
+		obj.recibir_empujon(_dir * fuerza_empuje * obj.mass)
+	elif obj is RigidBody3D:
 		obj.apply_central_impulse(_dir * fuerza_empuje * obj.mass)
 	elif obj is CharacterBody3D:
 		obj.velocity += _dir * fuerza_empuje
