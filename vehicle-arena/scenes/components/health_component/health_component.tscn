@@ -4,8 +4,9 @@
 [ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="2_hy0qq"]
 [ext_resource type="Script" uid="uid://dkeanc3bq6hok" path="res://scenes/components/damage_validator/damage_validator.gd" id="3_tvoea"]
 
-[node name="HealthComponent" type="Node" unique_id=1038012900]
+[node name="HealthComponent" type="Node" unique_id=1038012900 node_paths=PackedStringArray("validator")]
 script = ExtResource("1_txckl")
+validator = NodePath("Node")
 
 [node name="PropertySynchronizer" type="Node" parent="." unique_id=698122003]
 script = ExtResource("2_hy0qq")
