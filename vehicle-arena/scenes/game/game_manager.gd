@@ -1,35 +1,129 @@
 extends Node
 
+## Reglas de la partida "Cazar al jabalí":
+##   - Dura DURACION segundos.
+##   - El primero que mata al jabalí gana.
+##   - Si se acaba el tiempo, el jabalí se escapa y pierden todos.
+##
+## RED (clase 8, "estado del mundo compartido"): SOLO EL HOST DECIDE.
+##   - El host escucha la muerte del jabalí (died solo se emite en el host)
+##     y sabe quién dio el último golpe (HealthComponent.ultimo_atacante).
+##   - El reloj corre en todas las máquinas para mostrar la cuenta regresiva,
+##     pero solo el del host termina la partida.
+##   - El resultado se avisa a todos con call_func (un evento puntual).
+
+## Duración de la partida en segundos
+const DURACION := 180.0
+## Resultado especial: nadie cazó al jabalí
+const NADIE := -1
+
+## Se emite en TODAS las máquinas cuando termina la partida
+## (cazador = ID del que lo cazó, o NADIE si se escapó)
+signal partida_terminada(cazador: int)
+
 @export var label_resultado: Label
+## Opcional: un Label para la cuenta regresiva. Si no asignás ninguno,
+## se crea uno arriba al centro, en la misma capa que el resultado.
+@export var label_tiempo: Label
 
 var _terminada := false
+var _tiempo_restante := DURACION
+var _jabali: Node = null
+
 
 func _ready() -> void:
 	add_to_group("game_manager")
 	GDSync.expose_func(_mostrar_resultado)
 	if label_resultado:
 		label_resultado.hide()
+	if label_tiempo == null:
+		label_tiempo = _crear_label_tiempo()
 
-# Solo el host decide
-func revisar_ganador() -> void:
-	if not GDSync.is_host() or _terminada:
+	# El jabalí está en la misma partida (main.tscn). died solo se emite en el host.
+	_jabali = get_tree().get_first_node_in_group("jabali")
+	if _jabali == null:
+		push_warning("game_manager: no encontré ningún nodo en el grupo 'jabali'")
 		return
-	var vehiculos := get_tree().get_nodes_in_group("vehiculos")
-	var vivos := vehiculos.filter(func(v): return v.health.current > 0.0)
-	if vehiculos.size() < 2 or vivos.size() != 1:
+	# El jabalí está DESPUÉS en el árbol: puede que todavía no corrió su _ready
+	# (y su variable health siga vacía). Lo esperamos, como hicimos con el HUD.
+	if not _jabali.is_node_ready():
+		await _jabali.ready
+	_jabali.health.died.connect(_al_cazar_jabali)
+
+
+func _process(delta: float) -> void:
+	if _terminada:
 		return
-	_terminada = true
-	var ganador_id: int = GDSync.get_gdsync_owner(vivos[0])
-	_mostrar_resultado(ganador_id)                      # el host
-	GDSync.call_func(_mostrar_resultado, [ganador_id])  # los demás
+	_tiempo_restante = maxf(_tiempo_restante - delta, 0.0)
+	_mostrar_tiempo()
+	# Todos ven la cuenta regresiva, pero solo el host decide que se terminó
+	if _tiempo_restante <= 0.0 and GDSync.is_host():
+		_terminar(NADIE)
+
+
+# ---- Decisiones (solo el host) -------------------------------------------------
+
+func _al_cazar_jabali() -> void:
+	if not GDSync.is_host():
+		return
+	_terminar(_jabali.health.ultimo_atacante)
+
+
+func _terminar(cazador: int) -> void:
+	if _terminada:
+		return
+	_mostrar_resultado(cazador)                     # el host
+	GDSync.call_func(_mostrar_resultado, [cazador]) # los demás
+
+
+# ---- Lo que ven todos -----------------------------------------------------------
 
 # Los parámetros llegan empaquetados en un Array
 func _mostrar_resultado(data = null) -> void:
-	var ganador_id: int = int(data[0]) if data is Array else int(data)
-	if not label_resultado:
+	if _terminada:
 		return
-	label_resultado.show()
-	if ganador_id == GDSync.get_client_id():
-		label_resultado.text = "¡VICTORIA!"
-	else:
-		label_resultado.text = "DERROTA"
+	_terminada = true
+	var cazador: int = int(data[0]) if data is Array else int(data)
+
+	# Los karts se quedan quietos y dejan de disparar
+	get_tree().call_group("vehiculos", "detener")
+	# El jabalí deja de moverse; si lo cazaron, desaparece
+	if _jabali:
+		_jabali.bt_player.active = false
+		if cazador != NADIE:
+			_jabali.hide()
+
+	if label_resultado:
+		label_resultado.show()
+		if cazador == NADIE:
+			label_resultado.text = "¡El jabalí se escapó!"
+		elif cazador == GDSync.get_client_id():
+			label_resultado.text = "¡Cazaste al jabalí!"
+		else:
+			label_resultado.text = "¡%s cazó al jabalí!" % NetworkManager.nombre_de(cazador)
+
+	partida_terminada.emit(cazador)
+
+
+func _mostrar_tiempo() -> void:
+	if label_tiempo == null:
+		return
+	var segundos := ceili(_tiempo_restante)
+	label_tiempo.text = "%d:%02d" % [segundos / 60, segundos % 60]
+	# Los últimos 30 segundos, en rojo
+	label_tiempo.modulate = Color.RED if segundos <= 30 else Color.WHITE
+
+
+func _crear_label_tiempo() -> Label:
+	var label := Label.new()
+	label.name = "LabelTiempo"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 28)
+	label.add_theme_color_override("font_outline_color", Color.BLACK)
+	label.add_theme_constant_override("outline_size", 6)
+	label.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	label.offset_top = 8
+	# En la misma capa que el resultado, para que se dibuje arriba del juego
+	var padre: Node = label_resultado.get_parent() if label_resultado else self
+	padre.add_child.call_deferred(label)
+	return label

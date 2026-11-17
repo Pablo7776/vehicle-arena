@@ -93,8 +93,7 @@ func _physics_process(delta: float) -> void:
 func _on_health_changed(current: float, max_value: float) -> void:
 	label.text = "HP: %d / %d" % [current, max_value]
 	
-# Corre solo en el host. Por ahora solo lo anuncia en la consola;
-# en la parte C el game_manager usa esto para terminar la partida.
+# Corre solo en el host. El game_manager también escucha died y termina la partida.
 func _al_morir() -> void:
 	var cazador: int = health.ultimo_atacante
 	print("El jabalí lo cazó: ", NetworkManager.nombre_de(cazador), " (id ", cazador, ")")

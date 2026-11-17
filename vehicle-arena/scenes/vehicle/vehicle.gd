@@ -16,14 +16,13 @@ extends VehicleBody3D
 @onready var health: HealthComponent = $HealthComponent
 
 var _en_reversa := false
-var _muerto := false   # estado local de cada peer, se deduce de health.current (sincronizado)
+var _muerto := false   # true = no maneja ni dispara (sin vida, o la partida terminó)
 
 
 func _ready() -> void:
-	add_to_group("vehiculos")   # el GameManager cuenta los vivos con este grupo
+	add_to_group("vehiculos")   # el game_manager los detiene a todos al terminar la partida
 	GDSync.expose_func(_empujon_remoto)
 	health.health_changed.connect(_on_health_changed)
-	health.died.connect(_on_died)
 	if ammo_hud != null:
 		weapon.municion_cambiada.connect(ammo_hud.actualizar_municion)
 		ammo_hud.actualizar_municion(weapon.municion_actual, weapon.municion_maxima)
@@ -44,10 +43,13 @@ func _morir() -> void:
 	# acá: explosión, humo, oscurecer el modelo, etc.
 
 
-# died se emite solo en el host: es el momento de revisar si terminó la partida
-func _on_died() -> void:
-	if GDSync.is_host():
-		get_tree().get_first_node_in_group("game_manager").revisar_ganador()
+## Lo llama el game_manager en todas las máquinas cuando termina la partida:
+## el kart frena y deja de manejar y disparar (AimController también mira _muerto).
+func detener() -> void:
+	_muerto = true
+	engine_force = 0.0
+	steering = 0.0
+	brake = FUERZA_FRENO
 
 
 func _physics_process(delta: float) -> void:
