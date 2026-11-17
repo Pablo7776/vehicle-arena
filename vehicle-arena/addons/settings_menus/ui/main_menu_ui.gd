@@ -73,7 +73,7 @@ func _build() -> void:
 	center.add_child(panel)
 
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 14)
+	col.add_theme_constant_override("separation", 5)   # era 14: así entra en la pantalla horizontal
 	panel.add_child(col)
 
 	var title := Label.new()
@@ -93,19 +93,20 @@ func _build() -> void:
 		sub.custom_minimum_size = Vector2(theme_data.menu_max_width - 32, 0)
 		col.add_child(sub)
 
-	col.add_child(_spacer(8))
+	col.add_child(_spacer(4))
 	
 	# Adaptado para GD-Sync: Input de Nombre de Sala
 	_sala_input = LineEdit.new()
 	_sala_input.placeholder_text = "Nombre de la Sala (ej. Arena01)"
 	_sala_input.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_sala_input.custom_minimum_size = Vector2(0, 40)
+	_sala_input.custom_minimum_size = Vector2(0, 24)   # era 40
 	col.add_child(_sala_input)
 	
-	col.add_child(_spacer(8))
+	col.add_child(_spacer(4))
 	
 	# Botones principales GDSync
 	_test_button = _add_button(col, "Test", _on_test)
+	_test_button.visible = OS.is_debug_build()   # "Test" solo en el editor, no en la build final
 	_first_button = _add_button(col, "Crear Sala (Host)", _on_host)
 	_btn_join = _add_button(col, "Unirse a Partida", _on_join)
 	
@@ -116,7 +117,7 @@ func _build() -> void:
 	if show_quit:
 		_add_button(col, "Salir", _on_quit)
 
-	col.add_child(_spacer(8))
+	col.add_child(_spacer(4))
 	
 	# Label para los logs de red (Reemplaza label_log)
 	_status_label = Label.new()

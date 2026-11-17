@@ -11,5 +11,5 @@ button_font_size = 9
 panel_corner_radius = 3
 panel_padding = 8
 menu_max_width = 240
-game_subtitle = "Polished settings + menus, free."
+game_title = "Vehicle Arena"
 metadata/_custom_type_script = "uid://ca5xkoaeirno6"
