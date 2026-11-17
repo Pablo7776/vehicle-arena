@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://ddncj6y5nxn1y" path="res://assets/Hypno's Fantsy Village Pack/tree1.fbx" id="6_u52cf"]
 [ext_resource type="Script" uid="uid://bjkkkwg1l78x3" path="res://scenes/debug/fps_label.gd" id="7_u52cf"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
+size = Vector3(1, 200, 700)
+
 [node name="Arena" type="Node3D" unique_id=1386833253]
 
 [node name="Item_life" parent="." unique_id=1159983786 instance=ExtResource("2_8trdl")]
@@ -90,5 +93,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.999691, -11.721206, -33.82
 
 [node name="Punto4" type="Marker3D" parent="PuntosSpawnJugadores" unique_id=1656564666]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.534317, -7.1747284, -48.86556)
+
+[node name="Limites" type="StaticBody3D" parent="." unique_id=2075328328]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Limites" unique_id=1299682257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 293.85892, 0, 0)
+shape = SubResource("BoxShape3D_f8ekr")
+debug_color = Color(18.892, 0, 10.722, 1)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Limites" unique_id=524607819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -306.66577, 0, 0)
+shape = SubResource("BoxShape3D_f8ekr")
+debug_color = Color(18.892, 0, 10.722, 1)
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Limites" unique_id=551418203]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.25589, 0, -306.4489)
+shape = SubResource("BoxShape3D_f8ekr")
+debug_color = Color(18.892, 0, 10.722, 1)
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Limites" unique_id=686096120]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.25589, 0, 293.9773)
+shape = SubResource("BoxShape3D_f8ekr")
+debug_color = Color(18.892, 0, 10.722, 1)
 
 [editable path="Item_life"]
