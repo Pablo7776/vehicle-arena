@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://bjkkkwg1l78x3" path="res://scenes/debug/fps_label.gd" id="7_u52cf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8ekr"]
-size = Vector3(1, 200, 700)
+size = Vector3(10, 200, 700)
 
 [node name="Arena" type="Node3D" unique_id=1386833253]
 
@@ -97,22 +97,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.534317, -7.1747284, -48.86
 [node name="Limites" type="StaticBody3D" parent="." unique_id=2075328328]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Limites" unique_id=1299682257]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 293.85892, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 298.56403, 0, 0)
 shape = SubResource("BoxShape3D_f8ekr")
 debug_color = Color(18.892, 0, 10.722, 1)
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="Limites" unique_id=524607819]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -306.66577, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -311.39172, 0, 0)
 shape = SubResource("BoxShape3D_f8ekr")
 debug_color = Color(18.892, 0, 10.722, 1)
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="Limites" unique_id=551418203]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.25589, 0, -306.4489)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.25589, 0, -311.034)
 shape = SubResource("BoxShape3D_f8ekr")
 debug_color = Color(18.892, 0, 10.722, 1)
 
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="Limites" unique_id=686096120]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.25589, 0, 293.9773)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.25589, 0, 298.51358)
 shape = SubResource("BoxShape3D_f8ekr")
 debug_color = Color(18.892, 0, 10.722, 1)
 
