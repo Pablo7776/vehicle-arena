@@ -22,6 +22,7 @@ var _muerto := false   # true = no maneja ni dispara (sin vida, o la partida ter
 func _ready() -> void:
 	add_to_group("vehiculos")   # el game_manager los detiene a todos al terminar la partida
 	GDSync.expose_func(_empujon_remoto, ENUMS.EXPOSE_PERMISSION.HOST)   # el empujón lo ordena el jabalí, que corre en el host
+	GDSync.expose_func(_balas_remoto, ENUMS.EXPOSE_PERMISSION.HOST)     # las balas las da el ítem, que decide el host
 	health.health_changed.connect(_on_health_changed)
 	if ammo_hud != null:
 		weapon.municion_cambiada.connect(ammo_hud.actualizar_municion)
@@ -108,6 +109,22 @@ func recibir_empujon(impulso: Vector3) -> void:
 func _empujon_remoto(data) -> void:
 	var impulso: Vector3 = data[0] if data is Array else data
 	apply_central_impulse(impulso)
+
+
+## Lo llama el ítem de munición (en el host) cuando este kart lo agarra.
+## La munición la lleva el DUEÑO en su máquina (no viaja por red), así que
+## el host se la pide a él: igual que el empujón, el host decide y el dueño ejecuta.
+func recibir_balas(cantidad: int) -> void:
+	if GDSync.is_gdsync_owner(self):
+		weapon.recargar(cantidad)
+	else:
+		GDSync.call_func_on(GDSync.get_gdsync_owner(self), _balas_remoto, [cantidad])
+
+
+# Corre en la máquina del dueño. Los parámetros llegan empaquetados en un Array.
+func _balas_remoto(data) -> void:
+	var cantidad: int = int(data[0]) if data is Array else int(data)
+	weapon.recargar(cantidad)
 
 
 func curar(amount: float) -> void:

@@ -1,19 +1,20 @@
 extends Area3D
 
-## Ítem de curación con reaparición en un punto aleatorio.
+## Ítem de MUNICIÓN con reaparición en un punto aleatorio.
+## (Antes curaba; como los karts ya no pierden vida, ahora da balas.)
 ##
 ## RED (GD-Sync) — "solo el host decide" (clase 8, race condition del ítem):
 ## - Solo el HOST detecta quién lo agarró. Tiene la posición de todos los karts
 ##   (la manda su PropertySynchronizer), así que su física los ve a todos.
 ## - El flag _activo es el "yaRecolectado" de la clase: se cierra ANTES de hacer
 ##   nada más. Si dos karts lo tocan en el mismo frame, el segundo llega tarde.
-## - El host cura (HealthComponent.heal -> la vida viaja sincronizada), elige el
+## - El host le da las balas al kart (se las pide a su dueño), elige el
 ##   punto de reaparición y avisa a todos con call_func (un EVENTO puntual,
 ##   no un valor que cambie todo el tiempo).
 ## - Limitación: un jugador que se una a mitad de partida no sabe si el ítem
 ##   está oculto ni dónde está. Hoy no pasa, porque la sala se cierra al empezar.
 
-@export var cantidad_vida: float = 25.0
+@export var cantidad_balas: int = 15
 @export var tiempo_reaparicion: float = 5.0
 @export var puntos_spawn: Array[Marker3D]   # arrastrá los Marker3D desde el Inspector
 
@@ -36,12 +37,12 @@ func _on_body_entered(body: Node3D) -> void:
 	# 2. Si ya lo agarró alguien, este llegó tarde (if (yaRecolectado) return;)
 	if not _activo:
 		return
-	if not body.has_method("curar"):
+	if not body.has_method("recibir_balas"):
 		return
 	# 3. Cerrar YA, antes de cualquier otra cosa, para que nadie más lo agarre
 	_activo = false
 
-	body.curar(cantidad_vida)
+	body.recibir_balas(cantidad_balas)
 	var nuevo := _elegir_punto()
 	_ocultar_y_reaparecer(nuevo)                   # en el host
 	GDSync.call_func(_recoger_remoto, [nuevo])     # en todos los demás, con el mismo punto
