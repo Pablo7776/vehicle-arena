@@ -41,6 +41,9 @@ navigation_mesh = SubResource("NavigationMesh_k2fmo")
 
 [node name="Arena" parent="NavigationRegion3D" unique_id=1386833253 instance=ExtResource("1_hyk8p")]
 
+[node name="Item_life" parent="NavigationRegion3D/Arena" index="0" unique_id=1159983786]
+transform = Transform3D(11.175, 0, 0, 0, 11.175, 0, 0, 0, 11.175, -12.23645, -14.14517, -39.77954)
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2025600270]
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=1297915195]
