@@ -9,7 +9,7 @@
 [node name="Arena" type="Node3D" unique_id=1386833253]
 
 [node name="Item_life" parent="." unique_id=1159983786 instance=ExtResource("2_8trdl")]
-transform = Transform3D(11.175, 0, 0, 0, 11.175, 0, 0, 0, 11.175, -12.23645, 8.071102, -39.77954)
+transform = Transform3D(11.175, 0, 0, 0, 11.175, 0, 0, 0, 11.175, -12.236, -14, -39.78)
 
 [node name="Area3D" parent="Item_life" index="0" unique_id=303463410 node_paths=PackedStringArray("puntos_spawn")]
 puntos_spawn = [NodePath("../../PuntosSpawnVida/Punto1"), NodePath("../../PuntosSpawnVida/Punto2")]
