@@ -31,6 +31,7 @@ var _dash_t := 0.0
 func _ready() -> void:
 	health.health_changed.connect(_on_health_changed)
 	_on_health_changed(health.current, health.max_health)
+	health.died.connect(_al_morir)   # died solo se emite en el host
 	_actualizar_autoridad()
 	# Si el host se va, GD-Sync elige otro: el nuevo host toma el control de la IA
 	GDSync.host_changed.connect(func(_es_host, _nuevo_host): _actualizar_autoridad())
@@ -92,5 +93,12 @@ func _physics_process(delta: float) -> void:
 func _on_health_changed(current: float, max_value: float) -> void:
 	label.text = "HP: %d / %d" % [current, max_value]
 	
+# Corre solo en el host. Por ahora solo lo anuncia en la consola;
+# en la parte C el game_manager usa esto para terminar la partida.
+func _al_morir() -> void:
+	var cazador: int = health.ultimo_atacante
+	print("El jabalí lo cazó: ", NetworkManager.nombre_de(cazador), " (id ", cazador, ")")
+
+
 func set_estado(texto: String) -> void:
 	estado = texto

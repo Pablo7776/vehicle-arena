@@ -6,4 +6,5 @@ extends Area3D
 
 func receive_hit(hit: HitData) -> void:
 	if health:
-		health.apply_damage(hit.amount * damage_multiplier)	
+		# Pasamos también QUIÉN pegó: el host lo necesita para saber quién cazó al jabalí
+		health.apply_damage(hit.amount * damage_multiplier, hit.source_peer_id)
