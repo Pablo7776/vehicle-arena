@@ -95,19 +95,22 @@ func _build() -> void:
 
 	col.add_child(_spacer(4))
 	
-	# Adaptado para GD-Sync: Input de Nombre de Sala
-	_sala_input = LineEdit.new()
-	_sala_input.placeholder_text = "Nombre de la Sala (ej. Arena01)"
-	_sala_input.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_sala_input.custom_minimum_size = Vector2(0, 24)   # era 40
-	col.add_child(_sala_input)
-	
-	col.add_child(_spacer(4))
-	
 	# Botones principales GDSync
 	_test_button = _add_button(col, "Test", _on_test)
 	_test_button.visible = OS.is_debug_build()   # "Test" solo en el editor, no en la build final
-	_first_button = _add_button(col, "Crear Sala (Host)", _on_host)
+
+	# Fila: [ nombre de la sala ][ Crear Sala ]
+	var fila_sala := HBoxContainer.new()
+	fila_sala.add_theme_constant_override("separation", 5)
+	col.add_child(fila_sala)
+	_sala_input = LineEdit.new()
+	_sala_input.placeholder_text = "Nombre de la sala"
+	_sala_input.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_sala_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL   # ocupa el espacio que deja el botón
+	_sala_input.add_theme_font_size_override("font_size", theme_data.button_font_size)
+	fila_sala.add_child(_sala_input)
+	_first_button = _add_button(fila_sala, "Crear Sala", _on_host)
+
 	_btn_join = _add_button(col, "Unirse a Partida", _on_join)
 	
 	if show_options:
