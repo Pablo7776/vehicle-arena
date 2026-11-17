@@ -13,7 +13,6 @@ var _dir: Vector3 = Vector3.ZERO
 var _golpeo: bool = false
 
 func _enter() -> void:
-	print("EMBESTIR: enter")
 	_obj = null
 	var mejor: float = INF
 	for v: Node3D in agent.get_tree().get_nodes_in_group("vehiculos"):

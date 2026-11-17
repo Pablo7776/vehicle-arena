@@ -53,7 +53,7 @@ shape = SubResource("CapsuleShape3D_uaiwt")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.782986, 0)
 pixel_size = 1.0
 billboard = 1
-text = "hola"
+text = ""
 font_size = 8
 
 [node name="HealthComponent" parent="." unique_id=1038012900 instance=ExtResource("3_eu4uf")]
@@ -71,7 +71,7 @@ blackboard_plan = SubResource("BlackboardPlan_eu4uf")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.409847, 9.622119, 0)
 pixel_size = 0.2
 billboard = 1
-text = "aaaa"
+text = ""
 script = SubResource("GDScript_uaiwt")
 
 [node name="PropertySynchronizer" type="Node" parent="." unique_id=1105970277]

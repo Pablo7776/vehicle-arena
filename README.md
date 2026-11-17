@@ -15,7 +15,7 @@ Hasta 4 jugadores manejan karts por una arena y compiten para **cazar a un jabal
 5. El que da el **último golpe** lo caza y gana. Si el reloj llega a 0, el jabalí se escapa.
 6. El host aprieta **Volver a la sala** y vuelven todos a la sala de espera para otra ronda.
 
-Los karts **no se hacen daño entre ellos**: la competencia es por llegar primero al jabalí. Hay un **ítem de curación** que reaparece en puntos al azar.
+Los karts **no se hacen daño entre ellos**: la competencia es por llegar primero al jabalí. Hay un **ítem de munición** (+15 balas) que reaparece en puntos al azar.
 
 ### Controles
 
@@ -34,7 +34,8 @@ Los karts **no se hacen daño entre ellos**: la competencia es por llegar primer
 2. Abrí el proyecto (`vehicle-arena/project.godot`) desde el administrador de proyectos.
 3. Verificá que los plugins estén activados en **Proyecto → Configuración del proyecto → Plugins**: GD-Sync, Settings & Menus. LimboAI es una extensión y carga sola.
 4. Para probar en red: **Depurar → Personalizar ejecución de instancias → 2** (o más) y ejecutá. Una instancia crea la sala y las otras se unen con el mismo nombre.
-5. El botón **Test** del menú arranca la arena sin conexión, para probar rápido sin red.
+5. El botón **Test** del menú (solo aparece al ejecutar desde el editor) arranca la arena sin conexión, para probar rápido sin red.
+6. **F1** o el botón **LOG** (arriba a la derecha) muestran en pantalla los mensajes de la consola.
 
 ---
 
@@ -56,7 +57,7 @@ Se usa **GD-Sync**, que maneja la conexión, las salas (lobbies), la sincronizac
 
 ### La regla de autoridad
 
-- **El host decide el estado del mundo**: el jabalí, su vida, quién lo cazó, el ítem de curación, el reloj y el resultado.
+- **El host decide el estado del mundo**: el jabalí, su vida, quién lo cazó, el ítem de munición, el reloj y el resultado.
 - **El dueño de cada kart decide su propio kart**: su movimiento y sus disparos. Así su kart responde sin retraso en su pantalla.
 
 ### Qué decide cada uno y cómo viaja
@@ -68,7 +69,7 @@ Se usa **GD-Sync**, que maneja la conexión, las salas (lobbies), la sincronizac
 | Vida del jabalí | El **host** | `PropertySynchronizer` del `HealthComponent` (*When Host*) |
 | Disparo | El **dueño** del kart | `call_func` a todos: cada uno crea su copia de la bala |
 | Daño de una bala | La **detecta** quien disparó; el **host** la **valida y aplica** | `call_func_on(host, [daño, atacante])` + `DamageValidator` |
-| Recoger el ítem de curación | El **host** (solo él detecta, con un flag) | `call_func` con el punto de reaparición |
+| Recoger el ítem de munición | El **host** (solo él detecta, con un flag); las balas se las suma el **dueño** del kart | `call_func` con el punto de reaparición + `call_func_on(dueño, balas)` |
 | Embestida del jabalí | La **decide** el host; la **ejecuta** el dueño del kart | `call_func_on(dueño, impulso)` |
 | Quién cazó al jabalí / fin por tiempo | El **host** | `call_func` a todos con el resultado |
 | Cuenta regresiva | Todos la **muestran**; solo el reloj del **host** termina la partida | — |
@@ -96,6 +97,7 @@ Se usa **GD-Sync**, que maneja la conexión, las salas (lobbies), la sincronizac
 - **Solo el host vuelve a la sala**, para que todos vuelvan juntos y nadie quede con una partida vieja mientras empieza otra.
 - **La munición no viaja por red.** La lleva cada dueño en su máquina: es información propia y nadie más la necesita.
 - **No se puede entrar con la partida empezada**, porque la sala se cierra. Así nadie se encuentra un ítem o un jabalí en un estado que no conoce.
+- **Las funciones remotas que deciden cosas solo las puede llamar el host** (`expose_func(..., EXPOSE_PERMISSION.HOST)`): un cliente no puede anunciar un resultado, empezar la partida ni darse balas.
 - **Si el host se va**, GD-Sync elige otro y el juego sigue: la IA del jabalí, el reloj y el botón "Volver a la sala" pasan al nuevo host.
 
 ---
@@ -104,7 +106,7 @@ Se usa **GD-Sync**, que maneja la conexión, las salas (lobbies), la sincronizac
 
 ```
 vehicle-arena/
-├── autoloads/        NetworkManager: toda la lógica de red y de salas
+├── autoloads/        NetworkManager (red y salas) y ConsolaPantalla (log en pantalla)
 ├── ai/               Tareas y árbol de comportamiento del jabalí (LimboAI)
 ├── scenes/
 │   ├── arena/        La arena: terreno, puntos de aparición, ítem, límites
@@ -115,7 +117,7 @@ vehicle-arena/
 │   ├── target_dummy/ El jabalí
 │   ├── components/   Componentes reutilizables (vida, golpes, arma)
 │   ├── bullets/      La bala
-│   ├── items/        Ítem de curación
+│   ├── items/        Ítem de munición
 │   ├── hud/          HUD de munición y joystick
 │   ├── sala_espera/  Sala de espera (lobby)
 │   ├── camera/  audio/  debug/  entorno/  pasto/
@@ -139,7 +141,7 @@ Cada script vive al lado de la escena que lo usa.
 ## Limitaciones conocidas
 
 - La cuenta regresiva corre en cada máquina, así que puede diferir en una fracción de segundo. No afecta el resultado: lo decide el reloj del host.
-- Como el host decide sobre el ítem de curación, el jugador que no es host nota un mínimo retraso entre tocarlo y verlo desaparecer.
+- Como el host decide sobre el ítem de munición, el jugador que no es host nota un mínimo retraso entre tocarlo y verlo desaparecer.
 - En PC solo se dispara hacia adelante; el apuntado libre está en el joystick de Android.
 - El menú principal todavía usa el plugin Settings & Menus.
 

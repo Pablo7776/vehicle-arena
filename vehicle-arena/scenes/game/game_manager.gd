@@ -14,8 +14,9 @@ extends Node
 
 ## Duración de la partida en segundos
 const DURACION := 180.0
-## Resultado especial: nadie cazó al jabalí
-const NADIE := -1
+## Resultado especial: nadie cazó al jabalí. Es -2 (y no -1) porque sin conexión
+## (botón Test) el ID del jugador es -1, y se confundiría con "nadie".
+const NADIE := -2
 
 ## Se emite en TODAS las máquinas cuando termina la partida
 ## (cazador = ID del que lo cazó, o NADIE si se escapó)
