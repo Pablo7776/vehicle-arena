@@ -32,6 +32,13 @@ offset_right = 0.0
 offset_bottom = 0.0
 size_flags_horizontal = 8
 
+[node name="BotonExplotar" parent="hud" index="2"]
+offset_left = 155.0
+offset_top = -314.0
+offset_right = 213.0
+offset_bottom = -267.0
+text = "EXP"
+
 [node name="TouchGestureController" type="Node" parent="." unique_id=1304990146]
 script = ExtResource("3_gmlin")
 
@@ -42,12 +49,13 @@ scale = Vector2(0.5859375, 0.59374994)
 texture_normal = ExtResource("5_p47bc")
 action = "disparar"
 
-[node name="AimController" type="Node" parent="." unique_id=792537202 node_paths=PackedStringArray("joystick", "weapon", "camera", "vehicle")]
+[node name="AimController" type="Node" parent="." unique_id=792537202 node_paths=PackedStringArray("joystick", "weapon", "camera", "vehicle", "boton_explotar")]
 script = ExtResource("6_75vfm")
 joystick = NodePath("../hud/VirtualJoystick")
 weapon = NodePath("../Kart1/weapon")
 camera = NodePath("../Camera3D")
 vehicle = NodePath("../Kart1")
+boton_explotar = NodePath("../hud/BotonExplotar")
 
 [node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("2_gmlin")]
 transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 0, -2)

@@ -25,6 +25,7 @@ const ZONA_MUERTA_JOYSTICK := 0.2
 @export var weapon: Weapon
 @export var camera: Camera3D
 @export var vehicle: Node3D   # arrastrá acá Kart1 (el VehicleBody3D)
+@export var boton_explotar: BaseButton   # botón del HUD que hace explotar la última bala
 
 ## true en PC (apunta con el mouse), false en Android (joystick).
 var usar_mouse := not OS.has_feature("mobile")
@@ -37,6 +38,8 @@ func _ready() -> void:
 	joystick.action_up = APUNTAR_ARRIBA
 	joystick.action_down = APUNTAR_ABAJO
 	joystick.flicked.connect(_on_flicked)
+	if boton_explotar != null:
+		boton_explotar.pressed.connect(_explotar_bala)
 
 	if usar_mouse:
 		_apagar_joystick()   # en PC no se usa
@@ -104,6 +107,14 @@ func _disparar(direccion: Vector3, fuerza: float) -> void:
 		direccion = vehicle.global_transform.basis.z   # sin apuntar: para adelante
 	if weapon.shoot(direccion):
 		disparo.emit(direccion, fuerza)
+
+
+func _explotar_bala() -> void:
+	if vehicle == null or not GDSync.is_gdsync_owner(vehicle):
+		return
+	if vehicle._muerto:
+		return
+	weapon.detonar()
 
 
 ## true mientras estás arrastrando el joystick (solo Android).
