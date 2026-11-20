@@ -15,7 +15,8 @@ const APUNTAR_ARRIBA := &"apuntar_arriba"
 const APUNTAR_ABAJO := &"apuntar_abajo"
 
 ## Se emite cada vez que sale una bala (el indicador lo usa para mostrarse).
-signal disparo(direccion: Vector3)
+## `fuerza` va de 0 a 1: cuánto estiraste el joystick (en PC siempre 1).
+signal disparo(direccion: Vector3, fuerza: float)
 
 ## Por debajo de esto (0 a 1) el joystick se considera suelto.
 const ZONA_MUERTA_JOYSTICK := 0.2
@@ -50,7 +51,7 @@ func _physics_process(_delta: float) -> void:
 	# Espacio: dispara hacia donde apunta el mouse en PC
 	# (en Android no hay teclado, así que esto no corre)
 	if Input.is_action_just_pressed("disparar"):
-		_disparar(direccion_apuntado())
+		_disparar(direccion_apuntado(), fuerza_apuntado())
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -60,7 +61,22 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var boton := event as InputEventMouseButton
 	if boton != null and boton.pressed and boton.button_index == MOUSE_BUTTON_LEFT:
-		_disparar(direccion_apuntado())
+		_disparar(direccion_apuntado(), fuerza_apuntado())
+
+
+## Cuánto estás estirando el joystick, de 0 (apenas) a 1 (al máximo).
+## En PC siempre 1 (por ahora el mouse no tiene fuerza).
+func fuerza_apuntado() -> float:
+	if usar_mouse:
+		return 1.0
+	var v := Input.get_vector(APUNTAR_IZQUIERDA, APUNTAR_DERECHA, APUNTAR_ARRIBA, APUNTAR_ABAJO)
+	return _fuerza_desde(v.length())
+
+
+# El largo del joystick va de 0 a 1, pero por debajo de la zona muerta no cuenta:
+# lo pasamos a 0 (justo al salir de la zona muerta) .. 1 (estirado del todo).
+func _fuerza_desde(largo: float) -> float:
+	return clampf(inverse_lerp(ZONA_MUERTA_JOYSTICK, 1.0, largo), 0.0, 1.0)
 
 
 ## Dirección (en el mundo, plana) hacia donde saldría la bala ahora mismo.
@@ -76,10 +92,10 @@ func direccion_apuntado() -> Vector3:
 
 
 func _on_flicked(input_vector: Vector2) -> void:
-	_disparar(_screen_to_world(-input_vector))
+	_disparar(_screen_to_world(-input_vector), _fuerza_desde(input_vector.length()))
 
 
-func _disparar(direccion: Vector3) -> void:
+func _disparar(direccion: Vector3, fuerza: float) -> void:
 	if vehicle == null or not GDSync.is_gdsync_owner(vehicle):
 		return
 	if vehicle._muerto:
@@ -87,7 +103,7 @@ func _disparar(direccion: Vector3) -> void:
 	if direccion == Vector3.ZERO:
 		direccion = vehicle.global_transform.basis.z   # sin apuntar: para adelante
 	if weapon.shoot(direccion):
-		disparo.emit(direccion)
+		disparo.emit(direccion, fuerza)
 
 
 ## true mientras estás arrastrando el joystick (solo Android).

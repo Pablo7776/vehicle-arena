@@ -5,6 +5,8 @@ extends Node3D
 ## Solo lo ve el dueño del kart y no se sincroniza por red: es una ayuda visual.
 ## Aparece mientras apuntás con el joystick (Android) y un ratito después
 ## de cada disparo (PC y Android).
+## El círculo se va cerrando según cuánto estirás el joystick: apenas lo movés
+## es un arco chico delante de la flecha; estirado del todo, el círculo completo.
 
 @export var vehicle: Node3D          # Kart1
 @export var aim_controller: Node     # AimController
@@ -16,12 +18,23 @@ extends Node3D
 @export var tiempo_visible_tras_disparo := 1.0
 ## De ese tiempo, cuántos segundos finales usa para desvanecerse.
 @export var duracion_desvanecer := 0.4
+## Tamaño del arco (en grados) cuando apenas estirás el joystick.
+@export var arco_minimo := 40.0
+## Grosor del aro, en metros (radio del "tubo").
+@export var grosor := 0.08
+
+const SEGMENTOS_CIRCULO := 64   # cuántos tramos tiene el círculo completo
+const LADOS_TUBO := 6           # lados del "tubo" del aro
 
 var _visible_hasta := 0.0           # momento (en segundos) hasta el que se muestra
 var _ultima_direccion := Vector3.ZERO
 var _material: StandardMaterial3D   # copia propia, para cambiarle la transparencia
 var _alfa_base := 1.0
 var _emision_base := 1.0
+var _ultima_fuerza := 1.0
+var _malla_arco := ImmediateMesh.new()   # el aro, armado por código
+var _grados_dibujados := -1.0
+var _frames_precalentar := 3   # se dibuja casi invisible al empezar, para compilar su shader
 
 @onready var circulo: MeshInstance3D = $Circulo
 @onready var flecha: MeshInstance3D = $Flecha
@@ -33,10 +46,6 @@ func _ready() -> void:
 	top_level = true
 	visible = false
 
-	var torus := circulo.mesh as TorusMesh
-	if torus != null:
-		torus.inner_radius = radio - 0.08
-		torus.outer_radius = radio + 0.08
 	# La flecha (un prisma) queda acostada, con la punta hacia -Z,
 	# justo afuera del círculo. Al girar este nodo, la flecha da la vuelta.
 	flecha.rotation_degrees = Vector3(-90.0, 0.0, 0.0)
@@ -50,8 +59,13 @@ func _ready() -> void:
 		_alfa_base = _material.albedo_color.a
 		_emision_base = _material.emission_energy_multiplier
 		_configurar_para_que_lo_tape_el_kart(_material)
+		_material.cull_mode = BaseMaterial3D.CULL_DISABLED   # el aro se ve de cualquier lado
 		circulo.material_override = _material
 		flecha.material_override = _material
+	# El TorusMesh de la escena queda para verlo en el editor y tomar su material;
+	# en el juego lo reemplazamos por el arco que armamos nosotros.
+	circulo.mesh = _malla_arco
+	_dibujar_arco(360.0)
 	_marcar_kart(vehicle)
 
 	if aim_controller != null:
@@ -92,8 +106,9 @@ func _marcar_kart(kart: Node) -> void:
 		(pieza as MeshInstance3D).material_overlay = marca
 
 
-func _al_disparar(direccion: Vector3) -> void:
+func _al_disparar(direccion: Vector3, fuerza: float) -> void:
 	_ultima_direccion = direccion
+	_ultima_fuerza = fuerza
 	_visible_hasta = _ahora() + tiempo_visible_tras_disparo
 
 
@@ -110,9 +125,17 @@ func _process(_delta: float) -> void:
 	# 1 = se ve entero, 0 = invisible. Mientras apuntás con el joystick, entero;
 	# después de disparar, entero hasta que en el final se va apagando.
 	var opacidad := 1.0
-	if not aim_controller.apuntando_con_joystick():
+	if aim_controller.apuntando_con_joystick():
+		_ultima_fuerza = aim_controller.fuerza_apuntado()
+	else:
 		var restante := _visible_hasta - _ahora()
 		opacidad = clampf(restante / maxf(duracion_desvanecer, 0.01), 0.0, 1.0)
+
+	# Los primeros frames se dibuja casi invisible para que Godot compile su shader
+	# ahora y no en el primer disparo (ver precalentar_shaders.gd).
+	if _frames_precalentar > 0:
+		_frames_precalentar -= 1
+		opacidad = maxf(opacidad, 0.01)
 
 	visible = opacidad > 0.0
 	if not visible:
@@ -121,6 +144,7 @@ func _process(_delta: float) -> void:
 		_material.albedo_color.a = _alfa_base * opacidad
 		_material.emission_energy_multiplier = _emision_base * opacidad   # también se apaga el brillo
 
+	_dibujar_arco(lerpf(arco_minimo, 360.0, _ultima_fuerza))
 	global_position = vehicle.global_position + Vector3.UP * altura
 	if _ultima_direccion != Vector3.ZERO:
 		global_basis = Basis.looking_at(_ultima_direccion, Vector3.UP)   # -Z mira hacia la dirección
@@ -128,3 +152,57 @@ func _process(_delta: float) -> void:
 
 func _ahora() -> float:
 	return Time.get_ticks_msec() / 1000.0
+
+
+# Arma el aro como un "tubo" curvo de `grados` de largo, centrado delante
+# de la flecha (hacia -Z). Con 360 queda el círculo completo.
+func _dibujar_arco(grados: float) -> void:
+	grados = clampf(grados, 1.0, 360.0)
+	if absf(grados - _grados_dibujados) < 0.5:
+		return   # no cambió: no hace falta rearmarlo
+	_grados_dibujados = grados
+
+	var tramos := maxi(2, ceili(SEGMENTOS_CIRCULO * grados / 360.0))
+	var desde := deg_to_rad(-grados / 2.0)
+	var hasta := deg_to_rad(grados / 2.0)
+
+	_malla_arco.clear_surfaces()
+	_malla_arco.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in tramos:
+		var a0 := lerpf(desde, hasta, float(i) / tramos)
+		var a1 := lerpf(desde, hasta, float(i + 1) / tramos)
+		for j in LADOS_TUBO:
+			var t0 := TAU * j / LADOS_TUBO
+			var t1 := TAU * (j + 1) / LADOS_TUBO
+			var p00 := _punto_tubo(a0, t0)
+			var p01 := _punto_tubo(a0, t1)
+			var p10 := _punto_tubo(a1, t0)
+			var p11 := _punto_tubo(a1, t1)
+			_vertice(p00, a0, t0)
+			_vertice(p10, a1, t0)
+			_vertice(p11, a1, t1)
+			_vertice(p00, a0, t0)
+			_vertice(p11, a1, t1)
+			_vertice(p01, a0, t1)
+	_malla_arco.surface_end()
+
+
+# Hacia afuera del círculo, para el ángulo `a` (0 = delante, hacia -Z)
+func _afuera(a: float) -> Vector3:
+	return Vector3(sin(a), 0.0, -cos(a))
+
+
+# Dirección "hacia afuera" de la superficie del tubo.
+# `a` dice en qué parte del círculo, `t` en qué parte del grosor.
+func _normal_tubo(a: float, t: float) -> Vector3:
+	return _afuera(a) * cos(t) + Vector3.UP * sin(t)
+
+
+# Punto de la superficie del tubo
+func _punto_tubo(a: float, t: float) -> Vector3:
+	return _afuera(a) * radio + _normal_tubo(a, t) * grosor
+
+
+func _vertice(punto: Vector3, a: float, t: float) -> void:
+	_malla_arco.surface_set_normal(_normal_tubo(a, t))
+	_malla_arco.surface_add_vertex(punto)
