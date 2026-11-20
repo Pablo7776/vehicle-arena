@@ -69,10 +69,7 @@ func _physics_process(delta: float) -> void:
 
 	_aplicar_motor_y_freno()
 
-	# Disparo con teclado: hacia adelante del kart.
-	# (El joystick de Android dispara desde AimController, también con weapon.shoot)
-	if Input.is_action_just_pressed("disparar"):
-		weapon.shoot(global_transform.basis.z)
+	# El disparo (mouse, Espacio y joystick) lo maneja AimController.
 
 
 # Freno que se convierte en marcha atrás:

@@ -16,6 +16,13 @@ var _active_touches := {}        # índice del dedo -> acción que activó ese d
 var _ultimo_soltado_acelerar := -1.0   # momento en que se soltó el último toque de acelerar
 
 
+func _ready() -> void:
+	# En PC el clic del mouse también llega como "toque" (emulate_touch_from_mouse)
+	# y se usa para disparar, así que estos controles solo van en Android.
+	if not OS.has_feature("mobile"):
+		set_process_unhandled_input(false)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventScreenTouch:
 		return

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://5xxh764gc6j7"]
+
+[ext_resource type="Script" uid="uid://kj2as487req4" path="res://scenes/player/indicador_apuntado.gd" id="1_indic"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_indicador"]
+transparency = 1
+no_depth_test = true
+albedo_color = Color(6.497651e-07, 0.3593477, 0.26447386, 0.7490196)
+emission_enabled = true
+emission_energy_multiplier = 14.89
+
+[sub_resource type="TorusMesh" id="Mesh_circulo"]
+material = SubResource("Mat_indicador")
+inner_radius = 2.22
+outer_radius = 2.38
+ring_segments = 6
+
+[sub_resource type="PrismMesh" id="Mesh_flecha"]
+material = SubResource("Mat_indicador")
+size = Vector3(1.8, 1.6, 0.16)
+
+[node name="IndicadorApuntado" type="Node3D" unique_id=1387381900]
+script = ExtResource("1_indic")
+radio = 3.8
+
+[node name="Circulo" type="MeshInstance3D" parent="." unique_id=1500702909]
+cast_shadow = 0
+mesh = SubResource("Mesh_circulo")
+
+[node name="Flecha" type="MeshInstance3D" parent="." unique_id=653712602]
+cast_shadow = 0
+mesh = SubResource("Mesh_flecha")
