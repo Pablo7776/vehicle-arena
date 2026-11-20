@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://rctl25lxarub"]
+
+[ext_resource type="Script" uid="uid://d1xqtslwxfk7n" path="res://scenes/bullets/explosion.gd" id="1_expl"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_explosion"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.105882354, 0.8901961, 0.7921569, 0.6)
+emission_enabled = true
+emission = Color(0.105882354, 0.8901961, 0.7921569, 1)
+emission_energy_multiplier = 13.0
+
+[sub_resource type="SphereMesh" id="Mesh_explosion"]
+material = SubResource("Mat_explosion")
+radius = 1.0
+height = 2.0
+
+[node name="Explosion" type="Node3D" unique_id=1427976659]
+script = ExtResource("1_expl")
+radio = 12.0
+
+[node name="Esfera" type="MeshInstance3D" parent="." unique_id=1759620694]
+cast_shadow = 0
+mesh = SubResource("Mesh_explosion")

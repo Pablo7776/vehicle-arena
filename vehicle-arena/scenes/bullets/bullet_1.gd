@@ -10,16 +10,42 @@ extends Hitbox
 @export var ray_down: float = 10.0           # cuánto baja buscando el suelo
 @export var follow_smooth: float = 20.0      # más alto = sigue el terreno más rápido
 
+@export_group("Explosión")
+@export var explosion_scene: PackedScene = preload("res://scenes/bullets/explosion.tscn")
+@export var explosion_damage: float = 15.0   # el host limita cada golpe a 25 (DamageValidator)
+
 var direction: Vector3
 var deals_damage: bool = true
+var _exploto := false
 
 func _ready() -> void:
 	super._ready()
 	if deals_damage:
-		hit_landed.connect(func(_h): queue_free())
+		# Golpe directo: el daño ya lo hizo el Hitbox; la explosión es solo visual
+		hit_landed.connect(func(_h): explotar(false))
 	else:
 		set_deferred("monitoring", false)   # copia visual: no detecta golpes
+	# Al terminar su recorrido (alcance del arma) explota.
+	# Pasa en todas las máquinas a la vez, porque todas las copias tienen el mismo life_time.
 	await get_tree().create_timer(life_time).timeout
+	explotar(deals_damage)
+
+
+## Crea la explosión donde está la bala y la borra.
+## `con_dano`: si la explosión daña lo que tiene alrededor (solo la bala de quien disparó).
+func explotar(con_dano: bool) -> void:
+	if _exploto:
+		return
+	_exploto = true
+	if explosion_scene != null:
+		var e := explosion_scene.instantiate()
+		e.damage = explosion_damage
+		e.source_peer_id = source_peer_id
+		e.hace_dano = con_dano
+		e.collision_mask = collision_mask
+		get_tree().current_scene.add_child(e)
+		e.global_position = global_position
+		e.explotar()
 	queue_free()
 
 func _physics_process(delta: float) -> void:
