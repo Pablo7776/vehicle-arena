@@ -20,6 +20,9 @@ signal disparo(direccion: Vector3, fuerza: float)
 
 ## Por debajo de esto (0 a 1) el joystick se considera suelto.
 const ZONA_MUERTA_JOYSTICK := 0.2
+## Un toque más corto que esto (en segundos) y casi sin mover el dedo
+## cuenta como "toque": hace explotar las balas en vez de apuntar.
+const DURACION_MAXIMA_TOQUE := 0.25
 
 @export var joystick: VirtualJoystick
 @export var weapon: Weapon
@@ -30,6 +33,8 @@ const ZONA_MUERTA_JOYSTICK := 0.2
 ## true en PC (apunta con el mouse), false en Android (joystick).
 var usar_mouse := not OS.has_feature("mobile")
 
+var _inicio_toque := 0.0   # cuándo apoyaste el dedo en el joystick
+
 
 func _ready() -> void:
 	_crear_acciones_apuntar()
@@ -38,8 +43,13 @@ func _ready() -> void:
 	joystick.action_up = APUNTAR_ARRIBA
 	joystick.action_down = APUNTAR_ABAJO
 	joystick.flicked.connect(_on_flicked)
+	joystick.pressed.connect(func(): _inicio_toque = _ahora())
+	joystick.released.connect(_al_soltar_joystick)
 	if boton_explotar != null:
 		boton_explotar.pressed.connect(_explotar_bala)
+		# En Android se explota tocando el lado derecho de la pantalla (el joystick);
+		# el botón queda solo para PC.
+		boton_explotar.visible = usar_mouse
 
 	if usar_mouse:
 		_apagar_joystick()   # en PC no se usa
@@ -63,8 +73,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not usar_mouse:
 		return
 	var boton := event as InputEventMouseButton
-	if boton != null and boton.pressed and boton.button_index == MOUSE_BUTTON_LEFT:
+	if boton == null or not boton.pressed:
+		return
+	if boton.button_index == MOUSE_BUTTON_LEFT:
 		_disparar(direccion_apuntado(), fuerza_apuntado())
+	elif boton.button_index == MOUSE_BUTTON_RIGHT:
+		_explotar_bala()   # clic derecho: hace explotar las balas
 
 
 ## Cuánto estás estirando el joystick, de 0 (apenas) a 1 (al máximo).
@@ -95,6 +109,9 @@ func direccion_apuntado() -> Vector3:
 
 
 func _on_flicked(input_vector: Vector2) -> void:
+	# Si el dedo casi no se movió, fue un toque (lo maneja _al_soltar_joystick)
+	if input_vector.length() < ZONA_MUERTA_JOYSTICK:
+		return
 	_disparar(_screen_to_world(-input_vector), _fuerza_desde(input_vector.length()))
 
 
@@ -107,6 +124,18 @@ func _disparar(direccion: Vector3, fuerza: float) -> void:
 		direccion = vehicle.global_transform.basis.z   # sin apuntar: para adelante
 	if weapon.shoot(direccion):
 		disparo.emit(direccion, fuerza)
+
+
+# Al soltar el joystick: si fue un toque rápido y sin arrastrar, explotan las balas.
+# Si arrastraste, ya disparó _on_flicked y acá no hacemos nada.
+func _al_soltar_joystick(input_vector: Vector2) -> void:
+	var fue_rapido := _ahora() - _inicio_toque <= DURACION_MAXIMA_TOQUE
+	if fue_rapido and input_vector.length() < ZONA_MUERTA_JOYSTICK:
+		_explotar_bala()
+
+
+func _ahora() -> float:
+	return Time.get_ticks_msec() / 1000.0
 
 
 func _explotar_bala() -> void:
