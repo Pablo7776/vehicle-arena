@@ -49,11 +49,47 @@ func _ready() -> void:
 		_material = original.duplicate() as StandardMaterial3D
 		_alfa_base = _material.albedo_color.a
 		_emision_base = _material.emission_energy_multiplier
+		_configurar_para_que_lo_tape_el_kart(_material)
 		circulo.material_override = _material
 		flecha.material_override = _material
+	_marcar_kart(vehicle)
 
 	if aim_controller != null:
 		aim_controller.disparo.connect(_al_disparar)
+
+
+# Queremos que el kart tape al indicador, pero el piso y el resto del mundo no.
+# Para eso usamos el stencil buffer (Godot 4.5+):
+#   1. El kart "marca" con un 1 los píxeles donde se dibuja (_marcar_kart).
+#   2. El indicador se dibuja sin prueba de profundidad (nada del mundo lo tapa)
+#      pero solo en los píxeles que NO tienen esa marca.
+const MARCA_KART := 1
+
+func _configurar_para_que_lo_tape_el_kart(material: StandardMaterial3D) -> void:
+	material.no_depth_test = true
+	material.stencil_mode = BaseMaterial3D.STENCIL_MODE_CUSTOM
+	material.stencil_flags = BaseMaterial3D.STENCIL_FLAG_READ
+	material.stencil_compare = BaseMaterial3D.STENCIL_COMPARE_NOT_EQUAL
+	material.stencil_reference = MARCA_KART
+	material.render_priority = 1   # después de la marca del kart
+
+
+# A cada pieza del kart le agregamos una pasada invisible que escribe la marca.
+# Va como material_overlay para no tocar los materiales del modelo.
+func _marcar_kart(kart: Node) -> void:
+	if kart == null:
+		return
+	var marca := StandardMaterial3D.new()
+	marca.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	marca.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	marca.albedo_color = Color(0, 0, 0, 0)   # invisible
+	marca.stencil_mode = BaseMaterial3D.STENCIL_MODE_CUSTOM
+	marca.stencil_flags = BaseMaterial3D.STENCIL_FLAG_WRITE
+	marca.stencil_compare = BaseMaterial3D.STENCIL_COMPARE_ALWAYS
+	marca.stencil_reference = MARCA_KART
+	marca.render_priority = -1   # antes que el indicador
+	for pieza in kart.find_children("*", "MeshInstance3D", true, false):
+		(pieza as MeshInstance3D).material_overlay = marca
 
 
 func _al_disparar(direccion: Vector3) -> void:
