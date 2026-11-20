@@ -13,6 +13,11 @@ extends Hitbox
 @export_group("Explosión")
 @export var explosion_scene: PackedScene = preload("res://scenes/bullets/explosion.tscn")
 @export var explosion_damage: float = 15.0   # el host limita cada golpe a 25 (DamageValidator)
+## Si explota sola al terminar su recorrido. Apagado: solo explota con el botón
+## EXPLOTAR, y si llega al final sin detonarla simplemente desaparece.
+@export var explota_al_final := false
+## Si al pegarle directo a algo se ve la explosión (visual, sin daño extra).
+@export var explota_al_impactar := false
 
 var direction: Vector3
 var deals_damage: bool = true
@@ -21,14 +26,26 @@ var _exploto := false
 func _ready() -> void:
 	super._ready()
 	if deals_damage:
-		# Golpe directo: el daño ya lo hizo el Hitbox; la explosión es solo visual
-		hit_landed.connect(func(_h): explotar(false))
+		# Golpe directo: el daño ya lo hizo el Hitbox
+		hit_landed.connect(_al_impactar)
 	else:
 		set_deferred("monitoring", false)   # copia visual: no detecta golpes
-	# Al terminar su recorrido (alcance del arma) explota.
+	# Al terminar su recorrido (alcance del arma) explota o desaparece.
 	# Pasa en todas las máquinas a la vez, porque todas las copias tienen el mismo life_time.
 	await get_tree().create_timer(life_time).timeout
-	explotar(deals_damage)
+	if explota_al_final:
+		explotar(deals_damage)
+	else:
+		_exploto = true   # ya no se puede detonar
+		queue_free()
+
+
+func _al_impactar(_hurtbox) -> void:
+	if explota_al_impactar:
+		explotar(false)
+	else:
+		_exploto = true
+		queue_free()
 
 
 ## Crea la explosión donde está la bala y la borra.
