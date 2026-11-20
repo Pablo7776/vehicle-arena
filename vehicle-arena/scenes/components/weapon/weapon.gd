@@ -17,7 +17,11 @@ signal municion_cambiada(actual: int, maxima: int)
 
 var municion_actual: int
 var _last_shot_time: float = -1000.0
-var _ultima_bala: Node3D = null   # la última que salió de esta arma (la que explota con el botón)
+# Balas de esta arma que siguen en el escenario (las que explotan con el botón).
+# Cada disparo lleva un número, el mismo en todas las máquinas, para que
+# cada jugador sepa cuál de sus copias corresponde a cuál bala real.
+var _balas := {}          # número de bala -> la bala
+var _siguiente_numero := 0
 
 
 func _ready() -> void:
@@ -46,28 +50,38 @@ func shoot(direction: Vector3) -> bool:
 	var shot_dir := -direction   # la bala avanza en sentido contrario a su `direction`
 	var peer_id := GDSync.get_client_id()
 
-	_spawn_bullet(pos, shot_dir, peer_id, true)
-	GDSync.call_func(spawn_bullet_remote, [pos, shot_dir, peer_id])
+	var numero := _siguiente_numero
+	_siguiente_numero += 1
+
+	_spawn_bullet(pos, shot_dir, peer_id, true, numero)
+	GDSync.call_func(spawn_bullet_remote, [pos, shot_dir, peer_id, numero])
 	return true
 
 
-## Hace explotar ahora la última bala disparada (botón EXPLOTAR).
-## Devuelve false si no hay ninguna en el aire.
+## Hace explotar ahora TODAS las balas de esta arma que siguen en el escenario
+## (botón EXPLOTAR). Devuelve false si no había ninguna.
 func detonar() -> bool:
-	if not is_instance_valid(_ultima_bala) or _ultima_bala._exploto:
+	var detonadas := []   # [número, posición] de cada bala que explotó
+	for numero in _balas.keys():
+		var bala: Node3D = _balas[numero]
+		if not is_instance_valid(bala) or bala._exploto:
+			continue
+		detonadas.append([numero, bala.global_position])
+		bala.explotar(true)   # estas son las reales: sus explosiones hacen daño
+	if detonadas.is_empty():
 		return false
-	var pos: Vector3 = _ultima_bala.global_position
-	_ultima_bala.explotar(true)   # esta es la real: la explosión hace daño
-	# En las otras pantallas, la copia de esta bala explota en el mismo punto
-	GDSync.call_func(_detonar_remoto, [pos])
+	# En las otras pantallas, cada copia explota en el mismo punto que su bala real
+	GDSync.call_func(_detonar_remoto, [detonadas])
 	return true
 
 
 func _detonar_remoto(data) -> void:
-	if not is_instance_valid(_ultima_bala) or _ultima_bala._exploto:
-		return
-	_ultima_bala.global_position = data[0]   # por si la copia iba un poco atrasada
-	_ultima_bala.explotar(false)             # copia: solo se ve
+	for par in data[0]:
+		var bala: Node3D = _balas.get(int(par[0]))
+		if not is_instance_valid(bala) or bala._exploto:
+			continue
+		bala.global_position = par[1]   # por si la copia iba un poco atrasada
+		bala.explotar(false)            # copia: solo se ve
 
 
 ## Para el ítem de munición, si algún día lo agregás.
@@ -78,10 +92,10 @@ func recargar(cantidad: int) -> void:
 
 # Los parámetros de call_func llegan empaquetados en un Array
 func spawn_bullet_remote(data) -> void:
-	_spawn_bullet(data[0], data[1], data[2], false)
+	_spawn_bullet(data[0], data[1], data[2], false, int(data[3]))
 
 
-func _spawn_bullet(pos: Vector3, dir: Vector3, peer_id: int, deals_damage: bool) -> void:
+func _spawn_bullet(pos: Vector3, dir: Vector3, peer_id: int, deals_damage: bool, numero: int) -> void:
 	var b := bullet_scene.instantiate()
 	b.direction = dir
 	b.speed = bullet_speed
@@ -90,5 +104,6 @@ func _spawn_bullet(pos: Vector3, dir: Vector3, peer_id: int, deals_damage: bool)
 	b.source_peer_id = peer_id
 	b.deals_damage = deals_damage
 	get_tree().current_scene.add_child(b)
-	_ultima_bala = b
+	_balas[numero] = b
+	b.tree_exiting.connect(func(): _balas.erase(numero))   # al desaparecer, sale de la lista
 	b.global_position = pos
