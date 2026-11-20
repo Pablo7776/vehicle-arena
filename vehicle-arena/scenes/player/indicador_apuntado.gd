@@ -3,8 +3,8 @@ extends Node3D
 ## Círculo con una flecha alrededor del kart que muestra hacia dónde vas a disparar.
 ## La dirección se la pide a AimController (la misma que usa para disparar).
 ## Solo lo ve el dueño del kart y no se sincroniza por red: es una ayuda visual.
-## Aparece mientras apuntás con el joystick (Android) y un ratito después
-## de cada disparo (PC y Android).
+## Aparece mientras apuntás con el joystick (Android) y, al disparar,
+## el círculo se contrae rápido hacia la flecha y desaparece (PC y Android).
 ## El círculo se va cerrando según cuánto estirás el joystick: apenas lo movés
 ## es un arco chico delante de la flecha; estirado del todo, el círculo completo.
 
@@ -14,10 +14,9 @@ extends Node3D
 @export var radio := 2.3
 ## Altura respecto del centro del kart (negativo = más cerca del piso).
 @export var altura := -0.2
-## Segundos que queda visible después de disparar.
-@export var tiempo_visible_tras_disparo := 1.0
-## De ese tiempo, cuántos segundos finales usa para desvanecerse.
-@export var duracion_desvanecer := 0.4
+## Segundos que tarda el círculo en contraerse después de disparar
+## (más chico = más rápido).
+@export var duracion_contraccion := 0.15
 ## Tamaño del arco (en grados) cuando apenas estirás el joystick.
 @export var arco_minimo := 40.0
 ## Grosor del aro, en metros (radio del "tubo").
@@ -26,7 +25,7 @@ extends Node3D
 const SEGMENTOS_CIRCULO := 64   # cuántos tramos tiene el círculo completo
 const LADOS_TUBO := 6           # lados del "tubo" del aro
 
-var _visible_hasta := 0.0           # momento (en segundos) hasta el que se muestra
+var _momento_disparo := -1000.0     # cuándo fue el último disparo (en segundos)
 var _ultima_direccion := Vector3.ZERO
 var _material: StandardMaterial3D   # copia propia, para cambiarle la transparencia
 var _alfa_base := 1.0
@@ -109,7 +108,7 @@ func _marcar_kart(kart: Node) -> void:
 func _al_disparar(direccion: Vector3, fuerza: float) -> void:
 	_ultima_direccion = direccion
 	_ultima_fuerza = fuerza
-	_visible_hasta = _ahora() + tiempo_visible_tras_disparo
+	_momento_disparo = _ahora()
 
 
 func _process(_delta: float) -> void:
@@ -122,14 +121,20 @@ func _process(_delta: float) -> void:
 	if dir != Vector3.ZERO:
 		_ultima_direccion = dir   # en PC sigue al mouse mientras está visible
 
-	# 1 = se ve entero, 0 = invisible. Mientras apuntás con el joystick, entero;
-	# después de disparar, entero hasta que en el final se va apagando.
+	# Tamaño del arco según cuánto estirás el joystick
+	var grados := lerpf(arco_minimo, 360.0, _ultima_fuerza)
+	# 1 = se ve entero, 0 = invisible
 	var opacidad := 1.0
 	if aim_controller.apuntando_con_joystick():
 		_ultima_fuerza = aim_controller.fuerza_apuntado()
+		grados = lerpf(arco_minimo, 360.0, _ultima_fuerza)
 	else:
-		var restante := _visible_hasta - _ahora()
-		opacidad = clampf(restante / maxf(duracion_desvanecer, 0.01), 0.0, 1.0)
+		# Después de disparar: `queda` baja de 1 a 0 en `duracion_contraccion`.
+		# El arco se achica hacia la flecha y en el último tramo se apaga.
+		var pasado := _ahora() - _momento_disparo
+		var queda := 1.0 - clampf(pasado / maxf(duracion_contraccion, 0.01), 0.0, 1.0)
+		grados *= queda
+		opacidad = clampf(queda * 3.0, 0.0, 1.0)
 
 	# Los primeros frames se dibuja casi invisible para que Godot compile su shader
 	# ahora y no en el primer disparo (ver precalentar_shaders.gd).
@@ -144,7 +149,7 @@ func _process(_delta: float) -> void:
 		_material.albedo_color.a = _alfa_base * opacidad
 		_material.emission_energy_multiplier = _emision_base * opacidad   # también se apaga el brillo
 
-	_dibujar_arco(lerpf(arco_minimo, 360.0, _ultima_fuerza))
+	_dibujar_arco(grados)
 	global_position = vehicle.global_position + Vector3.UP * altura
 	if _ultima_direccion != Vector3.ZERO:
 		global_basis = Basis.looking_at(_ultima_direccion, Vector3.UP)   # -Z mira hacia la dirección
