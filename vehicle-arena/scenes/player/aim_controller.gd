@@ -14,6 +14,9 @@ const APUNTAR_DERECHA := &"apuntar_derecha"
 const APUNTAR_ARRIBA := &"apuntar_arriba"
 const APUNTAR_ABAJO := &"apuntar_abajo"
 
+## Se emite cada vez que sale una bala (el indicador lo usa para mostrarse).
+signal disparo(direccion: Vector3)
+
 ## Por debajo de esto (0 a 1) el joystick se considera suelto.
 const ZONA_MUERTA_JOYSTICK := 0.2
 
@@ -83,7 +86,13 @@ func _disparar(direccion: Vector3) -> void:
 		return
 	if direccion == Vector3.ZERO:
 		direccion = vehicle.global_transform.basis.z   # sin apuntar: para adelante
-	weapon.shoot(direccion)
+	if weapon.shoot(direccion):
+		disparo.emit(direccion)
+
+
+## true mientras estás arrastrando el joystick (solo Android).
+func apuntando_con_joystick() -> bool:
+	return not usar_mouse and direccion_apuntado() != Vector3.ZERO
 
 
 # Tira un rayo desde la cámara por donde está el mouse y ve dónde corta

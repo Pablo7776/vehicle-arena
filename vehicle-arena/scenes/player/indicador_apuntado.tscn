@@ -5,9 +5,10 @@
 [sub_resource type="StandardMaterial3D" id="Mat_indicador"]
 transparency = 1
 no_depth_test = true
-albedo_color = Color(6.497651e-07, 0.3593477, 0.26447386, 0.7490196)
+albedo_color = Color(7.219613e-08, 0.3170798, 0.22900453, 0.7490196)
 emission_enabled = true
-emission_energy_multiplier = 14.89
+emission = Color(0.10440347, 0.89141107, 0.79131234, 1)
+emission_energy_multiplier = 16.0
 
 [sub_resource type="TorusMesh" id="Mesh_circulo"]
 material = SubResource("Mat_indicador")
