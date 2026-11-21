@@ -36,6 +36,7 @@ script = ExtResource("1_spjhc")
 
 [node name="VehicleWheel3D" type="VehicleWheel3D" parent="." unique_id=769143159]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95562816, 0, 0.7971802)
+use_as_traction = true
 use_as_steering = true
 wheel_radius = 0.38
 
@@ -44,6 +45,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95562816, 0, -0.7971802)
 
 [node name="VehicleWheel3D2" type="VehicleWheel3D" parent="." unique_id=1239924615]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95958626, 0, 0.7971802)
+use_as_traction = true
 use_as_steering = true
 wheel_radius = 0.38
 
