@@ -76,5 +76,6 @@ children = [SubResource("BTAction_beukn"), SubResource("BTAction_mrkx4"), SubRes
 children = [SubResource("BTSequence_jf346"), SubResource("BTSequence_s7dbb"), SubResource("BTSequence_p8jgx"), SubResource("BTSequence_beukn")]
 
 [resource]
+description = "dw"
 blackboard_plan = SubResource("BlackboardPlan_e8i8n")
 root_task = SubResource("BTDynamicSelector_stdl7")

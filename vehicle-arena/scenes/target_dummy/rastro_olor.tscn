@@ -1,61 +1,63 @@
-[gd_scene format=3 uid="uid://drpan3guvug78"]
+[gd_scene format=3 uid="uid://bk823i303jubm"]
+
+[ext_resource type="Shader" uid="uid://bwygjor246lri" path="res://scenes/target_dummy/rastro_olor.gdshader" id="1_niebla"]
 
 [sub_resource type="Gradient" id="Gradient_transparencia"]
-offsets = PackedFloat32Array(0, 0.15, 0.7, 1)
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.3, 1, 1, 1, 0.2, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0, 0.2, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.22, 1, 1, 1, 0.15, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture1D" id="Textura_transparencia"]
 gradient = SubResource("Gradient_transparencia")
 
 [sub_resource type="Curve" id="Curva_tamano"]
-_data = [Vector2(0, 0.4), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="Textura_tamano"]
 curve = SubResource("Curva_tamano")
 
 [sub_resource type="ParticleProcessMaterial" id="Proceso_olor"]
-emission_shape = 1
-emission_sphere_radius = 3.0
-direction = Vector3(0, 1, 0)
-spread = 60.0
-initial_velocity_min = 0.2
-initial_velocity_max = 0.8
-gravity = Vector3(0, 0.15, 0)
+emission_shape = 3
+emission_box_extents = Vector3(4, 0.1, 4)
+angle_min = -180.0
+angle_max = 180.0
+spread = 180.0
+flatness = 1.0
+initial_velocity_min = 0.1
+initial_velocity_max = 0.4
+gravity = Vector3(0, 0, 0)
 scale_max = 1.6
 scale_curve = SubResource("Textura_tamano")
 color = Color(1.2, 3, 0.8, 1)
 color_ramp = SubResource("Textura_transparencia")
 
-[sub_resource type="Gradient" id="Gradient_circulo"]
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+[sub_resource type="FastNoiseLite" id="Ruido_niebla"]
+frequency = 0.02
+fractal_octaves = 4
 
-[sub_resource type="GradientTexture2D" id="Textura_circulo"]
-gradient = SubResource("Gradient_circulo")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(0.5, 0)
+[sub_resource type="NoiseTexture2D" id="Textura_ruido"]
+width = 128
+height = 128
+noise = SubResource("Ruido_niebla")
+seamless = true
 
-[sub_resource type="StandardMaterial3D" id="Material_olor"]
-transparency = 1
-shading_mode = 0
-vertex_color_use_as_albedo = true
-albedo_texture = SubResource("Textura_circulo")
-disable_receive_shadows = true
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
+[sub_resource type="ShaderMaterial" id="Material_niebla"]
+render_priority = 0
+shader = ExtResource("1_niebla")
+shader_parameter/ruido = SubResource("Textura_ruido")
+shader_parameter/escala_ruido = 0.7
+shader_parameter/velocidad_ruido = 0.02
+shader_parameter/suavidad_piso = 0.6
 
 [sub_resource type="QuadMesh" id="Malla_bocanada"]
-material = SubResource("Material_olor")
-size = Vector2(6, 6)
+material = SubResource("Material_niebla")
+size = Vector2(12, 12)
+orientation = 1
 
-[node name="RastroOlor" type="GPUParticles3D" unique_id=345771751]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+[node name="RastroOlor" type="GPUParticles3D" unique_id=1435393159]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 cast_shadow = 0
-amount = 80
+amount = 150
 lifetime = 15.0
 visibility_aabb = AABB(-600, -50, -600, 1200, 100, 1200)
 process_material = SubResource("Proceso_olor")
