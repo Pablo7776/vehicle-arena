@@ -31,9 +31,11 @@ func _ready() -> void:
 
 
 ## Dispara hacia `direction` (en el mundo). Devuelve true si salió una bala.
-func shoot(direction: Vector3) -> bool:
+## `ignorar_cadencia`: para las balas de una ráfaga, que salen más seguido
+## que la cadencia normal (fire_rate).
+func shoot(direction: Vector3, ignorar_cadencia := false) -> bool:
 	var now := Time.get_ticks_msec() / 1000.0
-	if now - _last_shot_time < fire_rate:
+	if not ignorar_cadencia and now - _last_shot_time < fire_rate:
 		return false
 	if municion_actual <= 0:
 		return false

@@ -17,12 +17,16 @@ const APUNTAR_ABAJO := &"apuntar_abajo"
 ## Se emite cada vez que sale una bala (el indicador lo usa para mostrarse).
 ## `fuerza` va de 0 a 1: cuánto estiraste el joystick (en PC siempre 1).
 signal disparo(direccion: Vector3, fuerza: float)
+## Se emite cuando el disparo queda cargado (el indicador hace un destello).
+signal carga_completa
 
 ## Por debajo de esto (0 a 1) el joystick se considera suelto.
 const ZONA_MUERTA_JOYSTICK := 0.2
 ## Un toque más corto que esto (en segundos) y casi sin mover el dedo
 ## cuenta como "toque": hace explotar las balas en vez de apuntar.
 const DURACION_MAXIMA_TOQUE := 0.25
+## Desde qué fuerza (0 a 1) se considera que el círculo está cerrado
+const FUERZA_PARA_CARGAR := 0.95
 
 @export var joystick: VirtualJoystick
 @export var weapon: Weapon
@@ -32,6 +36,18 @@ const DURACION_MAXIMA_TOQUE := 0.25
 
 ## true en PC (apunta con el mouse), false en Android (joystick).
 var usar_mouse := not OS.has_feature("mobile")
+
+@export_group("Ráfaga (Android)")
+## Segundos que hay que mantener el círculo cerrado para cargar la ráfaga
+@export var tiempo_carga := 0.5
+## Cuántas balas salen en la ráfaga
+@export var balas_rafaga := 3
+## Segundos entre bala y bala de la ráfaga (más de 0,08 para que el host
+## no descarte golpes: el validador rechaza dos golpes en menos de 80 ms)
+@export var intervalo_rafaga := 0.12
+
+var _cargando_desde := -1.0   # cuándo cerraste el círculo (-1 = no está cerrado)
+var _cargado := false
 
 var _inicio_toque := 0.0   # cuándo apoyaste el dedo en el joystick
 
@@ -58,6 +74,28 @@ func _ready() -> void:
 	await get_tree().create_timer(0.5).timeout
 	if vehicle != null and not GDSync.is_gdsync_owner(vehicle):
 		_apagar_joystick()
+
+
+func _process(_delta: float) -> void:
+	if usar_mouse:
+		return
+	# Carga de la ráfaga: círculo cerrado (joystick al máximo) durante `tiempo_carga`
+	if apuntando_con_joystick() and fuerza_apuntado() >= FUERZA_PARA_CARGAR:
+		if _cargando_desde < 0.0:
+			_cargando_desde = _ahora()
+		elif not _cargado and _ahora() - _cargando_desde >= tiempo_carga:
+			_cargado = true
+			carga_completa.emit()
+	elif apuntando_con_joystick():
+		# Aflojaste: el círculo se abrió y se pierde la carga
+		_cargando_desde = -1.0
+		_cargado = false
+	# (si soltaste el joystick no tocamos nada: _on_flicked usa la carga y la reinicia)
+
+
+## true si la ráfaga está cargada (el indicador lo usa para brillar más).
+func esta_cargado() -> bool:
+	return _cargado
 
 
 func _physics_process(_delta: float) -> void:
@@ -109,20 +147,36 @@ func direccion_apuntado() -> Vector3:
 
 
 func _on_flicked(input_vector: Vector2) -> void:
+	var estaba_cargado := _cargado
+	_cargando_desde = -1.0
+	_cargado = false
 	# Si el dedo casi no se movió, fue un toque (lo maneja _al_soltar_joystick)
 	if input_vector.length() < ZONA_MUERTA_JOYSTICK:
 		return
-	_disparar(_screen_to_world(-input_vector), _fuerza_desde(input_vector.length()))
+	var direccion := _screen_to_world(-input_vector)
+	var fuerza := _fuerza_desde(input_vector.length())
+	if estaba_cargado:
+		_rafaga(direccion, fuerza)
+	else:
+		_disparar(direccion, fuerza)
 
 
-func _disparar(direccion: Vector3, fuerza: float) -> void:
+# Varias balas seguidas en la misma dirección
+func _rafaga(direccion: Vector3, fuerza: float) -> void:
+	for i in balas_rafaga:
+		if i > 0:
+			await get_tree().create_timer(intervalo_rafaga).timeout
+		_disparar(direccion, fuerza, true)   # true: no espera la cadencia normal
+
+
+func _disparar(direccion: Vector3, fuerza: float, ignorar_cadencia := false) -> void:
 	if vehicle == null or not GDSync.is_gdsync_owner(vehicle):
 		return
 	if vehicle._muerto:
 		return
 	if direccion == Vector3.ZERO:
 		direccion = vehicle.global_transform.basis.z   # sin apuntar: para adelante
-	if weapon.shoot(direccion):
+	if weapon.shoot(direccion, ignorar_cadencia):
 		disparo.emit(direccion, fuerza)
 
 

@@ -7,6 +7,7 @@ extends Node3D
 ## el círculo se contrae rápido hacia la flecha y desaparece (PC y Android).
 ## El círculo se va cerrando según cuánto estirás el joystick: apenas lo movés
 ## es un arco chico delante de la flecha; estirado del todo, el círculo completo.
+## Cuando la ráfaga queda cargada hace un destello de luz y sigue brillando más.
 
 @export var vehicle: Node3D          # Kart1
 @export var aim_controller: Node     # AimController
@@ -22,6 +23,16 @@ extends Node3D
 ## Grosor del aro, en metros (radio del "tubo").
 @export var grosor := 0.08
 
+@export_group("Destello de carga")
+## Cuánto más brilla el aro en el destello (3 = cuatro veces el brillo normal)
+@export var brillo_destello := 3.0
+## Cuánto más brilla mientras está cargado (0,6 = 60 % más)
+@export var brillo_cargado := 0.6
+## Segundos que dura el destello
+@export var duracion_destello := 0.3
+## Intensidad máxima de la luz que ilumina el piso alrededor del kart
+@export var energia_luz := 6.0
+
 const SEGMENTOS_CIRCULO := 64   # cuántos tramos tiene el círculo completo
 const LADOS_TUBO := 6           # lados del "tubo" del aro
 
@@ -34,6 +45,8 @@ var _ultima_fuerza := 1.0
 var _malla_arco := ImmediateMesh.new()   # el aro, armado por código
 var _grados_dibujados := -1.0
 var _frames_precalentar := 3   # se dibuja casi invisible al empezar, para compilar su shader
+var _destello := 0.0           # 1 justo al cargar, baja a 0 en `duracion_destello`
+var _luz := OmniLight3D.new()  # el destello de luz sobre el piso
 
 @onready var circulo: MeshInstance3D = $Circulo
 @onready var flecha: MeshInstance3D = $Flecha
@@ -69,6 +82,15 @@ func _ready() -> void:
 
 	if aim_controller != null:
 		aim_controller.disparo.connect(_al_disparar)
+		if aim_controller.has_signal("carga_completa"):
+			aim_controller.carga_completa.connect(_al_cargar)
+
+	# Luz del destello: mismo color que el brillo del aro, apagada hasta que cargues
+	_luz.light_color = _material.emission if _material != null else Color.WHITE
+	_luz.omni_range = radio * 3.0
+	_luz.light_energy = 0.0
+	_luz.shadow_enabled = false
+	add_child(_luz)
 
 
 # Queremos que el kart tape al indicador, pero el piso y el resto del mundo no.
@@ -111,7 +133,12 @@ func _al_disparar(direccion: Vector3, fuerza: float) -> void:
 	_momento_disparo = _ahora()
 
 
-func _process(_delta: float) -> void:
+func _al_cargar() -> void:
+	_destello = 1.0
+
+
+func _process(delta: float) -> void:
+	_destello = move_toward(_destello, 0.0, delta / maxf(duracion_destello, 0.01))
 	if vehicle == null or aim_controller == null:
 		return
 	if not GDSync.is_gdsync_owner(vehicle) or vehicle._muerto:
@@ -145,14 +172,20 @@ func _process(_delta: float) -> void:
 	visible = opacidad > 0.0
 	if not visible:
 		return
+	# Brillo extra: el destello al cargar, y un poco más mientras siga cargado
+	var cargado: bool = aim_controller.has_method("esta_cargado") and aim_controller.esta_cargado()
+	var extra := brillo_destello * _destello + (brillo_cargado if cargado else 0.0)
 	if _material != null:
 		_material.albedo_color.a = _alfa_base * opacidad
-		_material.emission_energy_multiplier = _emision_base * opacidad   # también se apaga el brillo
+		_material.emission_energy_multiplier = _emision_base * opacidad * (1.0 + extra)
+	_luz.light_energy = energia_luz * _destello
 
 	_dibujar_arco(grados)
 	global_position = vehicle.global_position + Vector3.UP * altura
 	if _ultima_direccion != Vector3.ZERO:
 		global_basis = Basis.looking_at(_ultima_direccion, Vector3.UP)   # -Z mira hacia la dirección
+	# En el destello el aro se agranda un poquito y vuelve
+	global_basis = global_basis.orthonormalized().scaled(Vector3.ONE * (1.0 + 0.15 * _destello))
 
 
 func _ahora() -> float:
