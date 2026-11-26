@@ -29,28 +29,30 @@ func _tick(_delta: float) -> Status:
 	var away: Vector3 = agent.global_position - mas_cercano.global_position
 	away.y = 0.0
 	away = away.normalized()
-	var map: RID = agent.get_world_3d().navigation_map
+	var mundo: World3D = agent.get_world_3d()
 
 	var mejor_punto := Vector3.ZERO
 	var mejor_puntaje := -INF
 	for ang in ANGULOS:
 		var p: Vector3 = agent.global_position + away.rotated(Vector3.UP, deg_to_rad(ang)) * distancia
-		var c: Vector3 = NavigationServer3D.map_get_closest_point(map, p)
-		if c == Vector3.ZERO:
+		# Si en el camino hay una pared, esa dirección no sirve
+		if Bordes.hay_pared(mundo, agent.global_position, p):
 			continue
-		# Si el punto quedó muy cerca de donde está, es porque atrás hay pared: no sirve
-		if Vector2(c.x - agent.global_position.x, c.z - agent.global_position.z).length() < distancia * 0.5:
-			continue
-		var libre := Bordes.espacio_libre(map, c, margen_borde)            # 0..1
-		var lejos := c.distance_to(mas_cercano.global_position) / (distancia * 2.0)
+		var libre := Bordes.espacio_libre(mundo, p, margen_borde)          # 0..1
+		var lejos := p.distance_to(mas_cercano.global_position) / (distancia * 2.0)
 		# Lo más importante: no ir a un borde. Después: alejarse del kart.
 		var puntaje := libre * 3.0 + lejos
 		if puntaje > mejor_puntaje:
 			mejor_puntaje = puntaje
-			mejor_punto = c
+			mejor_punto = p
 
 	if mejor_punto == Vector3.ZERO:
 		return FAILURE
-	blackboard.set_var(guardar_en, mejor_punto)
+	# Una sola consulta al mapa de navegación, para el punto elegido
+	var map: RID = mundo.navigation_map
+	var c: Vector3 = NavigationServer3D.map_get_closest_point(map, mejor_punto)
+	if c == Vector3.ZERO:
+		return FAILURE
+	blackboard.set_var(guardar_en, c)
 	agent.set_estado("¡Huyendo!")
 	return SUCCESS

@@ -18,21 +18,26 @@ func _tick(_delta: float) -> Status:
 	agent.set_estado("Deambulando")
 	# Probamos varios puntos al azar y nos quedamos con el que tenga más
 	# espacio libre alrededor (si encontramos uno en campo abierto, listo).
+	var mundo: World3D = agent.get_world_3d()
 	var mejor_punto := Vector3.ZERO
 	var mejor_libre := -1.0
 	for i in 10:
 		var p: Vector3 = agent.global_position + Vector3(
 			randf_range(-rango, rango), 0.0, randf_range(-rango, rango))
-		var c := NavigationServer3D.map_get_closest_point(map, p)
-		if c == Vector3.ZERO or c.distance_to(p) > rango * 0.5:
+		# Puntos del otro lado de una pared (fuera de la arena) no sirven
+		if Bordes.hay_pared(mundo, agent.global_position, p):
 			continue
-		var libre := Bordes.espacio_libre(map, c, margen_borde)
+		var libre := Bordes.espacio_libre(mundo, p, margen_borde)
 		if libre > mejor_libre:
 			mejor_libre = libre
-			mejor_punto = c
+			mejor_punto = p
 		if libre >= 1.0:
 			break
 	if mejor_punto == Vector3.ZERO:
 		return FAILURE
-	blackboard.set_var(guardar_en, mejor_punto)
+	# Una sola consulta al mapa de navegación, para el punto elegido
+	var c := NavigationServer3D.map_get_closest_point(map, mejor_punto)
+	if c == Vector3.ZERO:
+		return FAILURE
+	blackboard.set_var(guardar_en, c)
 	return SUCCESS
