@@ -35,6 +35,7 @@ memoria = 5.0
 
 [sub_resource type="BTAction" id="BTAction_22sde"]
 script = ExtResource("2_jav6q")
+margen_borde = 150.0
 
 [sub_resource type="BTAction" id="BTAction_tacu7"]
 script = ExtResource("2_ssq0g")
@@ -61,6 +62,7 @@ children = [SubResource("BTCondition_lipte"), SubResource("BTAction_stdl7"), Sub
 
 [sub_resource type="BTAction" id="BTAction_beukn"]
 script = ExtResource("1_beukn")
+margen_borde = 150.0
 
 [sub_resource type="BTAction" id="BTAction_mrkx4"]
 script = ExtResource("2_ssq0g")
