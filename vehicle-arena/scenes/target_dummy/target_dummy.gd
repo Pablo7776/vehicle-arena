@@ -18,17 +18,20 @@ extends CharacterBody3D
 
 
 var hambre: float = 0.0
-var estado: String = "":
-	set(v):
-		estado = v
-		if estado_label:
-			estado_label.text = v
+## Qué está haciendo la IA ("¡Huyendo!", "Pastando...", etc.). Ya no se
+## muestra en pantalla, pero se sigue guardando: sirve para depurar
+## (por ejemplo con print) y viaja por red igual que antes.
+var estado: String = ""
 
 var _moving := false
 var _dash_vel := Vector3.ZERO
 var _dash_t := 0.0
 
 func _ready() -> void:
+	# Los carteles de texto del jabalí ya no se usan: la vida la muestra
+	# BarraVida y el estado de la IA no se muestra
+	label.hide()
+	estado_label.hide()
 	health.health_changed.connect(_on_health_changed)
 	_on_health_changed(health.current, health.max_health)
 	health.died.connect(_al_morir)   # died solo se emite en el host
