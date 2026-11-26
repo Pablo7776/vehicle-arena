@@ -21,6 +21,11 @@ var _muerto := false   # true = no maneja ni dispara (sin vida, o la partida ter
 
 func _ready() -> void:
 	add_to_group("vehiculos")   # el game_manager los detiene a todos al terminar la partida
+	# Interpolación de física solo para TU kart (lo mueve tu física). Los karts de
+	# los demás los mueve la red (PropertySynchronizer) en cada imagen: si Godot los
+	# interpolara además, se verían con retraso o a los saltos.
+	GDSync.connect_gdsync_owner_changed(self, func(_dueno): _actualizar_interpolacion())
+	_actualizar_interpolacion()
 	GDSync.expose_func(_empujon_remoto, ENUMS.EXPOSE_PERMISSION.HOST)   # el empujón lo ordena el jabalí, que corre en el host
 	GDSync.expose_func(_balas_remoto, ENUMS.EXPOSE_PERMISSION.HOST)     # las balas las da el ítem, que decide el host
 	health.health_changed.connect(_on_health_changed)
@@ -42,6 +47,14 @@ func _morir() -> void:
 	steering = 0.0
 	brake = 10.0
 	# acá: explosión, humo, oscurecer el modelo, etc.
+
+
+func _actualizar_interpolacion() -> void:
+	if GDSync.is_gdsync_owner(self):
+		physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_INHERIT
+	else:
+		physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	reset_physics_interpolation()
 
 
 ## Lo llama el game_manager en todas las máquinas cuando termina la partida:

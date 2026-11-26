@@ -57,6 +57,8 @@ func _ready() -> void:
 	# La posición la copiamos a mano en _process.
 	top_level = true
 	visible = false
+	# Lo movemos nosotros en _process (sigue al kart): sin interpolación de física
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 
 	# La flecha (un prisma) queda acostada, con la punta hacia -Z,
 	# justo afuera del círculo. Al girar este nodo, la flecha da la vuelta.
@@ -181,7 +183,8 @@ func _process(delta: float) -> void:
 	_luz.light_energy = energia_luz * _destello
 
 	_dibujar_arco(grados)
-	global_position = vehicle.global_position + Vector3.UP * altura
+	# Posición interpolada del kart, igual que la cámara (si no, tiembla respecto del auto)
+	global_position = vehicle.get_global_transform_interpolated().origin + Vector3.UP * altura
 	if _ultima_direccion != Vector3.ZERO:
 		global_basis = Basis.looking_at(_ultima_direccion, Vector3.UP)   # -Z mira hacia la dirección
 	# En el destello el aro se agranda un poquito y vuelve

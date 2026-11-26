@@ -24,20 +24,30 @@ func _ready() -> void:
 	current = true
 	top_level = true   # ignora la transformación del padre (Player)
 	vehiculo = get_node(vehiculo_path)
+	# La cámara la movemos nosotros en cada imagen (_process), no la física:
+	# Godot no tiene que interpolarla.
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 
 
 func _process(delta: float) -> void:
 	if vehiculo == null:
 		return
 
+	# Usamos la posición INTERPOLADA del kart: la física lo mueve 60 veces por
+	# segundo, pero la pantalla se dibuja a otro ritmo. Con la interpolación de
+	# física activada, Godot nos da dónde se ve el kart en ESTA imagen, así la
+	# cámara no "salta" respecto del auto (era el parpadeo a gran velocidad).
+	var t_kart := vehiculo.get_global_transform_interpolated()
+
 	# Posición: sigue al vehículo con suavizado
-	var pos_objetivo := vehiculo.global_transform.origin + vehiculo.global_transform.basis * offset
-	global_position = global_position.lerp(pos_objetivo, suavizado_pos * delta)
+	# (1 - exp(...) se comporta igual a cualquier cantidad de FPS)
+	var pos_objetivo := t_kart.origin + t_kart.basis * offset
+	global_position = global_position.lerp(pos_objetivo, 1.0 - exp(-suavizado_pos * delta))
 
 	# Rotación: mira en la dirección del vehículo
 	global_rotation = Vector3(
 		deg_to_rad(inclinacion_grados),
-		vehiculo.global_rotation.y + PI,
+		t_kart.basis.get_euler().y + PI,
 		_calcular_horizonte(delta)
 	)
 

@@ -62,6 +62,7 @@ func explotar(con_dano: bool) -> void:
 		e.collision_mask = collision_mask
 		get_tree().current_scene.add_child(e)
 		e.global_position = global_position
+		e.reset_physics_interpolation()
 		e.explotar()
 	queue_free()
 

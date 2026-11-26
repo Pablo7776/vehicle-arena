@@ -109,3 +109,4 @@ func _spawn_bullet(pos: Vector3, dir: Vector3, peer_id: int, deals_damage: bool,
 	_balas[numero] = b
 	b.tree_exiting.connect(func(): _balas.erase(numero))   # al desaparecer, sale de la lista
 	b.global_position = pos
+	b.reset_physics_interpolation()   # aparece ahí, no "viene volando" desde el origen

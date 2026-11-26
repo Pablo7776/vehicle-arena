@@ -42,6 +42,11 @@ func _ready() -> void:
 func _actualizar_autoridad() -> void:
 	var soy_host: bool = GDSync.is_host()
 	bt_player.active = soy_host
+	# En el host lo mueve la física: se interpola. En los demás lo mueve la red
+	# en cada imagen: sin interpolación de física (igual que los karts ajenos).
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_INHERIT if soy_host \
+			else Node.PHYSICS_INTERPOLATION_MODE_OFF
+	reset_physics_interpolation()
 	if not soy_host:
 		_moving = false
 		_dash_t = 0.0

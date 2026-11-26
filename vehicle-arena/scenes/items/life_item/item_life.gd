@@ -72,6 +72,7 @@ func _ocultar_y_reaparecer(indice: int) -> void:
 	# Se mueve mientras está oculto, así nadie ve el salto
 	if not puntos_spawn.is_empty():
 		raiz.global_position = puntos_spawn[indice].global_position
+		raiz.reset_physics_interpolation()
 		_indice_actual = indice
 	modelo.show()
 	colision.set_deferred("disabled", false)
