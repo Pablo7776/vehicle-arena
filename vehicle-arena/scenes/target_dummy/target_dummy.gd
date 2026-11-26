@@ -95,8 +95,9 @@ func _physics_process(delta: float) -> void:
 			rotation.y = lerp_angle(rotation.y, atan2(-dir.x, -dir.z), turn_speed * delta)
 	move_and_slide()
 
-func _on_health_changed(current: float, max_value: float) -> void:
-	label.text = "HP: %d / %d" % [current, max_value]
+func _on_health_changed(_current: float, _max_value: float) -> void:
+	# La vida ahora la muestra BarraVida (barra_vida.gd) en el cuerpo del jabalí
+	label.text = ""
 	
 # Corre solo en el host. El game_manager también escucha died y termina la partida.
 func _al_morir() -> void:

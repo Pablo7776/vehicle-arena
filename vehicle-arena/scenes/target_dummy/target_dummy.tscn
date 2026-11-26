@@ -6,6 +6,7 @@
 [ext_resource type="BehaviorTree" uid="uid://t7eks88stlix" path="res://ai/trees/jabali.tres" id="4_uaiwt"]
 [ext_resource type="Script" uid="uid://fcoih1ax5dcs" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="5_sync"]
 [ext_resource type="PackedScene" uid="uid://bk823i303jubm" path="res://scenes/target_dummy/rastro_olor.tscn" id="6_olor"]
+[ext_resource type="PackedScene" path="res://scenes/target_dummy/barra_vida.tscn" id="7_vida"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_eu4uf"]
 radius = 5.0
@@ -83,5 +84,12 @@ extrapolated = false
 max_extrapolation_time = 0.2
 
 [node name="RastroOlor" parent="." unique_id=2123054924 instance=ExtResource("6_olor")]
+
+[node name="BarraVida" parent="." unique_id=1917209488 node_paths=PackedStringArray("health") instance=ExtResource("7_vida")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
+health = NodePath("../HealthComponent")
+radio = 5.0
+alto = 6.0
+ancho = 1.0
 
 [editable path="Hurtbox"]
