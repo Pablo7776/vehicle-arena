@@ -1,7 +1,7 @@
 extends Label3D
 
 ## Cartel sobre el kart del jugador.
-##   Tu kart:           "TÚ" y tus balas
+##   Tu kart:           nada (tus balas las muestra la barra de munición del kart)
 ##   Karts de los demás: su nombre
 ## Va en el Label3D del kart, asignado desde la escena del jugador (player.tscn).
 ##
@@ -36,7 +36,7 @@ func _ready() -> void:
 func _actualizar() -> void:
 	var es_mio: bool = GDSync.is_gdsync_owner(self)
 	if es_mio:
-		text = "%d balas" % _weapon.municion_actual
+		text = ""   # la munición ahora la muestra BarraMunicion (barra_municion.gd)
 	else:
 		text = _nombre_del_dueno()
 	modulate = color_propio if es_mio else _color_ajeno
