@@ -44,7 +44,7 @@ var _emision_base := 1.0
 var _ultima_fuerza := 1.0
 var _malla_arco := ImmediateMesh.new()   # el aro, armado por código
 var _grados_dibujados := -1.0
-var _frames_precalentar := 3   # se dibuja casi invisible al empezar, para compilar su shader
+var _frames_precalentar := 5   # se dibuja casi invisible al empezar, para compilar su shader
 var _destello := 0.0           # 1 justo al cargar, baja a 0 en `duracion_destello`
 var _luz := OmniLight3D.new()  # el destello de luz sobre el piso
 
@@ -167,7 +167,10 @@ func _process(delta: float) -> void:
 
 	# Los primeros frames se dibuja casi invisible para que Godot compile su shader
 	# ahora y no en el primer disparo (ver precalentar_shaders.gd).
-	if _frames_precalentar > 0:
+	# También prende la luz del destello, apenas: la primera vez que una luz nueva
+	# ilumina la escena, Godot prepara variantes de los materiales que toca.
+	var precalentando := _frames_precalentar > 0
+	if precalentando:
 		_frames_precalentar -= 1
 		opacidad = maxf(opacidad, 0.01)
 
@@ -180,7 +183,7 @@ func _process(delta: float) -> void:
 	if _material != null:
 		_material.albedo_color.a = _alfa_base * opacidad
 		_material.emission_energy_multiplier = _emision_base * opacidad * (1.0 + extra)
-	_luz.light_energy = energia_luz * _destello
+	_luz.light_energy = 0.02 if precalentando else energia_luz * _destello
 
 	_dibujar_arco(grados)
 	# Posición interpolada del kart, igual que la cámara (si no, tiembla respecto del auto)

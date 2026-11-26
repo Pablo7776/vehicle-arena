@@ -7,10 +7,14 @@ extends Node3D
 ## que todavía no están en pantalla al arrancar (balas, indicador de apuntado...),
 ## así la traba pasa durante la carga y no mientras jugás.
 ## Para sumar otra cosa, agregá su escena a la lista `escenas` en el inspector.
+##   - Escenas con script (bala, explosión...): se copian solo sus mallas,
+##     así no corre su código (una bala de verdad se movería y haría daño).
+##   - Escenas sin script (por ejemplo el rastro de olor, que son partículas):
+##     se agregan enteras, porque las partículas también compilan su shader.
 
 @export var escenas: Array[PackedScene] = []
-## Cuántos frames se dibujan (con 2 o 3 alcanza).
-@export var frames := 3
+## Cuántos frames se dibujan (con 3 a 5 alcanza; las partículas necesitan alguno más).
+@export var frames := 5
 
 
 func _ready() -> void:
@@ -23,7 +27,12 @@ func _ready() -> void:
 	for escena in escenas:
 		if escena == null:
 			continue
-		_copiar_mallas(escena)
+		var muestra := escena.instantiate()
+		if muestra.get_script() == null:
+			add_child(muestra)   # sin código: se puede usar tal cual
+		else:
+			muestra.free()
+			_copiar_mallas(escena)
 
 	# Un poco delante de la cámara, en miniatura: se dibuja, pero no se nota
 	var adelante := -camara.global_basis.z
