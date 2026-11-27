@@ -16,7 +16,15 @@ var _active_touches := {}        # índice del dedo -> acción que activó ese d
 var _ultimo_soltado_acelerar := -1.0   # momento en que se soltó el último toque de acelerar
 
 
+## Apagado: ahora se maneja con el joystick izquierdo (JoystickManejo en hud.tscn).
+## Si lo volvés a activar, apagá ese joystick para que no peleen por la pantalla.
+@export var activo := false
+
+
 func _ready() -> void:
+	if not activo:
+		set_process_unhandled_input(false)
+		return
 	# En PC el clic del mouse también llega como "toque" (emulate_touch_from_mouse)
 	# y se usa para disparar, así que estos controles solo van en Android.
 	if not OS.has_feature("mobile"):
