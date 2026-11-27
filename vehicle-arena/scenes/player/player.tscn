@@ -9,8 +9,8 @@
 [ext_resource type="Script" uid="uid://brk5novpo1vjl" path="res://scenes/player/aim_controller.gd" id="6_75vfm"]
 [ext_resource type="AudioStream" uid="uid://b44yjrc7rd1kf" path="res://assets/audio/Loop1.mp3" id="7_0owmy"]
 [ext_resource type="Script" uid="uid://d2v6tj80f0vmy" path="res://scenes/audio/musica_proximidad.gd" id="8_qek5x"]
-[ext_resource type="PackedScene" uid="uid://5xxh764gc6j7" path="res://scenes/player/indicador_apuntado.tscn" id="9_indic"]
 [ext_resource type="PackedScene" path="res://scenes/player/barra_municion.tscn" id="10_barra"]
+[ext_resource type="PackedScene" uid="uid://5xxh764gc6j7" path="res://scenes/player/indicador_apuntado.tscn" id="9_indic"]
 
 [node name="Player" type="Node3D" unique_id=861030176]
 
@@ -26,7 +26,7 @@ collision_layer = 4
 [node name="Label3D" parent="Kart1" index="11" unique_id=1815795333]
 script = ExtResource("2_5gtgg")
 
-[node name="BarraMunicion" parent="Kart1" unique_id=408104656 node_paths=PackedStringArray("weapon") instance=ExtResource("10_barra")]
+[node name="BarraMunicion" parent="Kart1" node_paths=PackedStringArray("weapon") instance=ExtResource("10_barra")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -1.5)
 weapon = NodePath("../weapon")
 
@@ -37,7 +37,7 @@ offset_right = 0.0
 offset_bottom = 0.0
 size_flags_horizontal = 8
 
-[node name="BotonExplotar" parent="hud" index="3"]
+[node name="BotonExplotar" parent="hud" index="2"]
 offset_left = 155.0
 offset_top = -314.0
 offset_right = 213.0
@@ -65,10 +65,8 @@ boton_explotar = NodePath("../hud/BotonExplotar")
 [node name="Camera3D" parent="." unique_id=1054761183 instance=ExtResource("2_gmlin")]
 transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50000006, 0, 0, -2)
 vehiculo_path = NodePath("../Kart1")
-offset = Vector3(0, 3, -4)
+offset = Vector3(0, 4, -4)
 inclinacion_grados = -10.0
-suavizado_pos = 20.0
-punto_mira = Vector3(0, 1, 1.5)
 sensibilidad_horizonte = -1.0
 intensidad_horizonte = 0.8
 velocidad_horizonte = 300.0
