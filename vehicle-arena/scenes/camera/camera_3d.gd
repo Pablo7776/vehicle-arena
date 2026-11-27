@@ -5,8 +5,18 @@ extends Camera3D
 
 @export var vehiculo_path: NodePath   # asignar a Kart1
 @export var offset := Vector3(0, 12.5, -4.0)
-@export_range(-90, 90) var inclinacion_grados := -45.0   # negativo = mira hacia abajo
+@export_range(-90, 90) var inclinacion_grados := -45.0   # negativo = mira hacia abajo (solo si mirar_al_kart está apagado)
 @export var suavizado_pos := 8.0
+
+@export_group("Mirar al kart")
+## Si está activado, la cámara apunta siempre a un punto del kart en vez de usar
+## una inclinación fija: así el kart queda siempre a la vista, esté quieto o
+## yendo rápido (antes, quieto, quedaba medio fuera de la pantalla).
+@export var mirar_al_kart := true
+## Punto al que mira, relativo al kart: x = costado, y = altura, z = hacia adelante.
+## Más z = mira más adelante (el kart baja en la pantalla y ves más camino).
+@export var punto_mira := Vector3(0, 0.5, 1.5)
+@export_group("")
 
 @export_group("Horizonte")
 @export var horizonte_activo := true
@@ -44,12 +54,20 @@ func _process(delta: float) -> void:
 	var pos_objetivo := t_kart.origin + t_kart.basis * offset
 	global_position = global_position.lerp(pos_objetivo, 1.0 - exp(-suavizado_pos * delta))
 
-	# Rotación: mira en la dirección del vehículo
-	global_rotation = Vector3(
-		deg_to_rad(inclinacion_grados),
-		t_kart.basis.get_euler().y + PI,
-		_calcular_horizonte(delta)
-	)
+	var horizonte := _calcular_horizonte(delta)
+	if mirar_al_kart:
+		# Mira al punto del kart; después le aplicamos la inclinación del horizonte
+		var objetivo := t_kart.origin + t_kart.basis * punto_mira
+		var hacia := objetivo - global_position
+		if hacia.length() > 0.01:
+			global_basis = Basis.looking_at(hacia, Vector3.UP) * Basis(Vector3.BACK, horizonte)
+	else:
+		# Rotación fija: mira en la dirección del vehículo con inclinación fija
+		global_rotation = Vector3(
+			deg_to_rad(inclinacion_grados),
+			t_kart.basis.get_euler().y + PI,
+			horizonte
+		)
 
 
 # Devuelve el ángulo de inclinación de la imagen según el giroscopio.
