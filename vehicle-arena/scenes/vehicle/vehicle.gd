@@ -11,12 +11,22 @@ extends VehicleBody3D
 ## HUD de munición (el CanvasLayer con hud.gd). Se asigna en la escena del jugador.
 @export var ammo_hud: CanvasLayer
 
+@export_group("Enderezado automático")
+## Segundos que tiene que estar volcado (y casi quieto) antes de enderezarse
+@export var tiempo_volcado := 1.5
+## Cuántos metros lo levanta al enderezarlo (después cae sobre las ruedas)
+@export var altura_enderezado := 2.0
+## Qué tan inclinado cuenta como volcado: 1 = derecho, 0 = de costado, -1 = ruedas arriba
+@export_range(-1.0, 1.0) var inclinacion_volcado := 0.3
+@export_group("")
+
 @onready var vehicle_input = $VehicleInput
 @onready var weapon: Weapon = $weapon
 @onready var health: HealthComponent = $HealthComponent
 
 var _en_reversa := false
 var _muerto := false   # true = no maneja ni dispara (sin vida, o la partida terminó)
+var _volcado_desde := -1.0   # cuándo empezó a estar volcado (-1 = no lo está)
 
 
 func _ready() -> void:
@@ -81,8 +91,48 @@ func _physics_process(delta: float) -> void:
 	)
 
 	_aplicar_motor_y_freno()
+	_revisar_volcado()
 
 	# El disparo (mouse, Espacio y joystick) lo maneja AimController.
+
+
+# Si el kart quedó volcado (de costado o con las ruedas para arriba) y casi
+# quieto durante `tiempo_volcado` segundos, lo endereza solo.
+# Corre solo en la máquina del dueño: el kart lo mueve él y la posición nueva
+# les llega a los demás por el PropertySynchronizer, como siempre.
+func _revisar_volcado() -> void:
+	var cuanto_derecho := global_basis.y.dot(Vector3.UP)   # 1 = derecho, -1 = ruedas arriba
+	var volcado := cuanto_derecho < inclinacion_volcado
+	var casi_quieto := linear_velocity.length() < 3.0
+	if not (volcado and casi_quieto):
+		_volcado_desde = -1.0
+		return
+	var ahora := Time.get_ticks_msec() / 1000.0
+	if _volcado_desde < 0.0:
+		_volcado_desde = ahora
+	elif ahora - _volcado_desde >= tiempo_volcado:
+		_volcado_desde = -1.0
+		_enderezar()
+
+
+func _enderezar() -> void:
+	# Mirando hacia donde apuntaba el frente del kart, pero derecho
+	var adelante := global_basis.z
+	adelante.y = 0.0
+	if adelante.length() < 0.1:       # quedó parado de punta: usamos el "arriba"
+		adelante = global_basis.y
+		adelante.y = 0.0
+	var giro := atan2(adelante.x, adelante.z) if adelante.length() > 0.01 else 0.0
+
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	global_transform = Transform3D(Basis(Vector3.UP, giro),
+			global_position + Vector3.UP * altura_enderezado)
+	# Que no se vea "deslizándose" hasta la posición nueva:
+	reset_physics_interpolation()                    # en tu pantalla
+	var sync := get_node_or_null("PropertySynchronizer")
+	if sync != null and sync.has_method("pause_interpolation"):
+		sync.pause_interpolation(0.2)                # en las de los demás (GD-Sync)
 
 
 # Freno que se convierte en marcha atrás:
