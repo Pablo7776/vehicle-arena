@@ -49,24 +49,15 @@ func _process(delta: float) -> void:
 	# cámara no "salta" respecto del auto (era el parpadeo a gran velocidad).
 	var t_kart := vehiculo.get_global_transform_interpolated()
 
-	# Solo usamos hacia dónde MIRA el kart (su giro horizontal), no su inclinación:
-	# la suspensión y los golpes lo cabecean y lo ladean todo el tiempo, y a 4 o 5 m
-	# de distancia cada pequeño cabeceo movía mucho la cámara. Con poco suavizado
-	# se filtraba; con mucho, se veía como vibración.
-	var frente := t_kart.basis.z
-	frente.y = 0.0
-	var giro := atan2(frente.x, frente.z) if frente.length() > 0.01 else 0.0
-	var base_plana := Basis(Vector3.UP, giro)
-
 	# Posición: sigue al vehículo con suavizado
 	# (1 - exp(...) se comporta igual a cualquier cantidad de FPS)
-	var pos_objetivo := t_kart.origin + base_plana * offset
+	var pos_objetivo := t_kart.origin + t_kart.basis * offset
 	global_position = global_position.lerp(pos_objetivo, 1.0 - exp(-suavizado_pos * delta))
 
 	var horizonte := _calcular_horizonte(delta)
 	if mirar_al_kart:
 		# Mira al punto del kart; después le aplicamos la inclinación del horizonte
-		var objetivo := t_kart.origin + base_plana * punto_mira
+		var objetivo := t_kart.origin + t_kart.basis * punto_mira
 		var hacia := objetivo - global_position
 		if hacia.length() > 0.01:
 			global_basis = Basis.looking_at(hacia, Vector3.UP) * Basis(Vector3.BACK, horizonte)
@@ -74,7 +65,7 @@ func _process(delta: float) -> void:
 		# Rotación fija: mira en la dirección del vehículo con inclinación fija
 		global_rotation = Vector3(
 			deg_to_rad(inclinacion_grados),
-			giro + PI,
+			t_kart.basis.get_euler().y + PI,
 			horizonte
 		)
 

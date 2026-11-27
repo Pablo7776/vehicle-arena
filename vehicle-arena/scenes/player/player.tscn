@@ -67,6 +67,7 @@ transform = Transform3D(1, 0, 0, 0, -0.50000006, 0.8660254, 0, -0.8660254, -0.50
 vehiculo_path = NodePath("../Kart1")
 offset = Vector3(0, 3, -4)
 inclinacion_grados = -10.0
+suavizado_pos = 20.0
 punto_mira = Vector3(0, 1, 1.5)
 sensibilidad_horizonte = -1.0
 intensidad_horizonte = 0.8
