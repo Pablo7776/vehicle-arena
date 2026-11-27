@@ -23,9 +23,19 @@ const NADIE := -2
 signal partida_terminada(cazador: int)
 
 @export var label_resultado: Label
-## Opcional: un Label para la cuenta regresiva. Si no asignás ninguno,
-## se crea uno arriba al centro, en la misma capa que el resultado.
-@export var label_tiempo: Label
+## Cuenta regresiva: una barra fina arriba al centro que se achica desde
+## los dos lados hacia el medio (sin números). Se crea por código.
+@export_group("Barra de tiempo")
+## Ancho de la barra llena, como fracción del ancho de la pantalla
+@export_range(0.1, 1.0) var ancho_barra_tiempo := 0.6
+## Alto en píxeles y distancia al borde de arriba
+@export var alto_barra_tiempo := 6.0
+@export var margen_barra_tiempo := 12.0
+@export var color_barra_tiempo := Color(0.85, 0.95, 1.0, 0.9)
+## En los últimos segundos se pone roja y parpadea
+@export var segundos_aviso := 30.0
+@export var color_aviso := Color(1.0, 0.2, 0.15, 1.0)
+@export_group("")
 ## Opcional: el botón "Volver a la sala". Si no asignás ninguno, se crea uno
 ## debajo del resultado.
 @export var boton_volver: Button
@@ -33,6 +43,7 @@ signal partida_terminada(cazador: int)
 var _terminada := false
 var _tiempo_restante := DURACION
 var _jabali: Node = null
+var _barra_tiempo: ColorRect   # la parte que se achica
 
 
 func _ready() -> void:
@@ -40,8 +51,7 @@ func _ready() -> void:
 	GDSync.expose_func(_mostrar_resultado, ENUMS.EXPOSE_PERMISSION.HOST)   # solo el host anuncia el resultado
 	if label_resultado:
 		label_resultado.hide()
-	if label_tiempo == null:
-		label_tiempo = _crear_label_tiempo()
+	_crear_barra_tiempo()
 	if boton_volver == null:
 		boton_volver = _crear_boton_volver()
 	boton_volver.hide()
@@ -128,27 +138,44 @@ func _actualizar_boton_volver() -> void:
 
 
 func _mostrar_tiempo() -> void:
-	if label_tiempo == null:
+	if _barra_tiempo == null:
 		return
-	var segundos := ceili(_tiempo_restante)
-	label_tiempo.text = "%d:%02d" % [segundos / 60, segundos % 60]
-	# Los últimos 30 segundos, en rojo
-	label_tiempo.modulate = Color.RED if segundos <= 30 else Color.WHITE
+	# 1 = partida recién empezada, 0 = tiempo terminado.
+	# La barra queda centrada: se achica igual de los dos lados hacia el medio.
+	var mitad := ancho_barra_tiempo * (_tiempo_restante / DURACION) / 2.0
+	_barra_tiempo.anchor_left = 0.5 - mitad
+	_barra_tiempo.anchor_right = 0.5 + mitad
+	if _tiempo_restante <= segundos_aviso:
+		var c := color_aviso
+		c.a = 0.4 + 0.6 * absf(sin(Time.get_ticks_msec() / 1000.0 * 5.0))   # parpadeo
+		_barra_tiempo.color = c
+	else:
+		_barra_tiempo.color = color_barra_tiempo
 
 
-func _crear_label_tiempo() -> Label:
-	var label := Label.new()
-	label.name = "LabelTiempo"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", 28)
-	label.add_theme_color_override("font_outline_color", Color.BLACK)
-	label.add_theme_constant_override("outline_size", 6)
-	label.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	label.offset_top = 8
+# Riel tenue (el largo total) + la barra que se achica encima, arriba al centro
+func _crear_barra_tiempo() -> void:
+	var riel := _crear_franja(ancho_barra_tiempo, Color(1, 1, 1, 0.12))
+	_barra_tiempo = _crear_franja(ancho_barra_tiempo, color_barra_tiempo)
 	# En la misma capa que el resultado, para que se dibuje arriba del juego
 	var padre: Node = label_resultado.get_parent() if label_resultado else self
-	padre.add_child.call_deferred(label)
-	return label
+	padre.add_child.call_deferred(riel)
+	padre.add_child.call_deferred(_barra_tiempo)
+
+
+func _crear_franja(ancho: float, color: Color) -> ColorRect:
+	var franja := ColorRect.new()
+	franja.color = color
+	franja.mouse_filter = Control.MOUSE_FILTER_IGNORE   # no le quita toques al juego
+	franja.anchor_left = 0.5 - ancho / 2.0
+	franja.anchor_right = 0.5 + ancho / 2.0
+	franja.anchor_top = 0.0
+	franja.anchor_bottom = 0.0
+	franja.offset_left = 0.0
+	franja.offset_right = 0.0
+	franja.offset_top = margen_barra_tiempo
+	franja.offset_bottom = margen_barra_tiempo + alto_barra_tiempo
+	return franja
 
 
 func _crear_boton_volver() -> Button:

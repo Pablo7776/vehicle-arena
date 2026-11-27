@@ -28,6 +28,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9761305, -13.230886, -38.
 [node name="game_manager" type="Node" parent="." unique_id=542191633 node_paths=PackedStringArray("label_resultado")]
 script = ExtResource("3_5tue2")
 label_resultado = NodePath("../CanvasLayer/Label")
+color_barra_tiempo = Color(0.4, 1, 0.27058825, 0.4745098)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2097004690]
 
